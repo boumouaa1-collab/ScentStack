@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Scent Stack System — Source</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  @page { size: letter; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #2b2522;
+    background: #f7f1e8;
+  }
+  .page {
+    width: 8.5in;
+    height: 11in;
+    padding: 0.85in 0.85in 0.75in;
+    page-break-after: always;
+    position: relative;
+    background: #f7f1e8;
+    display: flex;
+    flex-direction: column;
+  }
+  .page:last-child { page-break-after: auto; }
+  .page-num {
+    position: absolute;
+    bottom: 0.4in;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 9pt;
+    color: #b08d57;
+    letter-spacing: 0.15em;
+  }
+  .page-header {
+    position: absolute;
+    top: 0.4in;
+    left: 0.85in;
+    right: 0.85in;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #b08d57;
+  }
+  .brand { font-family: 'Cormorant Garamond', serif; }
+  .serif { font-family: 'Cormorant Garamond', serif; }
+  .ivory { background: #f7f1e8; }
+  .cream { background: #efe4d4; }
+  .burgundy { background: #4a1c2c; color: #f7f1e8; }
+  .gold { color: #b08d57; }
+  .ornament {
+    text-align: center;
+    color: #b08d57;
+    font-size: 10pt;
+    letter-spacing: 0.3em;
+    margin: 0.3in 0;
+  }
+  .ornament::before, .ornament::after {
+    content: '———';
+    margin: 0 0.5em;
+    opacity: 0.4;
+  }
+  h1.cover-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42pt;
+    text-align: center;
+    color: #f7f1e8;
+    line-height: 1.15;
+  }
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26pt;
+    color: #4a1c2c;
+    margin-bottom: 0.15in;
+  }
+  h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16pt;
+    color: #4a1c2c;
+    margin-bottom: 0.1in;
+  }
+  h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 11pt;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #b08d57;
+    margin-bottom: 0.08in;
+  }
+  p { font-size: 11pt; line-height: 1.65; margin-bottom: 0.12in; }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-size: 9pt;
+    color: #b08d57;
+  }
+  .field {
+    border-bottom: 1px solid #d9c7b0;
+    padding: 0.08in 0;
+    min-height: 0.35in;
+  }
+  .field-label {
+    font-size: 9pt;
+    color: #b08d57;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.04in;
+  }
+  .field-large {
+    border-bottom: 1px solid #d9c7b0;
+    min-height: 0.8in;
+  }
+  .checkbox {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #b08d57;
+    border-radius: 3px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .rating-dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .rating-dots span {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid #b08d57;
+    border-radius: 50%;
+  }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.25in; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.2in; }
+  .box {
+    border: 1px solid #d9c7b0;
+    border-radius: 8px;
+    padding: 0.15in;
+  }
+  .box-gold {
+    border: 1px solid #b08d57;
+    border-radius: 8px;
+    padding: 0.2in;
+    background: rgba(176,141,87,0.05);
+  }
+  .table-row {
+    display: grid;
+    border-bottom: 1px solid #d9c7b0;
+    padding: 0.06in 0;
+    font-size: 10pt;
+  }
+  .cover {
+    background: #4a1c2c;
+    color: #f7f1e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+  }
+  .cover-border {
+    position: absolute;
+    inset: 0.5in;
+    border: 1px solid rgba(176,141,87,0.3);
+  }
+  .cover-border-inner {
+    position: absolute;
+    inset: 0.55in;
+    border: 1px solid rgba(176,141,87,0.15);
+  }
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.06in 0;
+    border-bottom: 1px dotted #d9c7b0;
+    font-size: 12pt;
+  }
+  .toc-item .serif { font-size: 13pt; color: #4a1c2c; }
+  .toc-item .page-ref { color: #b08d57; font-size: 10pt; }
+  .section-divider {
+    background: #4a1c2c;
+    color: #f7f1e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+  }
+  .challenge-day {
+    display: grid;
+    grid-template-columns: 0.5in 1fr;
+    gap: 0.15in;
+    align-items: start;
+    padding: 0.08in 0;
+    border-bottom: 1px solid #d9c7b0;
+  }
+  .day-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18pt;
+    color: #b08d57;
+    text-align: center;
+  }
+  .day-task { font-size: 10.5pt; line-height: 1.5; }
+  .note-lines div {
+    border-bottom: 1px solid #d9c7b0;
+    height: 0.28in;
+  }
+  ul.list { list-style: none; }
+  ul.list li {
+    padding: 0.04in 0;
+    font-size: 10.5pt;
+    display: flex;
+    align-items: baseline;
+  }
+  ul.list li::before {
+    content: '◆';
+    color: #b08d57;
+    margin-right: 8px;
+    font-size: 7pt;
+  }
+</style>
+</head>
+<body>
+<!-- COVER -->
+<div class="page cover">
+  <div class="cover-border"></div>
+  <div class="cover-border-inner"></div>
+  <div style="position:relative; z-index:1;">
+    <p class="eyebrow" style="color:#b08d57; margin-bottom:0.3in;">Scent Stack</p>
+    <h1 class="cover-title">The Scent<br>Stack System</h1>
+    <div style="width:1.5in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+    <p style="font-size:13pt; color:#f7f1e8; opacity:0.7; letter-spacing:0.05em;">Your complete fragrance wardrobe workbook</p>
+    <p style="margin-top:0.5in; font-size:9pt; color:#b08d57; letter-spacing:0.3em; text-transform:uppercase;">Premium Digital Edition</p>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="page">
+  <div class="page-header"><span>Scent Stack</span><span>The System</span></div>
+  <h2 style="text-align:center;">Table of Contents</h2>
+  <div class="ornament">◆</div>
+  <div style="max-width:5in; margin:0 auto;">
+    <div class="toc-item"><span class="serif">Section 1 — Getting Started</span><span class="page-ref">3</span></div>
+    <div class="toc-item"><span class="serif">Section 2 — Understand Your Taste</span><span class="page-ref">8</span></div>
+    <div class="toc-item"><span class="serif">Section 3 — Build My Wardrobe</span><span class="page-ref">16</span></div>
+    <div class="toc-item"><span class="serif">Section 4 — Collection Tracker</span><span class="page-ref">22</span></div>
+    <div class="toc-item"><span class="serif">Section 5 — Perfume Review Pages</span><span class="page-ref">28</span></div>
+    <div class="toc-item"><span class="serif">Section 6 — Signature Scent</span><span class="page-ref">34</span></div>
+    <div class="toc-item"><span class="serif">Section 7 — Seasonal Planning</span><span class="page-ref">38</span></div>
+    <div class="toc-item"><span class="serif">Section 8 — Occasion Planning</span><span class="page-ref">42</span></div>
+    <div class="toc-item"><span class="serif">Section 9 — Fragrance Shopping</span><span class="page-ref">46</span></div>
+    <div class="toc-item"><span class="serif">Section 10 — 30-Day Challenge</span><span class="page-ref">50</span></div>
+    <div class="toc-item"><span class="serif">Section 11 — Master Trackers</span><span class="page-ref">54</span></div>
+    <div class="toc-item"><span class="serif">Section 12 — Final Wardrobe</span><span class="page-ref">58</span></div>
+  </div>
+  <div class="page-num">2</div>
+</div>
+
+<!-- SECTION 1 DIVIDER -->
+<div class="page section-divider">
+  <p class="eyebrow" style="color:#b08d57;">Section One</p>
+  <h2 style="color:#f7f1e8; font-size:32pt; margin-top:0.2in;">Getting Started</h2>
+  <div style="width:1in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+  <p style="color:#f7f1e8; opacity:0.6; font-size:12pt;">Welcome to your fragrance journey</p>
+  <div class="page-num" style="color:#b08d57;">3</div>
+</div>
+
+<!-- WELCOME -->
+<div class="page">
+  <div class="page-header"><span>Section 1 — Getting Started</span><span>Scent Stack</span></div>
+  <h2>Welcome</h2>
+  <div class="ornament">◆</div>
+  <p>You are about to build something most fragrance lovers never do: a real, intentional wardrobe of scents that matches your life, your seasons, and your personality.</p>
+  <p>This workbook is not a list of perfumes to buy. It is a system for understanding what you love, why you love it, and how to build a collection that feels like <em>you</em>.</p>
+  <p>Whether you own two bottles or twenty, whether you are just starting out or have been wearing fragrance for years, the pages ahead will help you turn a random shelf into a curated wardrobe.</p>
+  <p>Take your time. There is no rush. Fragrance is personal, and the best discoveries happen when you pay attention.</p>
+  <div class="box-gold" style="margin-top:0.3in;">
+    <h4>A note from Scent Stack</h4>
+    <p style="margin-bottom:0;">This workbook is an original creation for fragrance enthusiasts. It is not affiliated with any brand. It does not make medical claims. It is a journaling and planning tool designed to enhance your personal enjoyment of fragrance.</p>
+  </div>
+  <div class="page-num">4</div>
+</div>
+
+<!-- HOW TO USE -->
+<div class="page">
+  <div class="page-header"><span>Section 1 — Getting Started</span><span>Scent Stack</span></div>
+  <h2>How to Use This Workbook</h2>
+  <div class="ornament">◆</div>
+  <ul class="list">
+    <li><strong>Print it</strong> — Use US Letter paper (A4 works too). Print the tracker and review pages as many copies as you need.</li>
+    <li><strong>Go digital</strong> — Import the PDF into GoodNotes, Notability, or any PDF annotation app to write with a stylus on your tablet.</li>
+    <li><strong>Work in order</strong> — Start with Section 1 and move through the sections. Each builds on the last.</li>
+    <li><strong>Or jump around</strong> — If you already know your taste, skip ahead to the wardrobe builder or tracker sections.</li>
+    <li><strong>Be honest</strong> — The worksheets only work if you are honest about what you actually like and wear.</li>
+    <li><strong>Revisit pages</strong> — Your taste will evolve. Come back to your scent personality and wardrobe planning pages over time.</li>
+    <li><strong>Use the trackers</strong> — The collection tracker and review pages are designed to be printed multiple times. One page per perfume.</li>
+  </ul>
+  <div class="box-gold" style="margin-top:0.3in;">
+    <h4>What you will need</h4>
+    <p style="margin-bottom:0;">A pen or stylus, your current fragrance collection, and a quiet moment to think about what you actually enjoy wearing.</p>
+  </div>
+  <div class="page-num">5</div>
+</div>
+
+<!-- FRAGRANCE JOURNEY -->
+<div class="page">
+  <div class="page-header"><span>Section 1 — Getting Started</span><span>Scent Stack</span></div>
+  <h2>My Fragrance Journey</h2>
+  <div class="ornament">◆</div>
+  <p>Before we look forward, take a moment to look back. Your fragrance history shapes your taste more than you think.</p>
+  <div style="margin-top:0.2in;">
+    <div class="field-label">My first fragrance was</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Who gave it to me / why I chose it</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">A fragrance I loved but no longer own</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">A fragrance I regret buying</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">A scent that brings back a specific memory</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">How my taste has changed over the years</div>
+    <div class="field-large"></div>
+  </div>
+  <div class="page-num">6</div>
+</div>
+
+<!-- QUICK START -->
+<div class="page">
+  <div class="page-header"><span>Section 1 — Getting Started</span><span>Scent Stack</span></div>
+  <h2>Quick-Start Page</h2>
+  <div class="ornament">◆</div>
+  <p>New to this? Start here. Five steps to get going.</p>
+  <div class="box-gold" style="margin-top:0.2in;">
+    <h4>Step 1 — List what you own</h4>
+    <p style="margin-bottom:0;">Write down every fragrance you currently have. You will log them properly in Section 4.</p>
+  </div>
+  <div class="box-gold" style="margin-top:0.15in;">
+    <h4>Step 2 — Identify your favorite note</h4>
+    <p style="margin-bottom:0;">Pick the one note you are always drawn to. Section 2 will help you confirm it.</p>
+  </div>
+  <div class="box-gold" style="margin-top:0.15in;">
+    <h4>Step 3 — Find your gap</h4>
+    <p style="margin-bottom:0;">What occasion do you never have the right scent for? That is your first wardrobe gap.</p>
+  </div>
+  <div class="box-gold" style="margin-top:0.15in;">
+    <h4>Step 4 — Pick a signature candidate</h4>
+    <p style="margin-bottom:0;">Choose one fragrance that feels most <em>you</em>. Section 6 will help you decide if it is the one.</p>
+  </div>
+  <div class="box-gold" style="margin-top:0.15in;">
+    <h4>Step 5 — Start the 30-day challenge</h4>
+    <p style="margin-bottom:0;">Jump to Section 10 for a daily activity that builds your fragrance knowledge.</p>
+  </div>
+  <div class="page-num">7</div>
+</div>
+
+<!-- SECTION 2 DIVIDER -->
+<div class="page section-divider">
+  <p class="eyebrow" style="color:#b08d57;">Section Two</p>
+  <h2 style="color:#f7f1e8; font-size:32pt; margin-top:0.2in;">Understand Your Taste</h2>
+  <div style="width:1in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+  <p style="color:#f7f1e8; opacity:0.6; font-size:12pt;">Learn the language of fragrance</p>
+  <div class="page-num" style="color:#b08d57;">8</div>
+</div>
+
+<!-- FRAGRANCE FAMILIES -->
+<div class="page">
+  <div class="page-header"><span>Section 2 — Understand Your Taste</span><span>Scent Stack</span></div>
+  <h2>Fragrance Families</h2>
+  <div class="ornament">◆</div>
+  <p>Every fragrance belongs to a family — a category that describes its dominant character. Knowing these families helps you talk about what you like and find new fragrances faster.</p>
+  <div class="two-col" style="margin-top:0.2in;">
+    <div class="box">
+      <h3 style="font-size:13pt;">Citrus</h3>
+      <p style="font-size:10pt; margin:0;">Bright, zesty, refreshing. Lemon, bergamot, grapefruit, orange. Uplifting and energizing.</p>
+    </div>
+    <div class="box">
+      <h3 style="font-size:13pt;">Floral</h3>
+      <p style="font-size:10pt; margin:0;">Rose, jasmine, lily, peony. The largest family. Romantic, soft, or bold depending on the bloom.</p>
+    </div>
+    <div class="box">
+      <h3 style="font-size:13pt;">Fruity</h3>
+      <p style="font-size:10pt; margin:0;">Peach, apple, berry, mango. Sweet and playful without being dessert-like.</p>
+    </div>
+    <div class="box">
+      <h3 style="font-size:13pt;">Gourmand</h3>
+      <p style="font-size:10pt; margin:0;">Vanilla, caramel, chocolate, coffee. Edible and warm. Cozy and comforting.</p>
+    </div>
+    <div class="box">
+      <h3 style="font-size:13pt;">Woody</h3>
+      <p style="font-size:10pt; margin:0;">Sandalwood, cedar, vetiver, oud. Dry, warm, grounding. Often unisex.</p>
+    </div>
+    <div class="box">
+      <h3 style="font-size:13pt;">Musky</h3>
+      <p style="font-size:10pt; margin:0;">Clean or animalic musk. Soft, skin-like, intimate. Often a base for other notes.</p>
+    </div>
+    <div class="box">
+      <h3 style="font-size:13pt;">Amber</h3>
+      <p style="font-size:10pt; margin:0;">Warm, resinous, slightly sweet. Labdanum, benzoin, ambergris. Rich and enveloping.</p>
+    </div>
+    <div class="box">
+      <h3 style="font-size:13pt;">Spicy</h3>
+      <p style="font-size:10pt; margin:0;">Cinnamon, cardamom, pepper, clove. Warm, stimulating, often a complement to other families.</p>
+    </div>
+    <div class="box">
+      <h3 style="font-size:13pt;">Fresh</h3>
+      <p style="font-size:10pt; margin:0;">Clean, airy, light. Often includes aldehydes or white musk. Like fresh laundry or clean skin.</p>
+    </div>
+    <div class="box">
+      <h3 style="font-size:13pt;">Aquatic</h3>
+      <p style="font-size:10pt; margin:0;">Sea spray, salt, water notes. Breezy and cool. Like a morning by the ocean.</p>
+    </div>
+    <div class="box">
+      <h3 style="font-size:13pt;">Green</h3>
+      <p style="font-size:10pt; margin:0;">Cut grass, leaves, stems, galbanum. Crisp and natural. Like a walk through a garden.</p>
+    </div>
+    <div class="box">
+      <h3 style="font-size:13pt;">Chypre</h3>
+      <p style="font-size:10pt; margin:0;">Bergamot top, floral heart, mossy base. Sophisticated and structured. A classic structure.</p>
+    </div>
+  </div>
+  <div class="page-num">9</div>
+</div>
+
+<!-- FRAGRANCE NOTES -->
+<div class="page">
+  <div class="page-header"><span>Section 2 — Understand Your Taste</span><span>Scent Stack</span></div>
+  <h2>Fragrance Notes</h2>
+  <div class="ornament">◆</div>
+  <p>A fragrance is built in three layers, called a pyramid. Each layer appears at a different time as the fragrance develops on your skin.</p>
+  <div class="box-gold" style="margin-top:0.2in;">
+    <h3 style="font-size:15pt;">Top Notes</h3>
+    <p style="margin:0;">The first thing you smell when you spray. These are light, volatile molecules that evaporate quickly — usually within 15 to 30 minutes. Citrus, herbs, and light fruits are common top notes. First impressions matter, but do not judge a fragrance by them alone.</p>
+  </div>
+  <div class="box-gold" style="margin-top:0.15in;">
+    <h3 style="font-size:15pt;">Heart Notes</h3>
+    <p style="margin:0;">The core of the fragrance. These appear after the top notes fade and last for several hours. Floral, fruity, and spicy notes often sit here. The heart is what most people will remember about your scent.</p>
+  </div>
+  <div class="box-gold" style="margin-top:0.15in;">
+    <h3 style="font-size:15pt;">Base Notes</h3>
+    <p style="margin:0;">The foundation. These are heavy, slow-evaporating molecules that can last all day. Woods, musk, amber, and vanilla are typical base notes. The base is what lingers on your clothes and skin hours later.</p>
+  </div>
+  <div style="margin-top:0.3in; text-align:center;">
+    <div style="display:inline-block; border:1px solid #b08d57; border-radius:50%; width:2.2in; height:2.2in; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:0.15in; text-align:center;">
+      <p class="eyebrow" style="margin-bottom:0;">Top → Heart → Base</p>
+      <p style="font-size:10pt; margin-top:0.1in; color:#4a1c2c;">30 min → 3-4 hours → 6+ hours</p>
+    </div>
+  </div>
+  <div class="page-num">10</div>
+</div>
+
+<!-- NOTE CATEGORIES -->
+<div class="page">
+  <div class="page-header"><span>Section 2 — Understand Your Taste</span><span>Scent Stack</span></div>
+  <h2>Common Notes by Category</h2>
+  <div class="ornament">◆</div>
+  <div class="two-col">
+    <div class="box">
+      <h4>Citrus Notes</h4>
+      <p style="font-size:10pt; margin:0;">Bergamot, lemon, lime, grapefruit, orange, mandarin, yuzu, neroli, petitgrain</p>
+    </div>
+    <div class="box">
+      <h4>Floral Notes</h4>
+      <p style="font-size:10pt; margin:0;">Rose, jasmine, lily, peony, tuberose, violet, iris, freesia, magnolia, neroli</p>
+    </div>
+    <div class="box">
+      <h4>Fruity Notes</h4>
+      <p style="font-size:10pt; margin:0;">Peach, apple, pear, blackberry, raspberry, mango, lychee, fig, plum</p>
+    </div>
+    <div class="box">
+      <h4>Gourmand Notes</h4>
+      <p style="font-size:10pt; margin:0;">Vanilla, caramel, tonka bean, chocolate, coffee, almond, honey, praline</p>
+    </div>
+    <div class="box">
+      <h4>Woody Notes</h4>
+      <p style="font-size:10pt; margin:0;">Sandalwood, cedar, vetiver, oud, patchouli, guaiac wood, cypress</p>
+    </div>
+    <div class="box">
+      <h4>Musky Notes</h4>
+      <p style="font-size:10pt; margin:0;">White musk, clean musk, ambrette, soft musk, skin musk</p>
+    </div>
+    <div class="box">
+      <h4>Amber Notes</h4>
+      <p style="font-size:10pt; margin:0;">Labdanum, benzoin, ambergris, opoponax, myrrh, frankincense</p>
+    </div>
+    <div class="box">
+      <h4>Spicy Notes</h4>
+      <p style="font-size:10pt; margin:0;">Cinnamon, cardamom, black pepper, clove, nutmeg, ginger, saffron, pink pepper</p>
+    </div>
+    <div class="box">
+      <h4>Fresh Notes</h4>
+      <p style="font-size:10pt; margin:0;">Aldehydes, white musk, cotton, clean air, ozone, soapy notes</p>
+    </div>
+    <div class="box">
+      <h4>Aquatic Notes</h4>
+      <p style="font-size:10pt; margin:0;">Sea salt, calone, water lily, kelp, ocean breeze, marine accord</p>
+    </div>
+    <div class="box">
+      <h4>Green Notes</h4>
+      <p style="font-size:10pt; margin:0;">Galbanum, grass, leaves, mint, basil, fig leaf, tea, bamboo</p>
+    </div>
+    <div class="box">
+      <h4>Leather & Tobacco</h4>
+      <p style="font-size:10pt; margin:0;">Leather, suede, tobacco, smoke, birch tar, hay</p>
+    </div>
+  </div>
+  <div class="page-num">11</div>
+</div>
+
+<!-- MY FAVORITE NOTES WORKSHEET -->
+<div class="page">
+  <div class="page-header"><span>Section 2 — Understand Your Taste</span><span>Scent Stack</span></div>
+  <h2>My Favorite Notes</h2>
+  <div class="ornament">◆</div>
+  <p>List the notes you are always drawn to. Think about fragrances you love — what do they have in common?</p>
+  <div style="margin-top:0.2in;">
+    <div class="field-label">Top notes I love</div>
+    <div class="field"></div>
+    <div class="field"></div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Heart notes I love</div>
+    <div class="field"></div>
+    <div class="field"></div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Base notes I love</div>
+    <div class="field"></div>
+    <div class="field"></div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.2in;">
+    <div class="field-label">A note I always notice and enjoy</div>
+    <div class="field-large"></div>
+  </div>
+  <div class="page-num">12</div>
+</div>
+
+<!-- NOTES I DON'T LIKE -->
+<div class="page">
+  <div class="page-header"><span>Section 2 — Understand Your Taste</span><span>Scent Stack</span></div>
+  <h2>Notes I Don't Like</h2>
+  <div class="ornament">◆</div>
+  <p>Knowing what you dislike is just as powerful as knowing what you love. It saves money and prevents blind-buy regrets.</p>
+  <div style="margin-top:0.2in;">
+    <div class="field-label">Notes I actively dislike</div>
+    <div class="field"></div>
+    <div class="field"></div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Notes I am indifferent to</div>
+    <div class="field"></div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">A fragrance I did not enjoy and why</div>
+    <div class="field-large"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">A note I want to learn to appreciate</div>
+    <div class="field"></div>
+  </div>
+  <div class="page-num">13</div>
+</div>
+
+<!-- FRAGRANCE FAMILIES I PREFER -->
+<div class="page">
+  <div class="page-header"><span>Section 2 — Understand Your Taste</span><span>Scent Stack</span></div>
+  <h2>Fragrance Families I Prefer</h2>
+  <div class="ornament">◆</div>
+  <p>Mark the families you are drawn to and rank your top three.</p>
+  <div class="two-col" style="margin-top:0.2in;">
+    <ul class="list" style="font-size:11pt;">
+      <li><span class="checkbox"></span>Citrus</li>
+      <li><span class="checkbox"></span>Floral</li>
+      <li><span class="checkbox"></span>Fruity</li>
+      <li><span class="checkbox"></span>Gourmand</li>
+      <li><span class="checkbox"></span>Woody</li>
+      <li><span class="checkbox"></span>Musky</li>
+    </ul>
+    <ul class="list" style="font-size:11pt;">
+      <li><span class="checkbox"></span>Amber</li>
+      <li><span class="checkbox"></span>Spicy</li>
+      <li><span class="checkbox"></span>Fresh</li>
+      <li><span class="checkbox"></span>Aquatic</li>
+      <li><span class="checkbox"></span>Green</li>
+      <li><span class="checkbox"></span>Chypre</li>
+    </ul>
+  </div>
+  <div style="margin-top:0.3in;">
+    <div class="field-label">My #1 family</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.1in;">
+    <div class="field-label">My #2 family</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.1in;">
+    <div class="field-label">My #3 family</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.2in;">
+    <div class="field-label">A family I want to explore more</div>
+    <div class="field"></div>
+  </div>
+  <div class="page-num">14</div>
+</div>
+
+<!-- MY SCENT PERSONALITY -->
+<div class="page">
+  <div class="page-header"><span>Section 2 — Understand Your Taste</span><span>Scent Stack</span></div>
+  <h2>My Scent Personality</h2>
+  <div class="ornament">◆</div>
+  <p>Combine your favorite families and notes to describe your scent personality in your own words.</p>
+  <div style="margin-top:0.2in;">
+    <div class="field-label">Three words that describe my ideal scent</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">My scent is warm / cool / fresh / bold (circle or write yours)</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">I want my fragrance to make me feel</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">I want others to describe my scent as</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">My scent personality in one sentence</div>
+    <div class="field-large"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">If my personality were a fragrance family, it would be</div>
+    <div class="field"></div>
+  </div>
+  <div class="page-num">15</div>
+</div>
+
+<!-- SECTION 3 DIVIDER -->
+<div class="page section-divider">
+  <p class="eyebrow" style="color:#b08d57;">Section Three</p>
+  <h2 style="color:#f7f1e8; font-size:32pt; margin-top:0.2in;">Build My Fragrance Wardrobe</h2>
+  <div style="width:1in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+  <p style="color:#f7f1e8; opacity:0.6; font-size:12pt;">A scent for every moment</p>
+  <div class="page-num" style="color:#b08d57;">16</div>
+</div>
+
+<!-- MY IDEAL FRAGRANCE WARDROBE -->
+<div class="page">
+  <div class="page-header"><span>Section 3 — Build My Wardrobe</span><span>Scent Stack</span></div>
+  <h2>My Ideal Fragrance Wardrobe</h2>
+  <div class="ornament">◆</div>
+  <p>A wardrobe is not a collection of random bottles. It is a small set of fragrances that cover the occasions in your life. Aim for 5 to 8 scents that truly work for you.</p>
+  <div style="margin-top:0.2in;">
+    <div class="field-label">My ideal wardrobe size</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Occasions I need a scent for</div>
+    <div class="field-large"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Families I want represented in my wardrobe</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Gaps I currently have</div>
+    <div class="field-large"></div>
+  </div>
+  <div class="page-num">17</div>
+</div>
+
+<!-- EVERYDAY / WORK / DATE-NIGHT -->
+<div class="page">
+  <div class="page-header"><span>Section 3 — Build My Wardrobe</span><span>Scent Stack</span></div>
+  <h2>Wardrobe Slots</h2>
+  <div class="ornament">◆</div>
+  <div class="three-col" style="margin-top:0.15in;">
+    <div class="box">
+      <h4>Everyday</h4>
+      <div class="field-label" style="font-size:8pt;">Current scent</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Ideal profile</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Notes</div>
+      <div class="field" style="min-height:0.25in;"></div>
+    </div>
+    <div class="box">
+      <h4>Work</h4>
+      <div class="field-label" style="font-size:8pt;">Current scent</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Ideal profile</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Notes</div>
+      <div class="field" style="min-height:0.25in;"></div>
+    </div>
+    <div class="box">
+      <h4>Date Night</h4>
+      <div class="field-label" style="font-size:8pt;">Current scent</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Ideal profile</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Notes</div>
+      <div class="field" style="min-height:0.25in;"></div>
+    </div>
+  </div>
+  <div class="three-col" style="margin-top:0.2in;">
+    <div class="box">
+      <h4>Special Occasion</h4>
+      <div class="field-label" style="font-size:8pt;">Current scent</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Ideal profile</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Notes</div>
+      <div class="field" style="min-height:0.25in;"></div>
+    </div>
+    <div class="box">
+      <h4>Summer</h4>
+      <div class="field-label" style="font-size:8pt;">Current scent</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Ideal profile</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Notes</div>
+      <div class="field" style="min-height:0.25in;"></div>
+    </div>
+    <div class="box">
+      <h4>Winter</h4>
+      <div class="field-label" style="font-size:8pt;">Current scent</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Ideal profile</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Notes</div>
+      <div class="field" style="min-height:0.25in;"></div>
+    </div>
+  </div>
+  <div class="three-col" style="margin-top:0.2in;">
+    <div class="box">
+      <h4>Casual</h4>
+      <div class="field-label" style="font-size:8pt;">Current scent</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Ideal profile</div>
+      <div class="field" style="min-height:0.25in;"></div>
+    </div>
+    <div class="box">
+      <h4>Statement</h4>
+      <div class="field-label" style="font-size:8pt;">Current scent</div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field-label" style="font-size:8pt;">Ideal profile</div>
+      <div class="field" style="min-height:0.25in;"></div>
+    </div>
+    <div class="box" style="background:rgba(176,141,87,0.08);">
+      <h4 style="color:#b08d57;">Gaps</h4>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field" style="min-height:0.25in;"></div>
+      <div class="field" style="min-height:0.25in;"></div>
+    </div>
+  </div>
+  <div class="page-num">18</div>
+</div>
+
+<!-- WARDROBE PLANNING WORKSHEET -->
+<div class="page">
+  <div class="page-header"><span>Section 3 — Build My Wardrobe</span><span>Scent Stack</span></div>
+  <h2>Wardrobe Planning Worksheet</h2>
+  <div class="ornament">◆</div>
+  <p>Now that you have mapped your slots, plan what to keep, what to add, and what to retire.</p>
+  <div style="margin-top:0.2in;">
+    <div class="field-label">Fragrances I am keeping</div>
+    <div class="field"></div>
+    <div class="field"></div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Fragrances I want to retire / swap</div>
+    <div class="field"></div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Next fragrance to add (and which slot it fills)</div>
+    <div class="field-large"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Budget I am setting for my wardrobe this year</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">My rule for buying new fragrances</div>
+    <div class="field-large"></div>
+  </div>
+  <div class="page-num">19</div>
+</div>
+
+<!-- FRAGRANCE GAPS -->
+<div class="page">
+  <div class="page-header"><span>Section 3 — Build My Wardrobe</span><span>Scent Stack</span></div>
+  <h2>Fragrance Gaps</h2>
+  <div class="ornament">◆</div>
+  <p>What occasions or moods do you lack a scent for? List every gap, then prioritize.</p>
+  <div class="two-col" style="margin-top:0.2in;">
+    <div>
+      <div class="field-label">Gap 1</div>
+      <div class="field"></div>
+      <div class="field-label">Gap 2</div>
+      <div class="field"></div>
+      <div class="field-label">Gap 3</div>
+      <div class="field"></div>
+      <div class="field-label">Gap 4</div>
+      <div class="field"></div>
+    </div>
+    <div>
+      <div class="field-label">Priority gap to fill first</div>
+      <div class="field-large"></div>
+      <div class="field-label">What family would fill it</div>
+      <div class="field"></div>
+      <div class="field-label">Notes I want in that fragrance</div>
+      <div class="field"></div>
+      <div class="field-label">Occasions it covers</div>
+      <div class="field"></div>
+    </div>
+  </div>
+  <div class="page-num">20</div>
+</div>
+
+<!-- SECTION 3 CLOSING REFLECTION -->
+<div class="page">
+  <div class="page-header"><span>Section 3 — Build My Wardrobe</span><span>Scent Stack</span></div>
+  <h2>Wardrobe Reflection</h2>
+  <div class="ornament">◆</div>
+  <p>Take a step back and look at the wardrobe you have planned.</p>
+  <div style="margin-top:0.2in;">
+    <div class="field-label">My wardrobe feels balanced because</div>
+    <div class="field-large"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">My wardrobe is missing</div>
+    <div class="field-large"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">One word to describe my ideal wardrobe</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">My wardrobe-building goal for the next 6 months</div>
+    <div class="field-large"></div>
+  </div>
+  <div class="page-num">21</div>
+</div>
+
+<!-- SECTION 4 DIVIDER -->
+<div class="page section-divider">
+  <p class="eyebrow" style="color:#b08d57;">Section Four</p>
+  <h2 style="color:#f7f1e8; font-size:32pt; margin-top:0.2in;">Collection Tracker</h2>
+  <div style="width:1in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+  <p style="color:#f7f1e8; opacity:0.6; font-size:12pt;">Log every bottle you own</p>
+  <div class="page-num" style="color:#b08d57;">22</div>
+</div>
+
+<!-- COLLECTION TRACKER (reusable - 3 copies shown, designed to be printed more) -->
+<!-- COPY 1 -->
+<div class="page">
+  <div class="page-header"><span>Section 4 — Collection Tracker</span><span>Scent Stack</span></div>
+  <h2>Collection Tracker</h2>
+  <div class="ornament">◆</div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Perfume name</div><div class="field"></div></div>
+    <div><div class="field-label">Brand</div><div class="field"></div></div>
+  </div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Fragrance family</div><div class="field"></div></div>
+    <div><div class="field-label">Season</div><div class="field"></div></div>
+  </div>
+  <div style="margin-top:0.1in;"><div class="field-label">Notes (top / heart / base)</div><div class="field"></div></div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Occasion</div><div class="field"></div></div>
+    <div><div class="field-label">Purchase date</div><div class="field"></div></div>
+  </div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Longevity (hours)</div><div class="field"></div></div>
+    <div><div class="field-label">Projection (skin / arm's length / room)</div><div class="field"></div></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Overall rating</div>
+    <div class="rating-dots"><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Would repurchase? Yes / No / Maybe</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.1in;">
+    <div class="field-label">Personal notes</div>
+    <div class="field-large"></div>
+  </div>
+  <div class="page-num">23</div>
+</div>
+
+<!-- COPY 2 -->
+<div class="page">
+  <div class="page-header"><span>Section 4 — Collection Tracker</span><span>Scent Stack</span></div>
+  <h2>Collection Tracker</h2>
+  <div class="ornament">◆</div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Perfume name</div><div class="field"></div></div>
+    <div><div class="field-label">Brand</div><div class="field"></div></div>
+  </div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Fragrance family</div><div class="field"></div></div>
+    <div><div class="field-label">Season</div><div class="field"></div></div>
+  </div>
+  <div style="margin-top:0.1in;"><div class="field-label">Notes (top / heart / base)</div><div class="field"></div></div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Occasion</div><div class="field"></div></div>
+    <div><div class="field-label">Purchase date</div><div class="field"></div></div>
+  </div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Longevity (hours)</div><div class="field"></div></div>
+    <div><div class="field-label">Projection (skin / arm's length / room)</div><div class="field"></div></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Overall rating</div>
+    <div class="rating-dots"><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Would repurchase? Yes / No / Maybe</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.1in;">
+    <div class="field-label">Personal notes</div>
+    <div class="field-large"></div>
+  </div>
+  <div class="page-num">24</div>
+</div>
+
+<!-- COPY 3 -->
+<div class="page">
+  <div class="page-header"><span>Section 4 — Collection Tracker</span><span>Scent Stack</span></div>
+  <h2>Collection Tracker</h2>
+  <div class="ornament">◆</div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Perfume name</div><div class="field"></div></div>
+    <div><div class="field-label">Brand</div><div class="field"></div></div>
+  </div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Fragrance family</div><div class="field"></div></div>
+    <div><div class="field-label">Season</div><div class="field"></div></div>
+  </div>
+  <div style="margin-top:0.1in;"><div class="field-label">Notes (top / heart / base)</div><div class="field"></div></div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Occasion</div><div class="field"></div></div>
+    <div><div class="field-label">Purchase date</div><div class="field"></div></div>
+  </div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Longevity (hours)</div><div class="field"></div></div>
+    <div><div class="field-label">Projection (skin / arm's length / room)</div><div class="field"></div></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Overall rating</div>
+    <div class="rating-dots"><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Would repurchase? Yes / No / Maybe</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.1in;">
+    <div class="field-label">Personal notes</div>
+    <div class="field-large"></div>
+  </div>
+  <div class="page-num">25</div>
+</div>
+
+<!-- SECTION 5 DIVIDER -->
+<div class="page section-divider">
+  <p class="eyebrow" style="color:#b08d57;">Section Five</p>
+  <h2 style="color:#f7f1e8; font-size:32pt; margin-top:0.2in;">Perfume Review Pages</h2>
+  <div style="width:1in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+  <p style="color:#f7f1e8; opacity:0.6; font-size:12pt;">Review each fragrance like a critic</p>
+  <div class="page-num" style="color:#b08d57;">26</div>
+</div>
+
+<!-- PERFUME REVIEW TEMPLATE (2 copies) -->
+<!-- COPY 1 -->
+<div class="page">
+  <div class="page-header"><span>Section 5 — Perfume Review</span><span>Scent Stack</span></div>
+  <h2>Perfume Review</h2>
+  <div class="ornament">◆</div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Perfume name</div><div class="field"></div></div>
+    <div><div class="field-label">Brand</div><div class="field"></div></div>
+  </div>
+  <div style="margin-top:0.1in;"><div class="field-label">First impression</div><div class="field-large"></div></div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Opening (first 15 min)</div><div class="field-large" style="min-height:0.6in;"></div></div>
+    <div><div class="field-label">Dry-down (after 1 hour)</div><div class="field-large" style="min-height:0.6in;"></div></div>
+  </div>
+  <div style="margin-top:0.1in;"><div class="field-label">Notes I noticed</div><div class="field"></div></div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Longevity</div><div class="field"></div></div>
+    <div><div class="field-label">Projection</div><div class="field"></div></div>
+  </div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Best season</div><div class="field"></div></div>
+    <div><div class="field-label">Best occasion</div><div class="field"></div></div>
+  </div>
+  <div style="margin-top:0.1in;">
+    <div class="field-label">Overall rating</div>
+    <div class="rating-dots"><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Would I buy it again?</div><div class="field"></div></div>
+    <div><div class="field-label">Price paid</div><div class="field"></div></div>
+  </div>
+  <div style="margin-top:0.1in;"><div class="field-label">Final thoughts</div><div class="field-large"></div></div>
+  <div class="page-num">27</div>
+</div>
+
+<!-- COPY 2 -->
+<div class="page">
+  <div class="page-header"><span>Section 5 — Perfume Review</span><span>Scent Stack</span></div>
+  <h2>Perfume Review</h2>
+  <div class="ornament">◆</div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Perfume name</div><div class="field"></div></div>
+    <div><div class="field-label">Brand</div><div class="field"></div></div>
+  </div>
+  <div style="margin-top:0.1in;"><div class="field-label">First impression</div><div class="field-large"></div></div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Opening (first 15 min)</div><div class="field-large" style="min-height:0.6in;"></div></div>
+    <div><div class="field-label">Dry-down (after 1 hour)</div><div class="field-large" style="min-height:0.6in;"></div></div>
+  </div>
+  <div style="margin-top:0.1in;"><div class="field-label">Notes I noticed</div><div class="field"></div></div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Longevity</div><div class="field"></div></div>
+    <div><div class="field-label">Projection</div><div class="field"></div></div>
+  </div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Best season</div><div class="field"></div></div>
+    <div><div class="field-label">Best occasion</div><div class="field"></div></div>
+  </div>
+  <div style="margin-top:0.1in;">
+    <div class="field-label">Overall rating</div>
+    <div class="rating-dots"><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Would I buy it again?</div><div class="field"></div></div>
+    <div><div class="field-label">Price paid</div><div class="field"></div></div>
+  </div>
+  <div style="margin-top:0.1in;"><div class="field-label">Final thoughts</div><div class="field-large"></div></div>
+  <div class="page-num">28</div>
+</div>
+
+<!-- SECTION 6 DIVIDER -->
+<div class="page section-divider">
+  <p class="eyebrow" style="color:#b08d57;">Section Six</p>
+  <h2 style="color:#f7f1e8; font-size:32pt; margin-top:0.2in;">Signature Scent</h2>
+  <div style="width:1in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+  <p style="color:#f7f1e8; opacity:0.6; font-size:12pt;">The fragrance that is unmistakably you</p>
+  <div class="page-num" style="color:#b08d57;">29</div>
+</div>
+
+<!-- SIGNATURE SCENT PAGES -->
+<div class="page">
+  <div class="page-header"><span>Section 6 — Signature Scent</span><span>Scent Stack</span></div>
+  <h2>What Do I Want My Scent to Say?</h2>
+  <div class="ornament">◆</div>
+  <p>A signature scent is a message before you speak. What do you want yours to say?</p>
+  <div style="margin-top:0.2in;">
+    <div class="field-label">When I walk into a room, I want my scent to say</div>
+    <div class="field-large"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Three words my signature scent should embody</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">A person whose scent I admire (and why)</div>
+    <div class="field-large"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">A mood I want my signature to create</div>
+    <div class="field"></div>
+  </div>
+  <div class="page-num">30</div>
+</div>
+
+<div class="page">
+  <div class="page-header"><span>Section 6 — Signature Scent</span><span>Scent Stack</span></div>
+  <h2>Notes I Love & Notes I Avoid</h2>
+  <div class="ornament">◆</div>
+  <div class="two-col">
+    <div>
+      <h4>Notes I love for a signature</h4>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+    </div>
+    <div>
+      <h4>Notes I avoid in a signature</h4>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+      <div class="field"></div>
+    </div>
+  </div>
+  <div style="margin-top:0.3in;">
+    <div class="field-label">Scents I repeatedly enjoy wearing</div>
+    <div class="field"></div>
+    <div class="field"></div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">What these scents have in common</div>
+    <div class="field-large"></div>
+  </div>
+  <div class="page-num">31</div>
+</div>
+
+<div class="page">
+  <div class="page-header"><span>Section 6 — Signature Scent</span><span>Scent Stack</span></div>
+  <h2>Signature Scent Candidates</h2>
+  <div class="ornament">◆</div>
+  <p>List 3-5 fragrances that could be your signature. You will narrow down to one.</p>
+  <div style="margin-top:0.2in;">
+    <div class="field-label">Candidate 1 — name & brand</div>
+    <div class="field"></div>
+    <div class="field-label">Why it could be my signature</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Candidate 2 — name & brand</div>
+    <div class="field"></div>
+    <div class="field-label">Why it could be my signature</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Candidate 3 — name & brand</div>
+    <div class="field"></div>
+    <div class="field-label">Why it could be my signature</div>
+    <div class="field"></div>
+  </div>
+  <div style="margin-top:0.15in;">
+    <div class="field-label">Candidate 4 — name & brand</div>
+    <div class="field"></div>
+    <div class="field-label">Why it could be my signature</div>
+    <div class="field"></div>
+  </div>
+  <div class="page-num">32</div>
+</div>
+
+<div class="page burgundy">
+  <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; text-align:center;">
+    <p class="eyebrow" style="color:#b08d57;">The Decision</p>
+    <h2 style="color:#f7f1e8; font-size:28pt; margin-top:0.2in;">My Signature Scent</h2>
+    <div style="width:1in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+    <div style="width:4in; margin-top:0.2in;">
+      <div style="border-bottom:1px solid #b08d57; height:0.4in; margin-bottom:0.15in;"></div>
+      <p style="color:#b08d57; font-size:9pt; text-transform:uppercase; letter-spacing:0.15em;">Fragrance name & brand</p>
+    </div>
+    <div style="width:4in; margin-top:0.3in;">
+      <div style="border-bottom:1px solid #b08d57; min-height:0.8in;"></div>
+      <p style="color:#b08d57; font-size:9pt; text-transform:uppercase; letter-spacing:0.15em;">Why this is my signature</p>
+    </div>
+    <p style="color:#f7f1e8; opacity:0.5; font-size:10pt; margin-top:0.5in;">Date decided: ____________________</p>
+  </div>
+  <div class="page-num" style="color:#b08d57;">33</div>
+</div>
+
+<!-- SECTION 7 DIVIDER -->
+<div class="page section-divider">
+  <p class="eyebrow" style="color:#b08d57;">Section Seven</p>
+  <h2 style="color:#f7f1e8; font-size:32pt; margin-top:0.2in;">Seasonal Planning</h2>
+  <div style="width:1in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+  <p style="color:#f7f1e8; opacity:0.6; font-size:12pt;">A scent for every season</p>
+  <div class="page-num" style="color:#b08d57;">34</div>
+</div>
+
+<!-- SEASONAL PAGES - Spring -->
+<div class="page">
+  <div class="page-header"><span>Section 7 — Seasonal Planning</span><span>Scent Stack</span></div>
+  <h2>Spring</h2>
+  <div class="ornament">◆</div>
+  <div class="field-label">Scents I want to wear this spring</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Scents I want to test</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Layering ideas</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Occasions this spring</div>
+  <div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Spring wishlist</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="page-num">35</div>
+</div>
+
+<!-- Summer -->
+<div class="page">
+  <div class="page-header"><span>Section 7 — Seasonal Planning</span><span>Scent Stack</span></div>
+  <h2>Summer</h2>
+  <div class="ornament">◆</div>
+  <div class="field-label">Scents I want to wear this summer</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Scents I want to test</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Layering ideas</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Occasions this summer</div>
+  <div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Summer wishlist</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="page-num">36</div>
+</div>
+
+<!-- Autumn -->
+<div class="page">
+  <div class="page-header"><span>Section 7 — Seasonal Planning</span><span>Scent Stack</span></div>
+  <h2>Autumn</h2>
+  <div class="ornament">◆</div>
+  <div class="field-label">Scents I want to wear this autumn</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Scents I want to test</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Layering ideas</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Occasions this autumn</div>
+  <div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Autumn wishlist</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="page-num">37</div>
+</div>
+
+<!-- Winter -->
+<div class="page">
+  <div class="page-header"><span>Section 7 — Seasonal Planning</span><span>Scent Stack</span></div>
+  <h2>Winter</h2>
+  <div class="ornament">◆</div>
+  <div class="field-label">Scents I want to wear this winter</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Scents I want to test</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Layering ideas</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Occasions this winter</div>
+  <div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Winter wishlist</div>
+  <div class="field"></div><div class="field"></div>
+  <div class="page-num">38</div>
+</div>
+
+<!-- SECTION 8 DIVIDER -->
+<div class="page section-divider">
+  <p class="eyebrow" style="color:#b08d57;">Section Eight</p>
+  <h2 style="color:#f7f1e8; font-size:32pt; margin-top:0.2in;">Occasion Planning</h2>
+  <div style="width:1in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+  <p style="color:#f7f1e8; opacity:0.6; font-size:12pt;">Match your scent to the moment</p>
+  <div class="page-num" style="color:#b08d57;">39</div>
+</div>
+
+<!-- OCCASION PAGES - Everyday + Office -->
+<div class="page">
+  <div class="page-header"><span>Section 8 — Occasion Planning</span><span>Scent Stack</span></div>
+  <div class="two-col">
+    <div>
+      <h2 style="font-size:20pt;">Everyday</h2>
+      <div class="ornament">◆</div>
+      <div class="field-label">My go-to scent</div>
+      <div class="field"></div>
+      <div class="field-label">Backup option</div>
+      <div class="field"></div>
+      <div class="field-label">Notes that work for daily wear</div>
+      <div class="field"></div>
+      <div class="field-label">How many sprays</div>
+      <div class="field"></div>
+      <div class="field-label">Notes</div>
+      <div class="field-large"></div>
+    </div>
+    <div>
+      <h2 style="font-size:20pt;">Office</h2>
+      <div class="ornament">◆</div>
+      <div class="field-label">My work scent</div>
+      <div class="field"></div>
+      <div class="field-label">Backup option</div>
+      <div class="field"></div>
+      <div class="field-label">Rules I follow (projection, etc.)</div>
+      <div class="field"></div>
+      <div class="field-label">How many sprays</div>
+      <div class="field"></div>
+      <div class="field-label">Notes</div>
+      <div class="field-large"></div>
+    </div>
+  </div>
+  <div class="page-num">40</div>
+</div>
+
+<!-- Date Night + Dinner -->
+<div class="page">
+  <div class="page-header"><span>Section 8 — Occasion Planning</span><span>Scent Stack</span></div>
+  <div class="two-col">
+    <div>
+      <h2 style="font-size:20pt;">Date Night</h2>
+      <div class="ornament">◆</div>
+      <div class="field-label">My date-night scent</div>
+      <div class="field"></div>
+      <div class="field-label">What I want it to project</div>
+      <div class="field"></div>
+      <div class="field-label">Notes that work</div>
+      <div class="field"></div>
+      <div class="field-label">How many sprays</div>
+      <div class="field"></div>
+      <div class="field-label">Notes</div>
+      <div class="field-large"></div>
+    </div>
+    <div>
+      <h2 style="font-size:20pt;">Dinner</h2>
+      <div class="ornament">◆</div>
+      <div class="field-label">My dinner scent</div>
+      <div class="field"></div>
+      <div class="field-label">Backup option</div>
+      <div class="field"></div>
+      <div class="field-label">Notes that work</div>
+      <div class="field"></div>
+      <div class="field-label">How many sprays</div>
+      <div class="field"></div>
+      <div class="field-label">Notes</div>
+      <div class="field-large"></div>
+    </div>
+  </div>
+  <div class="page-num">41</div>
+</div>
+
+<!-- Vacation + Wedding -->
+<div class="page">
+  <div class="page-header"><span>Section 8 — Occasion Planning</span><span>Scent Stack</span></div>
+  <div class="two-col">
+    <div>
+      <h2 style="font-size:20pt;">Vacation</h2>
+      <div class="ornament">◆</div>
+      <div class="field-label">My vacation scent</div>
+      <div class="field"></div>
+      <div class="field-label">Climate I am visiting</div>
+      <div class="field"></div>
+      <div class="field-label">Scents I pack</div>
+      <div class="field"></div>
+      <div class="field-label">Notes</div>
+      <div class="field-large"></div>
+    </div>
+    <div>
+      <h2 style="font-size:20pt;">Wedding</h2>
+      <div class="ornament">◆</div>
+      <div class="field-label">My wedding scent</div>
+      <div class="field"></div>
+      <div class="field-label">Day or evening?</div>
+      <div class="field"></div>
+      <div class="field-label">Notes that work</div>
+      <div class="field"></div>
+      <div class="field-label">Notes</div>
+      <div class="field-large"></div>
+    </div>
+  </div>
+  <div class="page-num">42</div>
+</div>
+
+<!-- Party + Special Event -->
+<div class="page">
+  <div class="page-header"><span>Section 8 — Occasion Planning</span><span>Scent Stack</span></div>
+  <div class="two-col">
+    <div>
+      <h2 style="font-size:20pt;">Party</h2>
+      <div class="ornament">◆</div>
+      <div class="field-label">My party scent</div>
+      <div class="field"></div>
+      <div class="field-label">Indoor or outdoor?</div>
+      <div class="field"></div>
+      <div class="field-label">How bold I go</div>
+      <div class="field"></div>
+      <div class="field-label">Notes</div>
+      <div class="field-large"></div>
+    </div>
+    <div>
+      <h2 style="font-size:20pt;">Special Event</h2>
+      <div class="ornament">◆</div>
+      <div class="field-label">My special-event scent</div>
+      <div class="field"></div>
+      <div class="field-label">What makes it special</div>
+      <div class="field"></div>
+      <div class="field-label">Notes that work</div>
+      <div class="field"></div>
+      <div class="field-label">Notes</div>
+      <div class="field-large"></div>
+    </div>
+  </div>
+  <div class="page-num">43</div>
+</div>
+
+<!-- SECTION 9 DIVIDER -->
+<div class="page section-divider">
+  <p class="eyebrow" style="color:#b08d57;">Section Nine</p>
+  <h2 style="color:#f7f1e8; font-size:32pt; margin-top:0.2in;">Fragrance Shopping</h2>
+  <div style="width:1in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+  <p style="color:#f7f1e8; opacity:0.6; font-size:12pt;">Buy with intention, not impulse</p>
+  <div class="page-num" style="color:#b08d57;">44</div>
+</div>
+
+<!-- WISHLIST + SHOPPING TRACKER -->
+<div class="page">
+  <div class="page-header"><span>Section 9 — Fragrance Shopping</span><span>Scent Stack</span></div>
+  <h2>Perfume Wishlist</h2>
+  <div class="ornament">◆</div>
+  <div class="three-col" style="margin-top:0.1in; font-size:9pt; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:#b08d57; border-bottom:1px solid #b08d57; padding-bottom:0.05in;">
+    <span>Fragrance</span><span>Why I want it</span><span>Priority</span>
+  </div>
+  <div class="three-col" style="margin-top:0.05in;"><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div></div>
+  <div class="three-col"><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div></div>
+  <div class="three-col"><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div></div>
+  <div class="three-col"><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div></div>
+  <div class="three-col"><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div></div>
+  <div class="page-num">45</div>
+</div>
+
+<!-- SHOPPING TRACKER -->
+<div class="page">
+  <div class="page-header"><span>Section 9 — Fragrance Shopping</span><span>Scent Stack</span></div>
+  <h2>Shopping & Price Tracker</h2>
+  <div class="ornament">◆</div>
+  <div class="three-col" style="margin-top:0.1in; font-size:9pt; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:#b08d57; border-bottom:1px solid #b08d57; padding-bottom:0.05in;">
+    <span>Fragrance</span><span>Price seen</span><span>Where</span>
+  </div>
+  <div class="three-col" style="margin-top:0.05in;"><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div></div>
+  <div class="three-col"><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div></div>
+  <div class="three-col"><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div></div>
+  <div class="three-col"><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div><div class="field" style="min-height:0.3in;"></div></div>
+  <div style="margin-top:0.2in;">
+    <div class="field-label">Where I discovered it</div>
+    <div class="field"></div>
+  </div>
+  <div class="two-col" style="margin-top:0.1in;">
+    <div><div class="field-label">Tested?</div><div class="field"></div></div>
+    <div><div class="field-label">Purchased?</div><div class="field"></div></div>
+  </div>
+  <div class="page-num">46</div>
+</div>
+
+<!-- BEFORE YOU BUY CHECKLIST -->
+<div class="page">
+  <div class="page-header"><span>Section 9 — Fragrance Shopping</span><span>Scent Stack</span></div>
+  <h2>Before You Buy Checklist</h2>
+  <div class="ornament">◆</div>
+  <p>Run through this list every time before you purchase a new fragrance.</p>
+  <ul class="list" style="margin-top:0.2in; font-size:11pt;">
+    <li><span class="checkbox"></span>Have I tested it on my skin (not just a paper strip)?</li>
+    <li><span class="checkbox"></span>Have I smelled the dry-down, not just the opening?</li>
+    <li><span class="checkbox"></span>Does it fill a gap in my wardrobe?</li>
+    <li><span class="checkbox"></span>Is it different enough from what I already own?</li>
+    <li><span class="checkbox"></span>Can I afford it without regret?</li>
+    <li><span class="checkbox"></span>Have I waited at least 24 hours since first trying it?</li>
+    <li><span class="checkbox"></span>Do I love it, or am I just excited by the novelty?</li>
+    <li><span class="checkbox"></span>Have I checked the price at multiple retailers?</li>
+    <li><span class="checkbox"></span>Will I wear it at least once a week?</li>
+    <li><span class="checkbox"></span>Does it match my scent personality?</li>
+  </ul>
+  <div class="page-num">47</div>
+</div>
+
+<!-- COLLECTION AUDIT -->
+<div class="page">
+  <div class="page-header"><span>Section 9 — Fragrance Shopping</span><span>Scent Stack</span></div>
+  <h2>Collection Audit</h2>
+  <div class="ornament">◆</div>
+  <p>Time to be honest about your collection.</p>
+  <div class="field-label" style="margin-top:0.2in;">Total fragrances I own</div>
+  <div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Fragrances I wore in the last 30 days</div>
+  <div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Fragrances I have not worn in 6+ months</div>
+  <div class="field-large"></div>
+  <div class="field-label" style="margin-top:0.1in;">Fragrances to declutter or gift</div>
+  <div class="field-large"></div>
+  <div class="field-label" style="margin-top:0.1in;">My collection is strongest in which families?</div>
+  <div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">My collection is weakest in which families?</div>
+  <div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">One action I will take after this audit</div>
+  <div class="field-large"></div>
+  <div class="page-num">48</div>
+</div>
+
+<!-- SECTION 10 DIVIDER -->
+<div class="page section-divider">
+  <p class="eyebrow" style="color:#b08d57;">Section Ten</p>
+  <h2 style="color:#f7f1e8; font-size:32pt; margin-top:0.2in;">30-Day Scent Challenge</h2>
+  <div style="width:1in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+  <p style="color:#f7f1e8; opacity:0.6; font-size:12pt;">One activity a day for 30 days</p>
+  <div class="page-num" style="color:#b08d57;">49</div>
+</div>
+
+<!-- 30-DAY CHALLENGE PAGE 1 (days 1-15) -->
+<div class="page">
+  <div class="page-header"><span>Section 10 — 30-Day Challenge</span><span>Scent Stack</span></div>
+  <h2>30-Day Challenge — Days 1-15</h2>
+  <div class="ornament">◆</div>
+  <div class="challenge-day"><span class="day-num">1</span><span class="day-task"><strong>List every fragrance you own.</strong> Write them all down — even samples. You cannot organize what you have not inventoried.</span></div>
+  <div class="challenge-day"><span class="day-num">2</span><span class="day-task"><strong>Wear a forgotten fragrance.</strong> Pick the one you have not worn in the longest time. Pay attention to how it develops.</span></div>
+  <div class="challenge-day"><span class="day-num">3</span><span class="day-task"><strong>Identify your favorite top note.</strong> Spray 2-3 fragrances and note what you smell in the first 5 minutes. What do you love?</span></div>
+  <div class="challenge-day"><span class="day-num">4</span><span class="day-task"><strong>Test on paper vs. skin.</strong> Spray the same fragrance on a strip and your wrist. Notice the difference. Skin chemistry matters.</span></div>
+  <div class="challenge-day"><span class="day-num">5</span><span class="day-task"><strong>Review one fragrance fully.</strong> Fill out a perfume review page for a fragrance you know well.</span></div>
+  <div class="challenge-day"><span class="day-num">6</span><span class="day-task"><strong>Discover a new family.</strong> Visit a store and test a fragrance from a family you never wear. Just try it.</span></div>
+  <div class="challenge-day"><span class="day-num">7</span><span class="day-task"><strong>Find your base note.</strong> Smell your wrist 4 hours after applying. What lingers? That is your base note for the day.</span></div>
+  <div class="challenge-day"><span class="day-num">8</span><span class="day-task"><strong>Organize your collection.</strong> Arrange your fragrances by family, season, or occasion. Photograph them.</span></div>
+  <div class="challenge-day"><span class="day-num">9</span><span class="day-task"><strong>Layer two fragrances.</strong> Apply one, wait 10 minutes, then apply another. Does it work? Log your experiment.</span></div>
+  <div class="challenge-day"><span class="day-num">10</span><span class="day-task"><strong>Test a fragrance in a different season.</strong> Wear a winter scent on a warm day (or vice versa). Does it change?</span></div>
+  <div class="challenge-day"><span class="day-num">11</span><span class="day-task"><strong>Write your scent personality.</strong> Complete the My Scent Personality page from Section 2.</span></div>
+  <div class="challenge-day"><span class="day-num">12</span><span class="day-task"><strong>Identify a wardrobe gap.</strong> Which occasion do you lack a scent for? Write it down.</span></div>
+  <div class="challenge-day"><span class="day-num">13</span><span class="day-task"><strong>Compare two similar fragrances.</strong> Spray two scents from the same family side by side. Which wins?</span></div>
+  <div class="challenge-day"><span class="day-num">14</span><span class="day-task"><strong>Rate your most-worn fragrance.</strong> Give it an honest rating. Are you wearing it out of love or habit?</span></div>
+  <div class="challenge-day"><span class="day-num">15</span><span class="day-task"><strong>Halfway reflection.</strong> What have you learned about your taste so far? Write it down.</span></div>
+  <div class="page-num">50</div>
+</div>
+
+<!-- 30-DAY CHALLENGE PAGE 2 (days 16-30) -->
+<div class="page">
+  <div class="page-header"><span>Section 10 — 30-Day Challenge</span><span>Scent Stack</span></div>
+  <h2>30-Day Challenge — Days 16-30</h2>
+  <div class="ornament">◆</div>
+  <div class="challenge-day"><span class="day-num">16</span><span class="day-task"><strong>Wear a sample you have been ignoring.</strong> Pull out a sample vial you never got around to testing. Give it a full day.</span></div>
+  <div class="challenge-day"><span class="day-num">17</span><span class="day-task"><strong>Experiment with sprays.</strong> Try 2 sprays of your signature instead of your usual number. Does more or less change the scent?</span></div>
+  <div class="challenge-day"><span class="day-num">18</span><span class="day-task"><strong>Test a fragrance on clothes.</strong> Spray on a scarf or sleeve. How does it differ from skin? Does it last longer?</span></div>
+  <div class="challenge-day"><span class="day-num">19</span><span class="day-task"><strong>Discover a new note.</strong> Visit a store and ask for something with a note you have never tried. Learn to recognize it.</span></div>
+  <div class="challenge-day"><span class="day-num">20</span><span class="day-task"><strong>Plan your seasonal rotation.</strong> Fill out the next season's planning page with what you want to wear.</span></div>
+  <div class="challenge-day"><span class="day-num">21</span><span class="day-task"><strong>Layer for an occasion.</strong> Create a layering combination for a specific event (date night, work, etc.).</span></div>
+  <div class="challenge-day"><span class="day-num">22</span><span class="day-task"><strong>Review a fragrance you dislike.</strong> Fill out a review page for it. Understanding why you dislike something teaches you about your taste.</span></div>
+  <div class="challenge-day"><span class="day-num">23</span><span class="day-task"><strong>Audit your collection.</strong> Complete the Collection Audit page. Be honest about what you wear and what you do not.</span></div>
+  <div class="challenge-day"><span class="day-num">24</span><span class="day-task"><strong>Identify your signature candidate.</strong> Narrow your candidates to one. Wear it for 3 days straight.</span></div>
+  <div class="challenge-day"><span class="day-num">25</span><span class="day-task"><strong>Test longevity honestly.</strong> Time how long your fragrance actually lasts. Write down when you last smell it.</span></div>
+  <div class="challenge-day"><span class="day-num">26</span><span class="day-task"><strong>Ask someone's opinion.</strong> Wear your signature candidate and ask a friend what they think. Listen without defending it.</span></div>
+  <div class="challenge-day"><span class="day-num">27</span><span class="day-task"><strong>Research one fragrance.</strong> Read about a fragrance you are considering. Learn its notes, family, and what people say about its performance.</span></div>
+  <div class="challenge-day"><span class="day-num">28</span><span class="day-task"><strong>Create a wishlist.</strong> Fill out the Perfume Wishlist page with your top 5 fragrances to buy next.</span></div>
+  <div class="challenge-day"><span class="day-num">29</span><span class="day-task"><strong>Write your fragrance goals.</strong> What do you want your collection to look like in a year?</span></div>
+  <div class="challenge-day"><span class="day-num">30</span><span class="day-task"><strong>Final reflection.</strong> Complete the Final Fragrance Wardrobe page. Celebrate how far your taste has come.</span></div>
+  <div class="page-num">51</div>
+</div>
+
+<!-- SECTION 11 DIVIDER -->
+<div class="page section-divider">
+  <p class="eyebrow" style="color:#b08d57;">Section Eleven</p>
+  <h2 style="color:#f7f1e8; font-size:32pt; margin-top:0.2in;">Master Trackers</h2>
+  <div style="width:1in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+  <p style="color:#f7f1e8; opacity:0.6; font-size:12pt;">Your complete index</p>
+  <div class="page-num" style="color:#b08d57;">52</div>
+</div>
+
+<!-- COLLECTION MASTER TRACKER -->
+<div class="page">
+  <div class="page-header"><span>Section 11 — Master Trackers</span><span>Scent Stack</span></div>
+  <h2>Collection Master Tracker</h2>
+  <div class="ornament">◆</div>
+  <div style="margin-top:0.1in; font-size:9pt; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#b08d57; border-bottom:1px solid #b08d57; padding-bottom:0.04in; display:grid; grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;">Fragrance · Family · Season · Rating · Own?</div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div style="border-bottom:1px solid #d9c7b0;">&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1in 0.8in 0.6in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="page-num">53</div>
+</div>
+
+<!-- OTHER MASTER TRACKERS -->
+<div class="page">
+  <div class="page-header"><span>Section 11 — Master Trackers</span><span>Scent Stack</span></div>
+  <h2>Layering & Wishlist Trackers</h2>
+  <div class="ornament">◆</div>
+  <h3 style="margin-top:0.1in;">Layering Tracker</h3>
+  <div style="font-size:9pt; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#b08d57; border-bottom:1px solid #b08d57; padding-bottom:0.04in; display:grid; grid-template-columns:1.5in 1.5in 0.8in 0.5in;">Fragrance 1 · Fragrance 2 · Rating · Repeat?</div>
+  <div class="table-row" style="grid-template-columns:1.5in 1.5in 0.8in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1.5in 0.8in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1.5in 0.8in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1.5in 0.8in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:1.5in 1.5in 0.8in 0.5in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <h3 style="margin-top:0.3in;">Wishlist Tracker</h3>
+  <div style="font-size:9pt; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#b08d57; border-bottom:1px solid #b08d57; padding-bottom:0.04in; display:grid; grid-template-columns:2in 0.8in 0.8in 0.8in;">Fragrance · Price · Tested? · Bought?</div>
+  <div class="table-row" style="grid-template-columns:2in 0.8in 0.8in 0.8in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:2in 0.8in 0.8in 0.8in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:2in 0.8in 0.8in 0.8in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:2in 0.8in 0.8in 0.8in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:2in 0.8in 0.8in 0.8in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="page-num">54</div>
+</div>
+
+<!-- SIGNATURE & SEASONAL & EXPERIMENT TRACKERS -->
+<div class="page">
+  <div class="page-header"><span>Section 11 — Master Trackers</span><span>Scent Stack</span></div>
+  <h2>Signature & Seasonal Trackers</h2>
+  <div class="ornament">◆</div>
+  <h3 style="margin-top:0.1in;">Signature Scent Tracker</h3>
+  <div class="two-col">
+    <div><div class="field-label">Current signature</div><div class="field"></div></div>
+    <div><div class="field-label">Since when</div><div class="field"></div></div>
+  </div>
+  <div class="field-label" style="margin-top:0.1in;">Backup signature</div>
+  <div class="field"></div>
+  <div class="field-label" style="margin-top:0.1in;">Rotation signatures</div>
+  <div class="field"></div>
+
+  <h3 style="margin-top:0.3in;">Seasonal Rotation Tracker</h3>
+  <div class="two-col">
+    <div><div class="field-label">Spring scent</div><div class="field"></div></div>
+    <div><div class="field-label">Summer scent</div><div class="field"></div></div>
+  </div>
+  <div class="two-col" style="margin-top:0.05in;">
+    <div><div class="field-label">Autumn scent</div><div class="field"></div></div>
+    <div><div class="field-label">Winter scent</div><div class="field"></div></div>
+  </div>
+
+  <h3 style="margin-top:0.3in;">Fragrance Experiment Tracker</h3>
+  <div style="font-size:9pt; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#b08d57; border-bottom:1px solid #b08d57; padding-bottom:0.04in; display:grid; grid-template-columns:2in 1in 0.8in;">Experiment · Result · Repeat?</div>
+  <div class="table-row" style="grid-template-columns:2in 1in 0.8in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:2in 1in 0.8in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="table-row" style="grid-template-columns:2in 1in 0.8in;"><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+  <div class="page-num">55</div>
+</div>
+
+<!-- SECTION 12 DIVIDER -->
+<div class="page section-divider">
+  <p class="eyebrow" style="color:#b08d57;">Section Twelve</p>
+  <h2 style="color:#f7f1e8; font-size:32pt; margin-top:0.2in;">Final Fragrance Wardrobe</h2>
+  <div style="width:1in; height:1px; background:#b08d57; margin:0.3in auto; opacity:0.5;"></div>
+  <p style="color:#f7f1e8; opacity:0.6; font-size:12pt;">Your completed picture</p>
+  <div class="page-num" style="color:#b08d57;">56</div>
+</div>
+
+<!-- FINAL WARDROBE SUMMARY -->
+<div class="page burgundy">
+  <div style="display:flex; flex-direction:column; justify-content:center; height:100%; padding:0 0.5in;">
+    <p class="eyebrow" style="color:#b08d57; text-align:center;">Your Fragrance Wardrobe</p>
+    <h2 style="color:#f7f1e8; font-size:28pt; text-align:center; margin-top:0.1in;">Final Summary</h2>
+    <div style="width:1in; height:1px; background:#b08d57; margin:0.2in auto; opacity:0.5;"></div>
+    <div style="margin-top:0.2in; color:#f7f1e8;">
+      <div style="border-bottom:1px solid rgba(176,141,87,0.3); padding:0.08in 0;"><span style="color:#b08d57; font-size:9pt; text-transform:uppercase; letter-spacing:0.1em;">Favorite notes</span><div style="min-height:0.25in;"></div></div>
+      <div style="border-bottom:1px solid rgba(176,141,87,0.3); padding:0.08in 0;"><span style="color:#b08d57; font-size:9pt; text-transform:uppercase; letter-spacing:0.1em;">Favorite families</span><div style="min-height:0.25in;"></div></div>
+      <div style="border-bottom:1px solid rgba(176,141,87,0.3); padding:0.08in 0;"><span style="color:#b08d57; font-size:9pt; text-transform:uppercase; letter-spacing:0.1em;">Signature scent</span><div style="min-height:0.25in;"></div></div>
+      <div style="border-bottom:1px solid rgba(176,141,87,0.3); padding:0.08in 0;"><span style="color:#b08d57; font-size:9pt; text-transform:uppercase; letter-spacing:0.1em;">Everyday scent</span><div style="min-height:0.25in;"></div></div>
+      <div style="border-bottom:1px solid rgba(176,141,87,0.3); padding:0.08in 0;"><span style="color:#b08d57; font-size:9pt; text-transform:uppercase; letter-spacing:0.1em;">Date-night scent</span><div style="min-height:0.25in;"></div></div>
+      <div style="border-bottom:1px solid rgba(176,141,87,0.3); padding:0.08in 0;"><span style="color:#b08d57; font-size:9pt; text-transform:uppercase; letter-spacing:0.1em;">Summer scent</span><div style="min-height:0.25in;"></div></div>
+      <div style="border-bottom:1px solid rgba(176,141,87,0.3); padding:0.08in 0;"><span style="color:#b08d57; font-size:9pt; text-transform:uppercase; letter-spacing:0.1em;">Winter scent</span><div style="min-height:0.25in;"></div></div>
+      <div style="border-bottom:1px solid rgba(176,141,87,0.3); padding:0.08in 0;"><span style="color:#b08d57; font-size:9pt; text-transform:uppercase; letter-spacing:0.1em;">Favorite layering combination</span><div style="min-height:0.25in;"></div></div>
+      <div style="border-bottom:1px solid rgba(176,141,87,0.3); padding:0.08in 0;"><span style="color:#b08d57; font-size:9pt; text-transform:uppercase; letter-spacing:0.1em;">Next fragrance purchase</span><div style="min-height:0.25in;"></div></div>
+      <div style="padding:0.08in 0;"><span style="color:#b08d57; font-size:9pt; text-transform:uppercase; letter-spacing:0.1em;">Fragrance goals</span><div style="min-height:0.35in;"></div></div>
+    </div>
+    <p style="color:#b08d57; font-size:9pt; text-transform:uppercase; letter-spacing:0.2em; text-align:center; margin-top:0.3in;">Scent Stack — The Scent Stack System</p>
+  </div>
+  <div class="page-num" style="color:#b08d57;">57</div>
+</div>
+
+</body>
+</html>
