@@ -1,8 +1,8 @@
 import { registerWebhookEvent, createOrderRecord, getOrderRecord, markOrder } from '../lib/store.js';
 import { paypalRequest, verifyWebhook } from '../lib/paypal.js';
 import { createSignedDownloadUrl } from '../lib/supabase.js';
-import { sendDownloadEmail } from '../lib/email.js';
-import { getProduct, productCatalog } from '../lib/products.js';
+import { sendDownloadEmail, sendBundleDownloadEmail, sendUnmatchedPurchaseAlert } from '../lib/email.js';
+import { getProduct, productCatalog, bundleProduct } from '../lib/products.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -41,33 +41,65 @@ export default async function handler(req, res) {
       purchaseUnit.custom_id ||
       resource.reference_id ||
       purchaseUnit.reference_id;
-    const product =
-      (productReference && getProduct(productReference)) ||
-      Object.values(productCatalog).find((item) => item.hostedButtonId === productReference) ||
-      null;
+    const itemName = purchaseUnit.items?.[0]?.name || purchaseUnit.description;
+    const capturedAmountForMatch = Number(resource.amount?.value || purchaseUnit.amount?.value || 0);
+    const priceMatches = Object.values(productCatalog).filter(
+      (item) => Math.abs(Number(item.price) - capturedAmountForMatch) < 0.005
+    );
+
+    const isBundleMatch =
+      productReference === bundleProduct.id ||
+      productReference === bundleProduct.hostedButtonId ||
+      (itemName && itemName === bundleProduct.name) ||
+      Math.abs(bundleProduct.price - capturedAmountForMatch) < 0.005;
+
+    const product = isBundleMatch
+      ? null
+      : (productReference && getProduct(productReference)) ||
+        Object.values(productCatalog).find((item) => item.hostedButtonId === productReference) ||
+        (itemName && Object.values(productCatalog).find((item) => item.name === itemName)) ||
+        // Only trust an amount match when exactly one product has that price — never guess between two.
+        (priceMatches.length === 1 ? priceMatches[0] : null) ||
+        null;
+
+    if (!product && !isBundleMatch) {
+      console.error(
+        'Webhook could not identify which product was purchased.',
+        JSON.stringify({ orderId, productReference, itemName, capturedAmountForMatch, priceMatchCount: priceMatches.length })
+      );
+      if (eventType === 'PAYMENT.CAPTURE.COMPLETED') {
+        await sendUnmatchedPurchaseAlert({
+          orderId,
+          amount: capturedAmountForMatch,
+          customerEmail: resource.payer?.email_address || paypalOrder?.payer?.email_address,
+          debugInfo: { productReference, itemName, priceMatchCount: priceMatches.length },
+        }).catch(() => null);
+      }
+    }
     let order = orderId ? getOrderRecord(orderId) : null;
 
     if (eventType === 'PAYMENT.CAPTURE.COMPLETED') {
       const capture = resource || {};
-      const capturedAmount = capture.amount?.value || purchaseUnit.amount?.value || product?.price || 0;
+      const capturedAmount = capture.amount?.value || purchaseUnit.amount?.value || product?.price || bundleProduct.price || 0;
       const emailAddress = order?.customer_email || resource.payer?.email_address || paypalOrder?.payer?.email_address || '';
+      const matched = isBundleMatch ? bundleProduct : product;
 
-      if (!order && product && orderId) {
+      if (!order && matched && orderId) {
         order = createOrderRecord({
           id: orderId,
           paypal_order_id: orderId,
           paypal_capture_id: capture.id || orderId,
-          product_id: product.id,
-          product_name: product.name,
+          product_id: matched.id,
+          product_name: matched.name,
           amount: Number(capturedAmount).toFixed(2),
-          currency: capture.amount?.currency_code || product.currency || 'USD',
+          currency: capture.amount?.currency_code || matched.currency || 'USD',
           customer_email: emailAddress,
           payment_status: 'paid',
           fulfillment_status: 'fulfilled',
           email_sent: false,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-          product_slug: product.slug,
+          product_slug: matched.slug || matched.id,
         });
       }
 
@@ -80,12 +112,28 @@ export default async function handler(req, res) {
         });
       }
 
-      if (product) {
+      if (isBundleMatch && order && emailAddress && !order.email_sent) {
+        const items = [];
+        for (const id of bundleProduct.productIds) {
+          const p = productCatalog[id];
+          const url = await createSignedDownloadUrl(p.storagePath, p.storageBucket, 3600);
+          items.push({ name: p.name, url: url || `${process.env.APP_URL || 'https://scentstack.store'}/thank-you?product=bundle` });
+        }
+        const emailResult = await sendBundleDownloadEmail({
+          to: emailAddress,
+          items,
+          amount: `$${Number(capturedAmount).toFixed(2)} USD`,
+          idempotencyKey: orderId,
+        });
+        markOrder(orderId, {
+          email_sent: !!emailResult.ok,
+          email_sent_at: emailResult.ok ? new Date().toISOString() : null,
+          email_error: emailResult.ok ? null : emailResult.reason || 'EMAIL_FAILED',
+        });
+      } else if (product) {
         const signedUrl = await createSignedDownloadUrl(product.storagePath, product.storageBucket, 3600);
-        if (signedUrl) {
-          if (order) {
-            markOrder(orderId, { secure_download_url: signedUrl, download_created_at: new Date().toISOString() });
-          }
+        if (signedUrl && order) {
+          markOrder(orderId, { secure_download_url: signedUrl, download_created_at: new Date().toISOString() });
         }
 
         if (order && emailAddress && !order.email_sent) {

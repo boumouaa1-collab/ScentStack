@@ -67,6 +67,19 @@ export const productCatalog = {
   },
 };
 
+export const bundleProduct = {
+  id: 'bundle',
+  name: 'Build Your Complete Scent Stack',
+  price: 39.99,
+  currency: 'USD',
+  // FIXME: this currently duplicates the 'printable' product's button — it is NOT a real
+  // bundle button yet. Create a dedicated Hosted Button in PayPal for $39.99 named
+  // "Build Your Complete Scent Stack" and paste its ID here AND in src/data/products.ts
+  // (the `bundle.hostedButtonId` field). Until then, do not sell the bundle live.
+  hostedButtonId: 'FYLAUZ43PFNSE',
+  productIds: ['discovery', 'collector', 'journal', 'printable', 'signature', 'wardrobe'],
+};
+
 export function getProductById(productId) {
   const id = String(productId || '').toLowerCase();
   return productCatalog[id] || productCatalog[id.replace(/[^a-z]+/g, '')] || null;

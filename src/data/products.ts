@@ -384,6 +384,8 @@ export const bundle = {
   saving: 8.95,
   description: 'Six premium fragrance tools. One complete system.',
   productIds: ['discovery', 'collector', 'journal', 'printable', 'signature', 'wardrobe'],
+  // FIXME: duplicates 'printable' product's button below — NOT a real bundle button yet.
+  // Replace with a dedicated PayPal Hosted Button ID for the $39.99 bundle before going live.
   hostedButtonId: 'FYLAUZ43PFNSE',
 };
 
