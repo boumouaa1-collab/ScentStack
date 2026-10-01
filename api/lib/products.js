@@ -67,6 +67,20 @@ export const productCatalog = {
   },
 };
 
+// Hidden $1 product used only to verify the live PayPal flow end-to-end before
+// trusting it with real products. Reuses prod1.pdf so there's a real file to deliver.
+productCatalog.livetest = {
+  id: 'livetest',
+  slug: 'live-checkout-test',
+  name: 'Live Checkout Test',
+  price: 1.00,
+  currency: 'USD',
+  fileName: 'prod1.pdf',
+  storageBucket: 'digital-products',
+  storagePath: 'prod1.pdf',
+  hostedButtonId: '',
+};
+
 export const bundleProduct = {
   id: 'bundle',
   name: 'Build Your Complete Scent Stack',

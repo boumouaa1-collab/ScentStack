@@ -8,7 +8,7 @@ import BundlePage from '@/pages/BundlePage';
 import CheckoutPage from '@/pages/CheckoutPage';
 import ThankYouPage from '@/pages/ThankYouPage';
 import SuccessPage from '@/pages/SuccessPage';
-import { products, getProduct, siteConfig } from '@/data/products';
+import { products, getProduct, siteConfig, testProduct } from '@/data/products';
 import { pathForPage, pageForPath } from '@/lib/router';
 import LegalPage from '@/pages/LegalPage';
 import ContactPage from '@/pages/ContactPage';
@@ -104,7 +104,7 @@ function App() {
 
     if (page.startsWith('thankyou-')) {
       const itemId = page.replace('thankyou-', '');
-      if (itemId === 'bundle' || products.find((p) => p.id === itemId))
+      if (itemId === 'bundle' || itemId === testProduct.id || products.find((p) => p.id === itemId))
         return <ThankYouPage itemId={itemId} onNavigate={navigate} />;
     }
 

@@ -1,20 +1,27 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, Lock, ShieldCheck, Sparkles } from 'lucide-react';
-import { bundle, getProductBySlugOrId, products } from '@/data/products';
+import { ArrowLeft, Lock, Mail, ShieldCheck, Sparkles } from 'lucide-react';
+import { bundle, testProduct, getProductBySlugOrId, products } from '@/data/products';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 
 const PAYPAL_SCRIPT_URL = 'https://www.paypal.com/sdk/js';
-const PAYPAL_HOSTED_BUTTON_CLIENT_ID =
-  'BAAg-jO_JNg1HzhkNEGfrR2ietydO1PouqpAxdU2QPg2XeCbIGTdatfcyhajgmea_6mnH8hiJbZUgWmAd4';
+const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || '';
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type CheckoutState = 'idle' | 'loading' | 'processing' | 'success' | 'error';
-type PaypalHostedButtons = {
-  HostedButtons: (options: { hostedButtonId: string }) => {
-    render: (selector: string) => unknown;
-  };
+
+type PaypalButtonsConfig = {
+  style?: Record<string, string>;
+  createOrder: () => Promise<string>;
+  onApprove: (data: { orderID: string }) => Promise<void>;
+  onCancel?: () => void;
+  onError?: (err: unknown) => void;
 };
 
-type PaypalWindow = Window & { paypal?: PaypalHostedButtons };
+type PaypalButtonsWindow = Window & {
+  paypal?: {
+    Buttons: (config: PaypalButtonsConfig) => { render: (selector: string) => Promise<void> | void };
+  };
+};
 
 type CheckoutPageProps = {
   onNavigate: (page: string) => void;
@@ -23,6 +30,7 @@ type CheckoutPageProps = {
 export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   const params = new URLSearchParams(window.location.search);
   const requestedProductId = params.get('product') || 'workbook';
+
   const selectedProduct = useMemo(() => {
     if (requestedProductId === bundle.id) {
       return {
@@ -30,76 +38,138 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
         id: bundle.id,
         title: bundle.name,
         price: bundle.price,
-        format: 'Three digital PDFs',
-        hostedButtonId: bundle.hostedButtonId,
+        format: 'Six digital PDFs',
       };
+    }
+    if (requestedProductId === testProduct.id) {
+      return testProduct;
     }
 
     const product = getProductBySlugOrId(requestedProductId);
     return product ?? products[0];
   }, [requestedProductId]);
 
+  const [email, setEmail] = useState('');
+  const [emailTouched, setEmailTouched] = useState(false);
+  const emailValid = EMAIL_RE.test(email.trim());
+
   const [status, setStatus] = useState<CheckoutState>('idle');
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState<string>('Enter your email to unlock secure checkout. 📩');
   const [paypalReady, setPaypalReady] = useState(false);
 
-  useDocumentMeta('Checkout | Scent Stack', 'Secure PayPal checkout for the Scent Stack digital PDF products.');
+  useDocumentMeta(
+    `Checkout — ${selectedProduct.title} | Scent Stack`,
+    `Secure PayPal checkout for ${selectedProduct.title}. Instant, email-delivered digital download.`
+  );
 
+  // Load the PayPal SDK once (Smart Buttons — no per-product setup needed in PayPal).
   useEffect(() => {
     const scriptId = 'paypal-sdk-script';
     const existingScript = document.getElementById(scriptId) as HTMLScriptElement | null;
     if (existingScript) {
-      if ((window as PaypalWindow).paypal) {
+      if ((window as PaypalButtonsWindow).paypal?.Buttons) {
         setPaypalReady(true);
+      } else {
+        existingScript.addEventListener('load', () => setPaypalReady(true));
       }
+      return;
+    }
+
+    if (!PAYPAL_CLIENT_ID) {
+      setStatus('error');
+      setMessage('⚠️ Checkout is not configured yet (missing PayPal client ID).');
       return;
     }
 
     const script = document.createElement('script');
     script.id = scriptId;
-    script.src = `${PAYPAL_SCRIPT_URL}?client-id=${encodeURIComponent(PAYPAL_HOSTED_BUTTON_CLIENT_ID)}&components=hosted-buttons&disable-funding=venmo&currency=USD`;
+    script.src = `${PAYPAL_SCRIPT_URL}?client-id=${encodeURIComponent(PAYPAL_CLIENT_ID)}&components=buttons&disable-funding=venmo&currency=USD&intent=capture`;
     script.async = true;
-    script.onload = () => {
-      setPaypalReady(true);
-    };
+    script.onload = () => setPaypalReady(true);
     script.onerror = () => {
       setStatus('error');
-      setMessage('The PayPal checkout script could not load. Please try again in a moment.');
+      setMessage('⚠️ The PayPal checkout script could not load. Please refresh and try again.');
     };
     document.body.appendChild(script);
-
-    return () => {
-      const container = document.getElementById('paypal-button-container');
-      if (container) container.innerHTML = '';
-    };
   }, []);
 
+  // Render the Smart Button once we have a ready SDK, a product, and a valid email.
   useEffect(() => {
+    const container = document.getElementById('paypal-button-container');
+    if (!container) return;
+    container.innerHTML = '';
+
     if (!paypalReady || !selectedProduct) return;
-    const paypalWindow = window as PaypalWindow;
-    if (!paypalWindow.paypal?.HostedButtons) return;
+    if (!emailValid) {
+      setMessage(emailTouched ? '⚠️ Enter a valid email — that\u2019s where your download goes.' : 'Enter your email to unlock secure checkout. 📩');
+      return;
+    }
 
-    setStatus('loading');
-    setMessage('Loading secure PayPal checkout...');
-    const renderResult = paypalWindow.paypal
-      .HostedButtons({ hostedButtonId: selectedProduct.hostedButtonId })
-      .render('#paypal-button-container');
+    const paypalWindow = window as PaypalButtonsWindow;
+    if (!paypalWindow.paypal?.Buttons) return;
 
-    Promise.resolve(renderResult)
-      .then(() => {
+    setStatus('idle');
+    setMessage('Complete payment with PayPal to get your download instantly. ✨');
+
+    const buttons = paypalWindow.paypal.Buttons({
+      style: { layout: 'vertical', color: 'gold', shape: 'pill', label: 'pay' },
+      createOrder: async () => {
+        setStatus('loading');
+        setMessage('Setting up your secure order...');
+        const response = await fetch('/api/paypal/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId: selectedProduct.id, customerEmail: email.trim() }),
+        });
+        const data = await response.json();
+        if (!response.ok || !data.id) {
+          throw new Error(data.message || 'Could not start checkout.');
+        }
+        return data.id as string;
+      },
+      onApprove: async (data) => {
+        setStatus('processing');
+        setMessage('Confirming your payment...');
+        try {
+          const response = await fetch('/api/paypal/capture-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              orderId: data.orderID,
+              productId: selectedProduct.id,
+              customerEmail: email.trim(),
+            }),
+          });
+          const result = await response.json();
+          if (!response.ok || !result.ok) {
+            setStatus('error');
+            setMessage(result.message || '⚠️ Payment could not be confirmed. Contact support and we\u2019ll sort it out.');
+            return;
+          }
+          setStatus('success');
+          onNavigate(requestedProductId === bundle.id ? 'thankyou-bundle' : `thankyou-${selectedProduct.id}`);
+        } catch {
+          setStatus('error');
+          setMessage('⚠️ Payment could not be confirmed. Contact support and we\u2019ll sort it out.');
+        }
+      },
+      onCancel: () => {
         setStatus('idle');
-        setMessage('Complete payment with PayPal to receive your digital product.');
-      })
-      .catch(() => {
+        setMessage('Checkout canceled — you can try again anytime.');
+      },
+      onError: () => {
         setStatus('error');
-        setMessage('Something went wrong while setting up PayPal. Please try again or contact support.');
-      });
+        setMessage('⚠️ Something went wrong with PayPal. Please try again or contact support.');
+      },
+    });
+
+    buttons.render('#paypal-button-container');
 
     return () => {
-      const container = document.getElementById('paypal-button-container');
-      if (container) container.innerHTML = '';
+      container.innerHTML = '';
     };
-  }, [selectedProduct, paypalReady]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paypalReady, selectedProduct, emailValid]);
 
   return (
     <div className="fade-in min-h-screen bg-[#f7f1e8] pt-24 pb-16">
@@ -136,16 +206,12 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
 
             <div className="mt-6 space-y-4 text-sm text-charcoal/75">
               <div className="flex items-center justify-between border-b border-[#b08d57]/15 pb-3">
-                <span>Product</span>
-                <span className="font-medium text-burgundy">{selectedProduct.title}</span>
-              </div>
-              <div className="flex items-center justify-between border-b border-[#b08d57]/15 pb-3">
                 <span>Format</span>
                 <span>Digital PDF</span>
               </div>
               <div className="flex items-center justify-between border-b border-[#b08d57]/15 pb-3">
                 <span>Delivery</span>
-                <span>Instant</span>
+                <span>Instant, by email 📩</span>
               </div>
               <div className="flex items-center justify-between pt-3 text-base font-medium text-charcoal">
                 <span>Price</span>
@@ -156,9 +222,12 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
             <div className="mt-8 rounded-2xl border border-[#b08d57]/15 bg-[#f7f1e8] p-4 text-sm leading-relaxed text-charcoal/75">
               <div className="flex items-center gap-2 text-burgundy">
                 <ShieldCheck size={16} className="text-gold" />
-                Secure checkout
+                Secure by design
               </div>
-              <p className="mt-2">Your PDF is delivered only after a verified PayPal capture completes, and the download is generated securely on our server.</p>
+              <p className="mt-2">
+                We never host your PDF publicly. A private download link is generated only after PayPal
+                confirms your payment, sent straight to the email you enter below.
+              </p>
             </div>
           </aside>
 
@@ -169,7 +238,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                 <h2 className="font-serif-display text-3xl text-burgundy">Order Summary</h2>
               </div>
               <div className="rounded-full bg-[#efe4d4] px-3 py-1 text-xs uppercase tracking-[0.2em] text-gold">
-                {selectedProduct.price === 9 ? 'USD' : 'USD'}
+                USD
               </div>
             </div>
 
@@ -180,22 +249,47 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
               </div>
               <div className="flex items-center justify-between border-t border-[#b08d57]/15 pt-4 text-base font-medium text-charcoal">
                 <span>Total</span>
-                <span className="font-serif-display text-3xl text-burgundy">${selectedProduct.price}.00</span>
+                <span className="font-serif-display text-3xl text-burgundy">${Number(selectedProduct.price).toFixed(2)}</span>
               </div>
             </div>
 
-            <div className="mt-6 rounded-2xl border border-[#b08d57]/15 bg-[#efe4d4]/40 p-4">
-              {status === 'error' && (
+            <div className="mt-6">
+              <label htmlFor="checkout-email" className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.15em] text-charcoal/60">
+                <Mail size={13} className="text-gold" />
+                Email for your download
+              </label>
+              <input
+                id="checkout-email"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onBlur={() => setEmailTouched(true)}
+                placeholder="you@example.com"
+                className="w-full rounded-xl border border-[#b08d57]/25 bg-white px-4 py-3 text-sm text-charcoal outline-none transition-colors focus:border-burgundy"
+              />
+              <p className="mt-2 text-xs text-charcoal/50">
+                Your download link is sent to this exact address — double-check it before paying.
+              </p>
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-[#b08d57]/15 bg-[#efe4d4]/40 p-4">
+              {status === 'error' ? (
                 <p className="text-sm text-red-700">{message}</p>
-              )}
-              {status === 'loading' && (
+              ) : (
                 <p className="text-sm text-charcoal/80">{message}</p>
               )}
-              {status !== 'error' && message && <p className="text-sm text-charcoal/80">{message}</p>}
             </div>
 
             <div className="mt-6">
               <div id="paypal-button-container" className="min-h-[220px]" />
+              {!emailValid && (
+                <p className="mt-3 text-center text-xs text-charcoal/50">
+                  The PayPal button appears once your email above is valid.
+                </p>
+              )}
             </div>
 
             <div className="mt-8 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-charcoal/50">
@@ -204,7 +298,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
             </div>
             <div className="mt-4 flex items-center gap-2 text-sm text-charcoal/60">
               <Sparkles size={15} className="text-gold" />
-              Instant digital delivery after successful payment
+              Instant delivery — no account needed
             </div>
           </section>
         </div>

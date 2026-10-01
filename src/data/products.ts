@@ -389,6 +389,23 @@ export const bundle = {
   hostedButtonId: 'FYLAUZ43PFNSE',
 };
 
+// Hidden test product — never listed on Shop/Home/Bundle pages (those all render
+// from `products` above). Reachable only via /checkout?product=livetest. Lets you
+// verify the live PayPal flow end-to-end for $1 before trusting it with real products.
+// Reuses prod1.pdf so the test purchase has a real file to deliver.
+export const testProduct = {
+  ...products[0],
+  id: 'livetest',
+  slug: 'live-checkout-test',
+  title: 'Live Checkout Test — $1',
+  subtitle: 'Internal test purchase used to verify the live PayPal flow end-to-end.',
+  price: 1,
+  format: 'Digital PDF (test — delivers the Fragrance Discovery Workbook file)',
+  fileName: 'prod1.pdf',
+  storagePath: 'prod1.pdf',
+  hostedButtonId: '',
+};
+
 export const getProduct = (slug: string) => products.find((p) => p.slug === slug);
 export const getProductById = (id: string) => products.find((p) => p.id === id);
 export const getProductBySlugOrId = (value: string) => getProduct(value) ?? getProductById(value);
