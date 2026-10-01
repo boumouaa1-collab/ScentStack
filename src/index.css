@@ -99,6 +99,12 @@
   .payment-logo:nth-child(2) { animation-delay: 0.25s; }
   .payment-logo:nth-child(3) { animation-delay: 0.5s; }
 
+  .payment-logo img {
+    height: 22px;
+    width: auto;
+    display: block;
+  }
+
   .footer-payment-methods {
     display: flex;
     align-items: center;
@@ -659,6 +665,113 @@
     .footer-payment-methods {
       align-items: flex-start;
       flex-direction: column;
+    }
+  }
+
+  /* Scroll-reveal — used by <Reveal> */
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 700ms ease-out, transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 3D tilt — used by <TiltCard> */
+  .tilt-card {
+    transition: transform 150ms ease-out;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .tilt-card-pop {
+    transform: translateZ(30px);
+  }
+
+  /* Header: entrance + animated underline on nav links */
+  .nav-enter {
+    animation: nav-drop 550ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes nav-drop {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .nav-link {
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    height: 1.5px;
+    width: 100%;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 280ms ease-out;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.is-active::after {
+    transform: scaleX(1);
+  }
+
+  /* Hero: slow-drifting gradient blobs for an "alive" background */
+  .hero-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(60px);
+    pointer-events: none;
+    opacity: 0.35;
+  }
+
+  .hero-blob-a {
+    top: -10%;
+    left: -5%;
+    width: 22rem;
+    height: 22rem;
+    background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+    animation: blob-drift-a 16s ease-in-out infinite;
+  }
+
+  .hero-blob-b {
+    bottom: -15%;
+    right: -5%;
+    width: 26rem;
+    height: 26rem;
+    background: radial-gradient(circle, var(--plum) 0%, transparent 70%);
+    animation: blob-drift-b 20s ease-in-out infinite;
+  }
+
+  @keyframes blob-drift-a {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(30px, 40px) scale(1.12); }
+  }
+
+  @keyframes blob-drift-b {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-30px, -25px) scale(1.08); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-on-scroll {
+      transition: none;
+      opacity: 1;
+      transform: none;
+    }
+
+    .hero-blob,
+    .nav-enter,
+    .tilt-card {
+      animation: none;
     }
   }
 }

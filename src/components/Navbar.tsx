@@ -33,7 +33,7 @@ export default function Navbar({ onNavigate, currentPage }: NavbarProps) {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`nav-enter fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled ? 'bg-[#f7f1e8]/95 backdrop-blur-md shadow-sm' : 'bg-transparent'
       }`}
     >
@@ -47,8 +47,8 @@ export default function Navbar({ onNavigate, currentPage }: NavbarProps) {
             <button
               key={page}
               onClick={() => nav(page)}
-              className={`text-sm tracking-wide transition-colors ${
-                currentPage === page ? 'text-burgundy' : 'text-charcoal/80 hover:text-burgundy'
+              className={`nav-link text-sm tracking-wide transition-colors ${
+                currentPage === page ? 'is-active text-burgundy' : 'text-charcoal/80 hover:text-burgundy'
               }`}
             >
               {label}

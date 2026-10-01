@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowRight, Bell, X } from 'lucide-react';
 import { activityItems, type ActivityItem } from '@/data/socialProof';
+import { getProductById, bundle } from '@/data/products';
 
 type PurchaseActivityToastProps = {
   onNavigate: (page: string) => void;
@@ -10,16 +11,28 @@ const initialDelay = 7000;
 const displayDuration = 6500;
 const rotationInterval = 18000;
 
+// Random index, never the same one twice in a row.
+function pickNextIndex(current: number, length: number) {
+  if (length <= 1) return 0;
+  let next = current;
+  while (next === current) {
+    next = Math.floor(Math.random() * length);
+  }
+  return next;
+}
+
 export default function PurchaseActivityToast({ onNavigate }: PurchaseActivityToastProps) {
-  const [activity, setActivity] = useState<ActivityItem>(activityItems[0]);
+  const [activity, setActivity] = useState<ActivityItem>(
+    activityItems[Math.floor(Math.random() * activityItems.length)]
+  );
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    let itemIndex = 0;
+    let itemIndex = activityItems.indexOf(activity);
     let hideTimer: ReturnType<typeof setTimeout> | undefined;
 
     const showNext = () => {
-      itemIndex = (itemIndex + 1) % activityItems.length;
+      itemIndex = pickNextIndex(itemIndex, activityItems.length);
       setActivity(activityItems[itemIndex]);
       setVisible(true);
       hideTimer = setTimeout(() => setVisible(false), displayDuration);
@@ -36,11 +49,15 @@ export default function PurchaseActivityToast({ onNavigate }: PurchaseActivityTo
       clearTimeout(hideTimer);
       clearInterval(rotationTimer);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!visible || !activity) return null;
 
-  const target = activity.productId === 'bundle' ? 'bundle' : `product-${activity.productId}`;
+  // Build the real route: bundle goes to /bundle, everything else needs the
+  // product's URL slug (not its short id) or it 404s.
+  const product = getProductById(activity.productId);
+  const target = activity.productId === bundle.id ? 'bundle' : product ? `product-${product.slug}` : 'shop';
 
   return (
     <aside className="activity-toast" role="status" aria-live="polite" aria-label="Example activity">

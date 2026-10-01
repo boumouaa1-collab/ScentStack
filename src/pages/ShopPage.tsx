@@ -4,6 +4,8 @@ import BuyButton from '@/components/BuyButton';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import ScentGif from '@/components/ScentGif';
 import CanvaBadge from '@/components/CanvaBadge';
+import Reveal from '@/components/Reveal';
+import TiltCard from '@/components/TiltCard';
 
 type ShopPageProps = {
   onNavigate: (page: string) => void;
@@ -15,17 +17,18 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
   return (
     <div className="fade-in min-h-screen bg-[#f7f1e8] pt-24 pb-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
-        <div className="mb-12 text-center">
+        <Reveal className="mb-12 text-center">
           <p className="section-eyebrow">The Collection</p>
           <h1 className="font-serif-display text-5xl text-burgundy md:text-6xl">Shop Scent Stack</h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-charcoal/70">
             Premium digital fragrance tools for perfume lovers who want a more intentional scent life.
           </p>
-        </div>
+        </Reveal>
 
         <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-          {products.map((product) => (
-            <article key={product.id} className="product-card flex flex-col overflow-hidden">
+          {products.map((product, i) => (
+            <Reveal key={product.id} delay={i * 90}>
+            <TiltCard className="product-card flex h-full flex-col overflow-hidden">
               <div className="product-visual relative flex aspect-[4/5] items-center justify-center overflow-hidden bg-[#efe4d4] p-6" style={{ background: product.accent }}>
                 <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif" />
                 <img src={product.coverImage} alt={`${product.title} cover`} className="max-h-[300px] w-auto rounded-sm object-contain shadow-xl" />
@@ -67,7 +70,8 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
                   </button>
                 </div>
               </div>
-            </article>
+            </TiltCard>
+            </Reveal>
           ))}
         </div>
       </div>

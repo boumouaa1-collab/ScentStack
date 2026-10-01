@@ -6,6 +6,8 @@ import BuyButton from '@/components/BuyButton';
 import CanvaBadge from '@/components/CanvaBadge';
 import ScentGif from '@/components/ScentGif';
 import PurchaseActivityToast from '@/components/PurchaseActivityToast';
+import Reveal from '@/components/Reveal';
+import TiltCard from '@/components/TiltCard';
 import { track } from '@/lib/analytics';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 
@@ -25,6 +27,8 @@ export default function Home({ products, onNavigate }: HomeProps) {
       <PurchaseActivityToast onNavigate={onNavigate} />
       {/* Hero */}
       <section className="relative overflow-hidden bg-[#f7f1e8] pt-32 pb-20">
+        <div className="hero-blob hero-blob-a" aria-hidden="true" />
+        <div className="hero-blob hero-blob-b" aria-hidden="true" />
         <ScentGif number={8} alt="Animated perfume bottle" className="hero-side-gif hero-side-gif-left" />
         <ScentGif number={11} alt="Animated fragrance detail" className="hero-side-gif hero-side-gif-right" />
         <div
@@ -119,14 +123,14 @@ export default function Home({ products, onNavigate }: HomeProps) {
               title: 'Build Your Wardrobe',
               text: 'Plan scents around seasons, moods and occasions.',
             },
-          ].map((f) => (
-            <div key={f.title}>
+          ].map((f, i) => (
+            <Reveal key={f.title} delay={i * 90}>
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#efe4d4]/60">
                 {f.icon}
               </div>
               <h3 className="font-serif-display text-xl text-burgundy">{f.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-charcoal/70">{f.text}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -155,8 +159,9 @@ export default function Home({ products, onNavigate }: HomeProps) {
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
-            <article key={product.id} className="product-card group flex flex-col">
+          {products.map((product, i) => (
+            <Reveal key={product.id} delay={i * 90}>
+            <TiltCard className="product-card group flex h-full flex-col">
               <ProductShowcase product={product} onNavigate={onNavigate} />
               <div className="flex flex-1 flex-col p-7">
                 <div className="mb-2 flex items-center justify-between">
@@ -195,14 +200,15 @@ export default function Home({ products, onNavigate }: HomeProps) {
                   </button>
                 </div>
               </div>
-            </article>
+            </TiltCard>
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* Bundle banner */}
       <section className="bg-burgundy py-20 text-[#f7f1e8]">
-        <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 text-center lg:px-10">
+        <Reveal className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 text-center lg:px-10">
           <Layers className="text-gold" size={32} />
           <p className="text-xs uppercase tracking-[0.3em] text-gold">Build Your Complete Scent Stack</p>
           <h2 className="font-serif-display text-4xl md:text-5xl">{bundle.name}</h2>
@@ -224,7 +230,7 @@ export default function Home({ products, onNavigate }: HomeProps) {
             Get The Complete Scent Stack
             <ArrowRight size={16} />
           </button>
-        </div>
+        </Reveal>
       </section>
 
       {/* How it works */}
@@ -250,21 +256,23 @@ export default function Home({ products, onNavigate }: HomeProps) {
               title: 'Instant download',
               text: 'Get your PDF immediately. Print it or use it on your tablet.',
             },
-          ].map((step) => (
-            <div key={step.title} className="rounded-2xl border border-[#b08d57]/15 bg-white p-8 text-center">
-              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#efe4d4]/60">
-                {step.icon}
-              </div>
-              <h3 className="mb-2 font-serif-display text-xl text-burgundy">{step.title}</h3>
-              <p className="text-sm leading-relaxed text-charcoal/70">{step.text}</p>
-            </div>
+          ].map((step, i) => (
+            <Reveal key={step.title} delay={i * 110}>
+              <TiltCard className="rounded-2xl border border-[#b08d57]/15 bg-white p-8 text-center">
+                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#efe4d4]/60">
+                  {step.icon}
+                </div>
+                <h3 className="mb-2 font-serif-display text-xl text-burgundy">{step.title}</h3>
+                <p className="text-sm leading-relaxed text-charcoal/70">{step.text}</p>
+              </TiltCard>
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* Newsletter */}
       <section className="border-y border-[#b08d57]/15 bg-white py-16">
-        <div className="mx-auto max-w-2xl px-6 text-center lg:px-10">
+        <Reveal className="mx-auto max-w-2xl px-6 text-center lg:px-10">
           <p className="section-eyebrow">The Scent Letter</p>
           <h2 className="font-serif-display text-4xl text-burgundy">Make room for better scent days.</h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-charcoal/70">
@@ -272,7 +280,7 @@ export default function Home({ products, onNavigate }: HomeProps) {
             your inbox.
           </p>
           <NewsletterForm />
-        </div>
+        </Reveal>
       </section>
     </div>
   );
