@@ -13,12 +13,14 @@ export type BlogPost = {
   readTime: string;
   publishedLabel: string;
   relatedProductId: string;
+  coverGifNumber: number;
   sections: BlogSection[];
 };
 
 export const blogPosts: BlogPost[] = [
   {
     slug: 'how-to-organize-your-perfume-collection',
+    coverGifNumber: 1,
     title: 'How to Organize Your Perfume Collection (Without It Becoming a Mess)',
     metaTitle: 'How to Organize Your Perfume Collection | Scent Stack',
     metaDescription:
@@ -62,6 +64,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'how-to-layer-perfume-beginners-guide',
+    coverGifNumber: 2,
     title: "How to Layer Perfume: A Beginner's Guide to Scent Layering",
     metaTitle: 'How to Layer Perfume: A Beginner Guide | Scent Stack',
     metaDescription:
@@ -104,6 +107,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'how-to-find-your-signature-scent',
+    coverGifNumber: 3,
     title: 'How to Find Your Signature Scent (Even If Nothing Feels "You" Yet)',
     metaTitle: 'How to Find Your Signature Scent | Scent Stack',
     metaDescription:
@@ -143,6 +147,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'perfume-notes-explained-top-middle-base',
+    coverGifNumber: 4,
     title: 'Perfume Notes Explained: Top, Middle, and Base Notes',
     metaTitle: 'Perfume Notes Explained: Top, Middle, Base | Scent Stack',
     metaDescription:
@@ -183,6 +188,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'build-a-fragrance-wardrobe-for-every-season',
+    coverGifNumber: 5,
     title: 'How to Build a Fragrance Wardrobe for Every Season',
     metaTitle: 'Build a Fragrance Wardrobe for Every Season | Scent Stack',
     metaDescription:
@@ -222,6 +228,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'how-long-does-perfume-last-shelf-life-storage',
+    coverGifNumber: 6,
     title: 'How Long Does Perfume Last? Shelf Life and Storage Tips',
     metaTitle: 'How Long Does Perfume Last? Storage Tips | Scent Stack',
     metaDescription:
@@ -262,6 +269,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'niche-vs-designer-perfume-difference',
+    coverGifNumber: 7,
     title: "Niche vs. Designer Perfume: What's Actually Different",
     metaTitle: 'Niche vs Designer Perfume: The Real Difference | Scent Stack',
     metaDescription:
@@ -301,6 +309,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'how-to-test-perfume-samples-properly',
+    coverGifNumber: 8,
     title: 'How to Test Perfume Samples the Right Way (Without Wasting Money)',
     metaTitle: 'How to Test Perfume Samples Properly | Scent Stack',
     metaDescription:
@@ -340,6 +349,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'perfume-mistakes-beginners-make',
+    coverGifNumber: 9,
     title: '7 Perfume Mistakes Beginners Make (and How to Avoid Them)',
     metaTitle: '7 Perfume Mistakes Beginners Make | Scent Stack',
     metaDescription:
@@ -385,6 +395,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'perfume-journal-vs-spreadsheet',
+    coverGifNumber: 10,
     title: 'Perfume Journal vs. Spreadsheet: The Best Way to Track Your Collection',
     metaTitle: 'Perfume Journal vs Spreadsheet: Which Is Better? | Scent Stack',
     metaDescription:
@@ -418,6 +429,125 @@ export const blogPosts: BlogPost[] = [
         heading: 'The honest answer',
         body: [
           'Either format works if you actually use it consistently. The real deciding factor is not spreadsheet versus journal — it is which format you will actually open and fill in a week from now, and a month from now. For most people, a ready-made structure beats a blank spreadsheet, simply because it removes the setup step that causes most trackers to get abandoned in the first place.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'perfume-concentrations-explained-parfum-edp-edt-edc',
+    title: 'Parfum vs. EDP vs. EDT vs. EDC: What the Labels Actually Mean',
+    metaTitle: 'Parfum vs EDP vs EDT vs EDC Explained | Scent Stack',
+    metaDescription:
+      'A clear breakdown of perfume concentrations — Parfum, Eau de Parfum, Eau de Toilette, and Eau de Cologne — and how to pick the right one for your budget and lifestyle.',
+    keyword: 'parfum vs edp vs edt vs edc',
+    excerpt:
+      'Those letters on the box are not marketing fluff — they tell you exactly how strong, how long-lasting, and how expensive a bottle is likely to be.',
+    readTime: '5 min read',
+    publishedLabel: 'Fragrance Basics',
+    relatedProductId: 'discovery',
+    coverGifNumber: 11,
+    sections: [
+      {
+        heading: 'It all comes down to one number: concentration',
+        body: [
+          'Every one of these labels describes the same thing — the percentage of actual fragrance oil dissolved in the alcohol-and-water base. More oil means a stronger scent, longer wear, and usually a higher price, because fragrance oil is the most expensive ingredient in the bottle.',
+          'Roughly: Parfum (also called Extrait de Parfum) sits around 20–30% oil, Eau de Parfum (EDP) around 15–20%, Eau de Toilette (EDT) around 5–15%, and Eau de Cologne (EDC) around 2–4%. These ranges vary by brand, but the order never changes.',
+        ],
+      },
+      {
+        heading: 'What that actually means on your skin',
+        body: [
+          'A Parfum will often last 8 hours or more from just two sprays, project less loudly, and feel richer and warmer, since lower alcohol content lets the base notes come through earlier. An EDT, by contrast, is lighter, fresher, and fades faster, which is exactly why it is the default format for citrus and aquatic scents meant to feel breezy rather than heavy.',
+          'Neither is "better" in general. A Parfum wasted on a scent designed to be light and fleeting can feel cloying, while an EDT of a rich oriental can disappear within two hours. The format should match the character of the scent, not just your budget.',
+        ],
+      },
+      {
+        heading: 'Which one should you actually buy?',
+        body: [
+          'If you are trying a new scent family for the first time, start with an EDT or EDP sample before committing to a full Parfum bottle — you are paying a premium for concentration, and it is wasted if the scent itself is not the right fit. If you already know you love a fragrance and wear it often, the math usually favors the higher concentration: you use less product per wear, so a Parfum can actually last longer in real-world cost-per-wear than a cheaper EDT you have to reapply three times a day.',
+          'A quick way to keep this straight once you start building a collection: log each bottle with its concentration alongside the brand and name. It sounds minor, but "which version do I actually own" is one of the most common things people forget once a collection passes ten bottles.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'how-to-make-perfume-last-longer-on-skin',
+    title: 'How to Make Perfume Last Longer on Skin (Without Buying a New Bottle)',
+    metaTitle: 'How to Make Perfume Last Longer | Scent Stack',
+    metaDescription:
+      'Practical, tested ways to make your perfume last longer on skin — from application spots to moisturizing technique — without needing a stronger (or pricier) bottle.',
+    keyword: 'how to make perfume last longer',
+    excerpt:
+      "Before you blame the bottle for fading fast, check your routine. Most longevity problems come down to technique, not the fragrance itself.",
+    readTime: '5 min read',
+    publishedLabel: 'Application & Technique',
+    relatedProductId: 'journal',
+    coverGifNumber: 12,
+    sections: [
+      {
+        heading: 'Moisturized skin holds scent — dry skin does not',
+        body: [
+          'Fragrance molecules bind to moisture and oil far better than they bind to dry skin, which is exactly why the same perfume wears differently in summer humidity versus winter dryness. An unscented, fragrance-free lotion applied right before you spray gives the scent something to hold onto, often adding one to two hours of wear with zero change to the perfume itself.',
+        ],
+      },
+      {
+        heading: 'Target pulse points, not clothing',
+        body: [
+          'Wrists, the inner elbow, behind the ears, and the base of the throat run warmer than the rest of your skin, and that heat helps the fragrance diffuse throughout the day. Spraying onto clothing instead can trap top notes in fabric without ever letting the scent develop properly, and some fragrances can stain light-colored fabric.',
+          'Resist the urge to rub your wrists together after spraying. It is a reflex, but it breaks down the top-note structure and can make a fragrance smell "off" or more muted than it is meant to.',
+        ],
+      },
+      {
+        heading: 'Spray from the right distance, at the right time',
+        body: [
+          'Hold the bottle 5–7 centimeters from skin rather than spraying directly against it — this gives a more even mist instead of a concentrated wet patch that evaporates unevenly. Applying right after a shower, while pores are slightly open and skin is still a little damp, also tends to extend wear compared to spraying onto fully dry, cool skin later in the day.',
+        ],
+      },
+      {
+        heading: 'If it still fades fast, it might be the fragrance family',
+        body: [
+          'Citrus and light aquatic top notes are simply more volatile by chemistry — they are built to be bright and short-lived, and no amount of technique turns them into an all-day scent. If longevity matters more to you than a specific scent profile, look toward woody, amber, or gourmand bases, which naturally cling to skin longer. Tracking how long each fragrance in your collection actually lasts — rather than trusting memory — makes it much easier to notice this pattern and shop accordingly next time.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'how-to-choose-a-fragrance-gift',
+    title: 'How to Choose a Fragrance Gift for Someone Else (Without Guessing Wrong)',
+    metaTitle: 'How to Choose a Perfume Gift | Scent Stack',
+    metaDescription:
+      'A practical approach to buying perfume as a gift — what to actually pay attention to about the person, and the safest bets when you are not sure.',
+    keyword: 'how to choose a perfume gift',
+    excerpt:
+      "Buying perfume for someone else feels risky because scent is so personal. Here is how to narrow it down without just guessing.",
+    readTime: '5 min read',
+    publishedLabel: 'Gifting Guide',
+    relatedProductId: 'printable',
+    coverGifNumber: 2,
+    sections: [
+      {
+        heading: 'Do not buy their favorite public figure\'s fragrance as a shortcut',
+        body: [
+          'A celebrity or brand-name release might be a safe-feeling default, but "popular" and "right for this person" are not the same thing. If you have ever heard them describe a scent as "too sweet," "too strong," or "too clean," that single comment is worth more than any bestseller list.',
+        ],
+      },
+      {
+        heading: 'Pay attention to what they already wear and own',
+        body: [
+          'Before buying, check what is already in their bathroom or on their dresser, if you reasonably can. People tend to repeat patterns — if every bottle they own leans warm and spicy, a bright citrus gift will likely sit unused, no matter how well-reviewed it is. If you genuinely cannot find a pattern, their clothing style and favorite candles are a decent secondary clue: bold vs. minimalist dressers, and sweet vs. earthy candle preferences, both loosely map to fragrance taste.',
+        ],
+      },
+      {
+        heading: 'When in doubt, go smaller and safer',
+        body: [
+          'If you are genuinely unsure, a full-size bottle is the wrong gift. A travel size or a curated discovery set lets them actually try something new without the pressure (or cost) of a 100ml commitment they might not love. This also works well for a new relationship or early-stage friendship, where you do not yet have years of data on their taste.',
+          'A gift card to a fragrance retailer is a perfectly fine option too, and far better than a confident wrong guess — but if you want something that feels more personal than a gift card without the risk of a bottle they will not wear, a guided tool that helps them discover notes and families they actually like makes a thoughtful middle ground.',
+        ],
+      },
+      {
+        heading: 'The safest bets, if you have zero information',
+        body: [
+          'With truly no clues to go on, lean toward universally wearable, moderate-intensity scents: a clean woody or a soft musk reads as inoffensive and pleasant to most noses, in a way that a bold oud or an intense gourmand does not. It will rarely be anyone\'s all-time favorite, but it is also very unlikely to end up regifted.',
         ],
       },
     ],

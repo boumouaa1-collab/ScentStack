@@ -4,6 +4,8 @@ import { type BlogPost, blogPosts } from '@/data/blog';
 import { getProduct, siteConfig } from '@/data/products';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import BuyButton from '@/components/BuyButton';
+import ScentGif from '@/components/ScentGif';
+import Reveal from '@/components/Reveal';
 
 type BlogPostPageProps = {
   post: BlogPost;
@@ -11,7 +13,8 @@ type BlogPostPageProps = {
 };
 
 export default function BlogPostPage({ post, onNavigate }: BlogPostPageProps) {
-  useDocumentMeta(post.metaTitle, post.metaDescription);
+  const heroProduct = getProduct(post.relatedProductId);
+  useDocumentMeta(post.metaTitle, post.metaDescription, false, heroProduct?.coverImage);
 
   useEffect(() => {
     const scriptId = 'blog-post-schema';
@@ -32,7 +35,7 @@ export default function BlogPostPage({ post, onNavigate }: BlogPostPageProps) {
     return () => document.getElementById(scriptId)?.remove();
   }, [post]);
 
-  const product = getProduct(post.relatedProductId);
+  const product = heroProduct;
   const related = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 2);
 
   return (
@@ -48,6 +51,10 @@ export default function BlogPostPage({ post, onNavigate }: BlogPostPageProps) {
       <p className="section-eyebrow">{post.publishedLabel}</p>
       <h1 className="font-serif-display mt-3 text-4xl leading-tight text-burgundy md:text-5xl">{post.title}</h1>
       <p className="mt-4 text-sm text-charcoal/50">{post.readTime}</p>
+
+      <div className="mt-8 aspect-[16/9] overflow-hidden rounded-2xl bg-[#efe4d4]/60">
+        <ScentGif number={post.coverGifNumber} alt={post.title} className="blog-hero-gif" />
+      </div>
 
       <div className="mt-10 space-y-8">
         {post.sections.map((section) => (
@@ -81,7 +88,7 @@ export default function BlogPostPage({ post, onNavigate }: BlogPostPageProps) {
       )}
 
       {related.length > 0 && (
-        <div className="mt-16 border-t border-[#b08d57]/15 pt-10">
+        <Reveal className="mt-16 border-t border-[#b08d57]/15 pt-10">
           <p className="section-eyebrow mb-5">Keep reading</p>
           <div className="grid gap-6 sm:grid-cols-2">
             {related.map((r) => (
@@ -96,7 +103,7 @@ export default function BlogPostPage({ post, onNavigate }: BlogPostPageProps) {
               </button>
             ))}
           </div>
-        </div>
+        </Reveal>
       )}
     </article>
   );

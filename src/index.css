@@ -144,6 +144,23 @@
     animation: scent-gif-float 5s ease-in-out infinite;
   }
 
+  .blog-card-gif {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 400ms ease-out;
+  }
+
+  .tilt-card:hover .blog-card-gif {
+    transform: scale(1.04);
+  }
+
+  .blog-hero-gif {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .ritual-gif {
     width: 4.5rem;
     height: 4.5rem;

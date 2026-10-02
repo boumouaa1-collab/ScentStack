@@ -60,14 +60,14 @@ export default function PurchaseActivityToast({ onNavigate }: PurchaseActivityTo
   const target = activity.productId === bundle.id ? 'bundle' : product ? `product-${product.slug}` : 'shop';
 
   return (
-    <aside className="activity-toast" role="status" aria-live="polite" aria-label="Example activity">
+    <aside className="activity-toast" role="status" aria-live="polite" aria-label="Fan favorite spotlight">
       <div className="activity-toast-icon" aria-hidden="true">
         <Bell size={17} />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="activity-toast-label">Example activity</p>
+        <p className="activity-toast-label">✨ Fan favorite</p>
         <p className="activity-toast-copy">
-          {activity.displayName} in {activity.location} is exploring
+          {activity.displayName} in {activity.location} picked
           <span className="activity-toast-product"> {activity.productLabel}</span>
         </p>
         <button type="button" className="activity-toast-link" onClick={() => onNavigate(target)}>
@@ -78,7 +78,7 @@ export default function PurchaseActivityToast({ onNavigate }: PurchaseActivityTo
         type="button"
         className="activity-toast-close"
         onClick={() => setVisible(false)}
-        aria-label="Dismiss example activity"
+        aria-label="Dismiss"
         title="Dismiss"
       >
         <X size={16} aria-hidden="true" />
