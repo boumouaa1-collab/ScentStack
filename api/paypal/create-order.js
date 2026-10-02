@@ -30,6 +30,12 @@ export default async function handler(req, res) {
             amount: {
               currency_code: product.currency || 'USD',
               value: Number(product.price).toFixed(2),
+              breakdown: {
+                item_total: {
+                  currency_code: product.currency || 'USD',
+                  value: Number(product.price).toFixed(2),
+                },
+              },
             },
             items: [
               {
@@ -48,6 +54,7 @@ export default async function handler(req, res) {
           brand_name: 'Scent Stack',
           landing_page: 'LOGIN',
           user_action: 'PAY_NOW',
+          shipping_preference: 'NO_SHIPPING',
           return_url: `${process.env.APP_URL || 'https://scentstack.store'}/success`,
           cancel_url: `${process.env.APP_URL || 'https://scentstack.store'}/checkout`,
         },
