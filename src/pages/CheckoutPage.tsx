@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, Lock, Mail, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowLeft, Lock, Mail, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { bundle, testProduct, getProductBySlugOrId, products, type Product } from '@/data/products';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import { useCart } from '@/lib/cartContext';
@@ -31,9 +31,24 @@ type CheckoutPageProps = {
 export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   const params = new URLSearchParams(window.location.search);
   const requestedProductId = params.get('product') || 'workbook';
-  const isCartMode = requestedProductId === 'cart';
 
-  const { items: cartItemIds, clearCart } = useCart();
+  // Bundle and the $1 live-test product are fixed-price, stand-alone purchases —
+  // they never merge with the cart. Everything else does.
+  const isBundleMode = requestedProductId === bundle.id;
+  const isTestMode = requestedProductId === testProduct.id;
+  const isSpecialMode = isBundleMode || isTestMode;
+
+  const { items: cartItemIds, addItem, removeItem, clearCart } = useCart();
+
+  // Visiting a product's checkout link (?product=<id>) folds that product into the
+  // cart instead of charging for it in isolation — so if you already had other
+  // items picked, "Get [Product]" adds to what you're buying rather than replacing it.
+  useEffect(() => {
+    if (isSpecialMode || requestedProductId === 'cart') return;
+    const match = getProductBySlugOrId(requestedProductId);
+    if (match) addItem(match.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requestedProductId, isSpecialMode]);
 
   const cartProducts: Product[] = useMemo(
     () => cartItemIds.map((id) => getProductBySlugOrId(id)).filter(Boolean) as Product[],
@@ -41,8 +56,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   );
 
   const selectedProduct = useMemo(() => {
-    if (isCartMode) return null;
-    if (requestedProductId === bundle.id) {
+    if (isBundleMode) {
       return {
         ...products[0],
         id: bundle.id,
@@ -51,22 +65,15 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
         format: 'Six digital PDFs',
       };
     }
-    if (requestedProductId === testProduct.id) {
-      return testProduct;
-    }
+    if (isTestMode) return testProduct;
+    return null;
+  }, [isBundleMode, isTestMode]);
 
-    const product = getProductBySlugOrId(requestedProductId);
-    return product ?? products[0];
-  }, [requestedProductId, isCartMode]);
-
-  // What this checkout is actually charging for — one product, or the whole cart.
-  const lineItems = isCartMode
-    ? cartProducts.map((p) => ({ title: p.title, price: p.price }))
-    : selectedProduct
-      ? [{ title: selectedProduct.title, price: Number(selectedProduct.price) }]
-      : [];
+  const lineItems = isSpecialMode
+    ? [{ title: selectedProduct!.title, price: Number(selectedProduct!.price) }]
+    : cartProducts.map((p) => ({ title: p.title, price: Number(p.price) }));
   const totalPrice = lineItems.reduce((sum, item) => sum + Number(item.price), 0);
-  const cartIsEmpty = isCartMode && cartProducts.length === 0;
+  const cartIsEmpty = !isSpecialMode && cartProducts.length === 0;
 
   const [email, setEmail] = useState('');
   const [emailTouched, setEmailTouched] = useState(false);
@@ -76,11 +83,15 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   const [message, setMessage] = useState<string>('Enter your email to unlock secure checkout. 📩');
   const [paypalReady, setPaypalReady] = useState(false);
 
+  const headlineTitle = isSpecialMode
+    ? selectedProduct!.title
+    : cartProducts.length === 1
+      ? cartProducts[0].title
+      : `${cartProducts.length} items`;
+
   useDocumentMeta(
-    isCartMode ? 'Checkout — Your Cart | Scent Stack' : `Checkout — ${selectedProduct?.title} | Scent Stack`,
-    isCartMode
-      ? 'Secure PayPal checkout for your Scent Stack cart. Instant, email-delivered digital downloads.'
-      : `Secure PayPal checkout for ${selectedProduct?.title}. Instant, email-delivered digital download.`
+    `Checkout — ${headlineTitle} | Scent Stack`,
+    `Secure PayPal checkout for ${headlineTitle}. Instant, email-delivered digital download${lineItems.length > 1 ? 's' : ''}.`
   );
 
   // Load the PayPal SDK once (Smart Buttons — no per-product setup needed in PayPal).
@@ -132,9 +143,9 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
     setStatus('idle');
     setMessage('Complete payment with PayPal to get your download instantly. ✨');
 
-    const orderBody = isCartMode
-      ? { productIds: cartProducts.map((p) => p.id), customerEmail: email.trim() }
-      : { productId: selectedProduct!.id, customerEmail: email.trim() };
+    const orderBody = isSpecialMode
+      ? { productId: selectedProduct!.id, customerEmail: email.trim() }
+      : { productIds: cartProducts.map((p) => p.id), customerEmail: email.trim() };
 
     const buttons = paypalWindow.paypal.Buttons({
       style: { layout: 'vertical', color: 'gold', shape: 'pill', label: 'pay' },
@@ -168,11 +179,11 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
             return;
           }
           setStatus('success');
-          if (isCartMode) {
+          if (isSpecialMode) {
+            onNavigate(isBundleMode ? 'thankyou-bundle' : `thankyou-${selectedProduct!.id}`);
+          } else {
             clearCart();
             onNavigate('thankyou-cart');
-          } else {
-            onNavigate(requestedProductId === bundle.id ? 'thankyou-bundle' : `thankyou-${selectedProduct!.id}`);
           }
         } catch {
           setStatus('error');
@@ -195,7 +206,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
       container.innerHTML = '';
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paypalReady, emailValid, isCartMode, cartIsEmpty, cartProducts, selectedProduct]);
+  }, [paypalReady, emailValid, isSpecialMode, cartIsEmpty, cartProducts, selectedProduct]);
 
   if (cartIsEmpty) {
     return (
@@ -213,11 +224,11 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
     <div className="fade-in min-h-screen bg-[#f7f1e8] pt-24 pb-16">
       <div className="mx-auto max-w-6xl px-6 lg:px-10">
         <button
-          onClick={() => onNavigate(isCartMode ? 'shop' : selectedProduct!.id === bundle.id ? 'bundle' : `product-${selectedProduct!.slug}`)}
+          onClick={() => onNavigate(isSpecialMode ? (isBundleMode ? 'bundle' : 'shop') : 'shop')}
           className="inline-flex items-center gap-2 text-sm text-charcoal/60 transition-colors hover:text-burgundy"
         >
           <ArrowLeft size={15} />
-          {isCartMode ? 'Back to shop' : 'Back to product'}
+          {isSpecialMode ? 'Back' : 'Back to shop'}
         </button>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_1fr]">
@@ -225,16 +236,24 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="section-eyebrow mb-2">Your order</p>
-                <h1 className="font-serif-display text-4xl text-burgundy">
-                  {isCartMode ? `${cartProducts.length} ${cartProducts.length === 1 ? 'item' : 'items'}` : selectedProduct!.title}
-                </h1>
+                <h1 className="font-serif-display text-4xl text-burgundy">{headlineTitle}</h1>
               </div>
               <div className="rounded-full bg-[#efe4d4] px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-burgundy">
                 USD
               </div>
             </div>
 
-            {isCartMode ? (
+            {isSpecialMode ? (
+              <div className="mt-6 overflow-hidden rounded-2xl border border-[#b08d57]/15 bg-[#efe4d4]/60 p-4">
+                <div className="flex justify-center rounded-xl p-4" style={{ background: selectedProduct!.accent }}>
+                  <img
+                    src={selectedProduct!.coverImage}
+                    alt={`${selectedProduct!.title} cover`}
+                    className="max-h-[260px] w-auto rounded-sm object-contain shadow-xl"
+                  />
+                </div>
+              </div>
+            ) : (
               <div className="mt-6 space-y-3">
                 {cartProducts.map((p) => (
                   <div key={p.id} className="flex items-center gap-3 rounded-2xl border border-[#b08d57]/15 bg-[#efe4d4]/40 p-3">
@@ -245,19 +264,20 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                       <p className="truncate text-sm font-medium text-charcoal">{p.title}</p>
                       <p className="text-xs text-charcoal/50">Digital PDF</p>
                     </div>
-                    <span className="font-serif-display text-xl text-burgundy">${p.price}</span>
+                    <span className="font-serif-display text-xl font-bold tabular-nums text-burgundy">${Number(p.price).toFixed(2)}</span>
+                    {cartProducts.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeItem(p.id)}
+                        aria-label={`Remove ${p.title}`}
+                        title="Remove"
+                        className="shrink-0 rounded-full p-1.5 text-charcoal/40 transition-colors hover:bg-white hover:text-burgundy"
+                      >
+                        <X size={14} />
+                      </button>
+                    )}
                   </div>
                 ))}
-              </div>
-            ) : (
-              <div className="mt-6 overflow-hidden rounded-2xl border border-[#b08d57]/15 bg-[#efe4d4]/60 p-4">
-                <div className="flex justify-center rounded-xl p-4" style={{ background: selectedProduct!.accent }}>
-                  <img
-                    src={selectedProduct!.coverImage}
-                    alt={`${selectedProduct!.title} cover`}
-                    className="max-h-[260px] w-auto rounded-sm object-contain shadow-xl"
-                  />
-                </div>
               </div>
             )}
 
