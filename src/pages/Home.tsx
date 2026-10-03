@@ -167,7 +167,7 @@ export default function Home({ products, onNavigate }: HomeProps) {
             <p className="section-eyebrow mb-2">Make scent personal</p>
             <p className="font-serif-display text-2xl text-burgundy sm:text-3xl">A more beautiful way to explore fragrance.</p>
           </div>
-          <ScentGif number={6} alt="Perfume hand illustration" className="ritual-gif" />
+          <ScentGif number={6} alt="Perfume hand illustration" className="ritual-gif hidden sm:block" />
         </div>
       </section>
 
