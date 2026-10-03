@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Check, FileText, Globe, Lock, PenLine, Zap } fro
 import type { Product } from '@/data/products';
 import { getProductById, bundle } from '@/data/products';
 import BuyButton from '@/components/BuyButton';
+import AddToCartButton from '@/components/AddToCartButton';
 import CanvaBadge from '@/components/CanvaBadge';
 import ScentGif from '@/components/ScentGif';
 import { track } from '@/lib/analytics';
@@ -192,28 +193,33 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
       {/* Upsell */}
       {related.length > 0 && (
         <section className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
-          <p className="mb-6 text-center font-serif-display text-2xl text-burgundy">{product.upsellHeadline}</p>
+          <p className="mb-2 text-center font-serif-display text-2xl text-burgundy">{product.upsellHeadline}</p>
+          <p className="mb-6 text-center text-sm text-charcoal/60">Add as many as you like — they'll all go through in one checkout.</p>
           <div className="grid gap-6 md:grid-cols-2">
             {related.map((rel) => (
               <div key={rel.id} className="overflow-hidden rounded-2xl p-8" style={{ background: rel.accent }}>
                 <p className="text-xs uppercase tracking-[0.3em] text-[#b08d57]">Complete your ritual</p>
                 <h3 className="mt-2 font-serif-display text-2xl text-[#f7f1e8]">{rel.title}</h3>
                 <p className="mt-3 text-sm text-[#f7f1e8]/70">{product.upsellMessage}</p>
-                <button
-                  onClick={() => onNavigate(`product-${rel.slug}`)}
-                  className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#b08d57] px-6 py-3 text-sm font-medium uppercase tracking-widest text-white transition-all hover:bg-[#c5a36c]"
-                >
-                  Explore — ${rel.price}
-                  <ArrowRight size={15} />
-                </button>
+                <div className="mt-5 flex items-center justify-between gap-4">
+                  <span className="font-serif-display text-3xl font-bold tabular-nums text-[#f7f1e8]">${rel.price}</span>
+                  <button
+                    onClick={() => onNavigate(`product-${rel.slug}`)}
+                    className="inline-flex shrink-0 items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-[#f7f1e8]/70 underline-offset-4 transition-colors hover:text-[#f7f1e8] hover:underline"
+                  >
+                    View details
+                  </button>
+                </div>
+                <AddToCartButton productId={rel.id} className="mt-4" />
               </div>
             ))}
           </div>
 
-          <div className="mt-8 rounded-2xl border border-[#b08d57]/20 bg-white p-8 text-center">
-            <p className="text-sm text-charcoal/70">Or build the complete collection</p>
-            <h3 className="mt-2 font-serif-display text-2xl text-burgundy">
-              Get all three for ${bundle.price} <span className="text-base text-charcoal/40 line-through">${bundle.originalPrice}</span>
+          <div className="bundle-highlight-box mt-8 rounded-2xl p-8 text-center">
+            <p className="text-sm font-medium uppercase tracking-[0.15em] text-[#b08d57]">✨ Best value — build the complete collection</p>
+            <h3 className="mt-3 flex items-baseline justify-center gap-3 font-serif-display text-4xl font-bold text-burgundy">
+              <span className="tabular-nums">${bundle.price}</span>
+              <span className="text-xl font-normal tabular-nums text-charcoal/40 line-through">${bundle.originalPrice}</span>
             </h3>
             <button
               onClick={() => {

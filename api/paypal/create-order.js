@@ -6,12 +6,22 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed.' });
   }
 
-  const { productId, customerEmail } = req.body || {};
-  const product = getProduct(productId);
+  const { productId, productIds, customerEmail } = req.body || {};
 
-  if (!product) {
+  // Accept either a single productId (legacy, still used by direct "Buy Now" buttons)
+  // or a productIds array (cart checkout with multiple items).
+  const ids = Array.isArray(productIds) && productIds.length > 0
+    ? productIds
+    : (productId ? [productId] : []);
+
+  const resolvedProducts = ids.map((id) => getProduct(id)).filter(Boolean);
+
+  if (resolvedProducts.length === 0) {
     return res.status(400).json({ message: 'Invalid product selected.' });
   }
+
+  const currency = resolvedProducts[0].currency || 'USD';
+  const itemTotal = resolvedProducts.reduce((sum, p) => sum + Number(p.price), 0).toFixed(2);
 
   try {
     const accessToken = await getPaypalAccessToken();
@@ -24,30 +34,28 @@ export default async function handler(req, res) {
         intent: 'CAPTURE',
         purchase_units: [
           {
-            reference_id: product.id,
-            description: product.name,
-            custom_id: product.id,
+            reference_id: resolvedProducts.map((p) => p.id).join('+'),
+            description: resolvedProducts.map((p) => p.name).join(', ').slice(0, 125),
+            custom_id: JSON.stringify(resolvedProducts.map((p) => p.id)).slice(0, 127),
             amount: {
-              currency_code: product.currency || 'USD',
-              value: Number(product.price).toFixed(2),
+              currency_code: currency,
+              value: itemTotal,
               breakdown: {
                 item_total: {
-                  currency_code: product.currency || 'USD',
-                  value: Number(product.price).toFixed(2),
+                  currency_code: currency,
+                  value: itemTotal,
                 },
               },
             },
-            items: [
-              {
-                name: product.name,
-                unit_amount: {
-                  currency_code: product.currency || 'USD',
-                  value: Number(product.price).toFixed(2),
-                },
-                quantity: '1',
-                category: 'DIGITAL_GOODS',
+            items: resolvedProducts.map((p) => ({
+              name: p.name,
+              unit_amount: {
+                currency_code: p.currency || 'USD',
+                value: Number(p.price).toFixed(2),
               },
-            ],
+              quantity: '1',
+              category: 'DIGITAL_GOODS',
+            })),
           },
         ],
         application_context: {

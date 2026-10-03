@@ -19,6 +19,8 @@ import ErrorPage from '@/pages/ErrorPage';
 import BlogPage from '@/pages/BlogPage';
 import BlogPostPage from '@/pages/BlogPostPage';
 import { getBlogPost } from '@/data/blog';
+import { CartProvider } from '@/lib/cartContext';
+import CartBar from '@/components/CartBar';
 
 function App() {
   const [page, setPage] = useState(() => pageForPath(window.location.pathname + window.location.search, products));
@@ -104,7 +106,7 @@ function App() {
 
     if (page.startsWith('thankyou-')) {
       const itemId = page.replace('thankyou-', '');
-      if (itemId === 'bundle' || itemId === testProduct.id || products.find((p) => p.id === itemId))
+      if (itemId === 'bundle' || itemId === testProduct.id || itemId === 'cart' || products.find((p) => p.id === itemId))
         return <ThankYouPage itemId={itemId} onNavigate={navigate} />;
     }
 
@@ -114,12 +116,15 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f1e8]">
-      <Navbar onNavigate={navigate} currentPage={page} />
-      <main>{render()}</main>
-      <Footer onNavigate={navigate} />
-      <SupportButton />
-    </div>
+    <CartProvider>
+      <div className="min-h-screen bg-[#f7f1e8]">
+        <Navbar onNavigate={navigate} currentPage={page} />
+        <main>{render()}</main>
+        <Footer onNavigate={navigate} />
+        <SupportButton />
+        <CartBar onNavigate={navigate} />
+      </div>
+    </CartProvider>
   );
 }
 
