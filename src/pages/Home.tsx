@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ArrowRight, BookOpen, Layers, Sparkles, Check, Gem, NotebookPen, Wand2 } from 'lucide-react';
 import type { Product } from '@/data/products';
 import { bundle } from '@/data/products';
@@ -22,6 +22,23 @@ export default function Home({ products, onNavigate }: HomeProps) {
     'Premium digital fragrance workbooks. Build your scent wardrobe, track your collection, and master perfume layering. Instant download.'
   );
 
+  // Desktop-only: headline drifts a few px toward the cursor. Capped small and
+  // moves only the headline itself, so it never overlaps the eyebrow or subtext.
+  const heroRef = useRef<HTMLDivElement | null>(null);
+  const [headlineOffset, setHeadlineOffset] = useState({ x: 0, y: 0 });
+  const MAX_HEADLINE_DRIFT = 10;
+
+  const handleHeroMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    const rect = heroRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const relX = (event.clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
+    const relY = (event.clientY - rect.top) / rect.height - 0.5;
+    setHeadlineOffset({ x: relX * MAX_HEADLINE_DRIFT * 2, y: relY * MAX_HEADLINE_DRIFT });
+  };
+
+  const handleHeroMouseLeave = () => setHeadlineOffset({ x: 0, y: 0 });
+
   return (
     <div className="fade-in">
       <PurchaseActivityToast onNavigate={onNavigate} />
@@ -38,9 +55,17 @@ export default function Home({ products, onNavigate }: HomeProps) {
               'radial-gradient(circle at 20% 30%, #4a1c2c 0, transparent 50%), radial-gradient(circle at 80% 70%, #b08d57 0, transparent 50%)',
           }}
         />
-        <div className="relative mx-auto max-w-7xl px-6 text-center lg:px-10">
+        <div
+          ref={heroRef}
+          onMouseMove={handleHeroMouseMove}
+          onMouseLeave={handleHeroMouseLeave}
+          className="relative mx-auto max-w-7xl px-6 text-center lg:px-10"
+        >
           <p className="section-eyebrow">Premium Digital Products For Fragrance Lovers</p>
-          <h1 className="font-serif-display mx-auto max-w-4xl text-5xl leading-tight text-burgundy md:text-7xl">
+          <h1
+            className="hero-headline font-serif-display mx-auto max-w-4xl text-5xl leading-tight text-burgundy md:text-7xl"
+            style={{ transform: `translate3d(${headlineOffset.x}px, ${headlineOffset.y}px, 0)` }}
+          >
             Your fragrance,
             <br />
             <span className="italic text-plum">beautifully organized.</span>
