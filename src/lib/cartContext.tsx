@@ -2,6 +2,16 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 
 const CART_STORAGE_KEY = 'scentstack_cart_v1';
 
+// The cart lives in sessionStorage so it only survives within the current tab/visit.
+// A fresh visit (e.g. arriving from a Pinterest pin) always starts with an empty cart
+// instead of showing a stale "Checkout" bar from a previous session.
+// The old localStorage cart is removed once so leftover items disappear.
+try {
+  localStorage.removeItem(CART_STORAGE_KEY);
+} catch {
+  // Storage unavailable — nothing to clean up.
+}
+
 type CartContextValue = {
   items: string[]; // product ids, each at most once
   addItem: (id: string) => void;
@@ -15,7 +25,7 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 function readStoredCart(): string[] {
   try {
-    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    const raw = sessionStorage.getItem(CART_STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed.filter((v): v is string => typeof v === 'string') : [];
@@ -29,7 +39,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+      sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     } catch {
       // Storage unavailable (private browsing, etc.) — cart just won't persist across reloads.
     }
