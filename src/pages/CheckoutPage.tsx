@@ -367,6 +367,8 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
               {!paypalReady && status !== 'error' && (
                 <LoadingSpinner label="Loading secure checkout" />
               )}
+              {paypalReady && status === 'loading' && <LoadingSpinner label="Setting up your secure order" />}
+              {paypalReady && status === 'processing' && <LoadingSpinner label="Confirming your payment" />}
               <div id="paypal-button-container" className="min-h-[220px]" />
               {!emailValid && paypalReady && (
                 <p className="mt-3 text-center text-xs text-charcoal/50">
