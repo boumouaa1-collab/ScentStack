@@ -552,6 +552,321 @@ export const blogPosts: BlogPost[] = [
       },
     ],
   },
+  {
+    slug: 'fragrance-families-explained-floral-woody-oriental-fresh',
+    title: 'Fragrance Families Explained: Floral, Woody, Oriental, Fresh',
+    metaTitle: 'Fragrance Families Explained | Scent Stack',
+    metaDescription:
+      'A clear guide to the four main fragrance families — Floral, Woody, Oriental, and Fresh — and how knowing yours makes every future perfume purchase easier.',
+    keyword: 'fragrance families explained',
+    excerpt:
+      'Before you learn individual notes, learn the family they belong to. It is the fastest way to stop buying perfumes you end up never wearing.',
+    readTime: '5 min read',
+    publishedLabel: 'Fragrance Basics',
+    relatedProductId: 'discovery',
+    coverGifNumber: 3,
+    sections: [
+      {
+        heading: 'Why families matter more than individual notes at first',
+        body: [
+          'A fragrance can list a dozen individual notes, but the overall impression almost always falls into one dominant family. Learning to recognize the family first — before memorizing specific notes like "bergamot" or "oud" — is the single fastest way to predict whether you will actually like a new perfume before you buy it.',
+          'Most classification systems group scents into four broad families: Floral, Woody, Oriental (sometimes called Amber), and Fresh. Many perfumes blend two families together, but one almost always leads.',
+        ],
+      },
+      {
+        heading: 'Floral and Fresh: the lighter end',
+        body: [
+          'Floral fragrances center on flower notes — rose, jasmine, lily of the valley, peony — and range from soft and powdery to bold and heady. They tend to read as classic, romantic, and versatile for daytime wear.',
+          'Fresh fragrances cover citrus, aquatic, and green notes. They are built to feel clean and energizing rather than complex, which is why they dominate the "office-safe" and summer categories. If you consistently reach for anything described as "clean" or "crisp," you are a Fresh person before you are anything else.',
+        ],
+      },
+      {
+        heading: 'Woody and Oriental: the deeper end',
+        body: [
+          'Woody fragrances are built around notes like sandalwood, cedar, vetiver, and patchouli. They read as grounded and warm, and tend to last longer on skin than Floral or Fresh scents because woody molecules are naturally heavier and less volatile.',
+          'Oriental (Amber) fragrances lean into vanilla, resins, spices, and warm musks. They are the richest, most noticeable family — excellent for cold weather and evening wear, but can feel overwhelming in a small warm room, which is why office environments often ask people to go lighter on these.',
+        ],
+      },
+      {
+        heading: 'Finding your family is a pattern, not a guess',
+        body: [
+          'The easiest way to identify your family is to look backward, not forward: pull up every perfume you currently own and actually enjoy wearing, and check what they have in common. Most people are surprised to find they already lean heavily toward one family without ever naming it. Logging each new fragrance you try against its family — not just its name — turns that pattern into something you can actually shop with, instead of relying on memory at the counter.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'how-to-travel-with-perfume-decanting-tsa-rules',
+    title: 'How to Travel With Perfume: Decanting, TSA Rules, and What Actually Works',
+    metaTitle: 'How to Travel With Perfume (Decanting + TSA Rules) | Scent Stack',
+    metaDescription:
+      'Everything to know about flying with perfume — TSA liquid limits, how to decant safely without losing scent quality, and what to pack instead of a full bottle.',
+    keyword: 'how to travel with perfume',
+    excerpt:
+      "A full bottle in checked luggage is a real risk. Here is how to actually bring your favorite scent on a trip without breaking a rule or a bottle.",
+    readTime: '4 min read',
+    publishedLabel: 'Travel & Practical Tips',
+    relatedProductId: 'wardrobe',
+    coverGifNumber: 4,
+    sections: [
+      {
+        heading: 'TSA liquid rules, specifically for perfume',
+        body: [
+          'In carry-on luggage, perfume counts as a liquid and must fit the standard 3-1-1 rule: containers of 100ml (3.4oz) or less, all fitting in a single quart-size clear bag. A 100ml bottle itself is allowed even if it is not full — the rule is about the container size, not how much liquid is left inside it.',
+          'In checked luggage, there is technically no TSA liquid limit, but airlines and glass bottles do not mix well at altitude and in rough baggage handling. A cracked bottle inside a suitcase is one of the most common travel-perfume complaints for a reason.',
+        ],
+      },
+      {
+        heading: 'Decanting into travel atomizers',
+        body: [
+          'A refillable glass or anodized-aluminum atomizer in the 5–10ml range is the safest way to travel with a signature scent without the weight, fragility, or TSA bag space a full bottle takes up. Avoid cheap plastic atomizers for anything beyond very short trips — some plastics can react with fragrance oils over time and subtly alter the scent.',
+          'To decant without losing quality: pour slowly down the inside wall of the new container rather than straight down the center, which limits oxidation from excess agitation, and fill it as close to the top as reasonably possible — less air in the bottle means less oxygen exposure over the length of the trip.',
+        ],
+      },
+      {
+        heading: 'Minimize oxidation and heat exposure while traveling',
+        body: [
+          'Heat and light are what actually degrade perfume over time, not air travel itself. Keep any travel atomizer in your carry-on rather than checked luggage, since cargo holds can reach temperature extremes a cabin never will, and avoid leaving it in a hot car or direct sun once you land.',
+        ],
+      },
+      {
+        heading: 'If you are testing something new, travel is a great excuse',
+        body: [
+          'A trip is a genuinely useful moment to test how a fragrance performs outside your usual climate and routine — humidity, heat, and activity level all change how a scent develops on skin. Packing two or three small decants of different fragrances, rather than committing to one full bottle, gives you real data on which one actually earns a spot in your permanent rotation once you are home.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'why-perfume-smells-different-on-everyone-skin-chemistry',
+    title: 'Why the Same Perfume Smells Different on Everyone (Skin Chemistry, Explained)',
+    metaTitle: 'Why Perfume Smells Different on Everyone | Scent Stack',
+    metaDescription:
+      'The real reasons the same bottle of perfume smells different from person to person — skin pH, diet, dryness, and why you should always test before buying.',
+    keyword: 'why does perfume smell different on skin',
+    excerpt:
+      "Your friend's bottle smelling amazing on them and underwhelming on you is not in your head. Here is what is actually happening.",
+    readTime: '4 min read',
+    publishedLabel: 'Fragrance Basics',
+    relatedProductId: 'signature',
+    coverGifNumber: 5,
+    sections: [
+      {
+        heading: "It is not just \"skin chemistry\" as one vague thing",
+        body: [
+          'The phrase gets used as a catch-all, but several distinct, measurable factors combine to create it: skin pH, natural oil production, hydration level, and even diet and medication can all shift how a fragrance\'s molecules evaporate and interact with your skin over the course of a day.',
+        ],
+      },
+      {
+        heading: 'Dry skin vs. oily skin changes everything',
+        body: [
+          'Oilier skin tends to hold fragrance longer and can amplify warmer, richer notes, while drier skin lets top notes fade faster and can make a scent feel thinner overall. This is exactly why the moisturizing-before-spraying technique genuinely works — it is not a myth, it is adjusting the one variable you actually have some control over.',
+        ],
+      },
+      {
+        heading: 'pH and body temperature play a real role too',
+        body: [
+          'Skin pH affects how fragrance molecules break down and project, and naturally runs slightly differently from person to person — and even in different seasons for the same person. Body temperature matters as well: warmer skin diffuses a fragrance\'s molecules into the air faster, which is part of why the same scent can feel bolder on a warm day or during exercise than on a cold one.',
+        ],
+      },
+      {
+        heading: 'What this means practically',
+        body: [
+          'Never trust how a perfume smells only on a paper test strip, and never trust only how it smells on someone else — both skip the one variable that actually matters, which is your own skin. Spray a small amount on your wrist or inner arm, wait at least 20–30 minutes for the alcohol to fully evaporate and the true scent to emerge, and reassess before deciding.',
+          'If you keep notes on how specific fragrances actually develop on your own skin over time, you start to notice your own personal pattern — which notes consistently amplify on you and which ones consistently fade fast — and that pattern becomes far more useful for future purchases than any generic review ever will.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'layering-perfume-with-lotion-does-it-work',
+    title: 'Layering Perfume With Lotion and Body Products: Does It Actually Work?',
+    metaTitle: 'Layering Perfume With Lotion — Does It Work? | Scent Stack',
+    metaDescription:
+      'Does layering a scented lotion under your perfume actually extend wear time, or just muddy the scent? A practical look at what works and what to avoid.',
+    keyword: 'layering perfume with lotion',
+    excerpt:
+      'The advice to "moisturize before you spray" is everywhere. Here is when that actually helps your fragrance, and when it quietly ruins it.',
+    readTime: '4 min read',
+    publishedLabel: 'Application & Technique',
+    relatedProductId: 'journal',
+    coverGifNumber: 6,
+    sections: [
+      {
+        heading: 'The theory is sound — but the product you pick matters a lot',
+        body: [
+          'Moisturized skin genuinely does hold fragrance better, as covered in how skin chemistry affects wear. The problem is not the technique itself, it is reaching for a heavily scented lotion without thinking about whether its scent actually complements the perfume going on top of it.',
+        ],
+      },
+      {
+        heading: 'When layering helps',
+        body: [
+          'An unscented or genuinely fragrance-free lotion is the safest layering base — it hydrates skin without adding a competing scent, which is the entire point. Some brands also release a matching "body lotion" or "body cream" specifically formulated to complement a specific perfume; when available, these are usually a safe, deliberately-tested pairing rather than a guess.',
+        ],
+      },
+      {
+        heading: 'When layering backfires',
+        body: [
+          'A strongly scented lotion from an unrelated product line — think a vanilla-coconut body butter layered under a crisp citrus-aquatic perfume — can muddy both scents into something neither was designed to be. This is the most common layering mistake: people reach for whatever lotion is already in the bathroom rather than considering whether its scent profile actually fits.',
+          'If you want to intentionally layer two different scented products to create a custom combination, that is a different (and genuinely fun) practice from basic skin prep — but it deserves its own deliberate testing on skin, the same way you would test any new fragrance, rather than happening by accident every morning.',
+        ],
+      },
+      {
+        heading: 'A simple rule to default to',
+        body: [
+          'If you are not actively trying to build a custom layered scent, keep your moisturizing step fragrance-free and let the perfume itself do all the work. It is the lowest-risk way to get the longevity benefit of moisturized skin without any of the risk of two scents fighting each other by accident.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'unisex-perfume-do-masculine-feminine-labels-mean-anything',
+    title: 'Unisex Perfume: Do "Masculine" and "Feminine" Labels Actually Mean Anything?',
+    metaTitle: 'Unisex Perfume Explained | Scent Stack',
+    metaDescription:
+      'Where fragrance gender labels actually come from, what they really tell you about a scent, and why wearing "the other side" of the aisle is nothing new.',
+    keyword: 'unisex perfume meaning',
+    excerpt:
+      'Nothing about a floral or a woody note is biologically tied to a gender. Here is where the labels actually come from — and why ignoring them is a completely normal way to shop.',
+    readTime: '5 min read',
+    publishedLabel: 'Fragrance Basics',
+    relatedProductId: 'signature',
+    coverGifNumber: 7,
+    sections: [
+      {
+        heading: 'The labels are marketing history, not chemistry',
+        body: [
+          'There is no molecule that is inherently "masculine" or "feminine." The gendering of fragrance is largely a 20th-century marketing convention: bright citrus and aquatic notes got packaged and advertised toward men, while florals and sweeter gourmands got packaged toward women, mostly because that made shelf categorization and advertising simpler, not because of any real chemical rule.',
+          'Historically it was often the reverse. Rich florals and heavy musks were worn by men in earlier eras, and some of the earliest modern "classic" florals were marketed to everyone before fragrance houses started splitting product lines by gender in the mid-1900s.',
+        ],
+      },
+      {
+        heading: 'What the label is actually telling you',
+        body: [
+          'When a bottle is labeled "for him" or "for her," it is really communicating a composition style the brand associates with that market, not a rule about who can wear it. A "masculine" fragrance tends to lean woody, spicy, or fresh-aquatic; a "feminine" one tends to lean floral or sweet. That is a style description, the same as "bold" or "subtle" — useful shorthand, not a boundary.',
+          'Skin chemistry, not gender, is what actually changes how a scent reads on a given person — which is also why the same fragrance can smell different from one wearer to the next regardless of who is wearing it.',
+        ],
+      },
+      {
+        heading: 'How to actually shop once you ignore the label',
+        body: [
+          'Shop by note family and occasion instead of the aisle a bottle is displayed in. If you like a scent on a blotter, that is the only signal that matters. Unisex and "shared" fragrance lines exist specifically because so many people were already crossing those marketing lines on their own — the label caught up to the behavior, not the other way around.',
+          'If you are building out a collection, it is worth tracking which note families you actually reach for again and again, independent of how a bottle was marketed. That pattern tells you far more about your taste than any gendered label ever will.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'how-many-perfumes-should-you-own-starter-collection',
+    title: 'How Many Perfumes Should You Actually Own? Building a Starter Collection',
+    metaTitle: 'How Many Perfumes Should You Own | Scent Stack',
+    metaDescription:
+      'A practical framework for how many bottles actually make sense when you are starting a fragrance collection, and what to buy first.',
+    keyword: 'how many perfumes should you own',
+    excerpt:
+      "There is no magic number, but there is a smarter order to buy in. Here is how to build a small collection that actually gets worn, instead of a shelf of impulse buys.",
+    readTime: '4 min read',
+    publishedLabel: 'Getting Started',
+    relatedProductId: 'discovery',
+    coverGifNumber: 8,
+    sections: [
+      {
+        heading: 'Start smaller than you think',
+        body: [
+          'A genuinely useful starter collection is usually three to five bottles, not the twenty-bottle shelf you see in collector videos. Three to five lets you cover the situations that actually come up — work, going out, warm weather, cold weather — without spending on a scent you will wear twice and forget.',
+          'Most people who end up with a drawer of regretted bottles made the same mistake: buying based on a single great moment in a store, rather than against an actual gap in what they already own.',
+        ],
+      },
+      {
+        heading: 'Buy for coverage, not duplication',
+        body: [
+          'The most common beginner mistake is owning five bottles that all smell roughly the same — five different "fresh and clean" scents, for example — because that was the safest category to keep reaching for. A better starter set deliberately covers different territory: one fresh/citrus, one woody or spicy, one floral or gourmand, and maybe one slightly bolder signature scent for occasions that call for it.',
+          'If you are not sure what you already lean toward, that is worth figuring out before buying anything else — it is far cheaper to spend an afternoon identifying your actual preferences than to find out by way of a fourth bottle that smells like the other three.',
+        ],
+      },
+      {
+        heading: 'When to actually expand past five',
+        body: [
+          'Grow the collection when you notice a specific gap, not on a schedule. Common real gaps: no cold-weather scent, nothing for formal evenings, nothing that is fully "just for me, home alone" versus "for being seen." Expanding to fill an actual gap tends to produce a collection you wear in full; expanding because a bottle looked nice online tends to produce the opposite.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'perfume-oils-vs-sprays-whats-the-difference',
+    title: "Perfume Oils vs. Sprays: What's Actually the Difference",
+    metaTitle: 'Perfume Oils vs Sprays Explained | Scent Stack',
+    metaDescription:
+      'How oil-based perfumes (attars) actually differ from alcohol-based sprays — in wear, projection, longevity, and how to apply each one correctly.',
+    keyword: 'perfume oil vs spray',
+    excerpt:
+      "Oils and sprays are not just two bottle formats — they behave completely differently on skin. Here is what actually changes, and which one fits your routine.",
+    readTime: '4 min read',
+    publishedLabel: 'Fragrance Basics',
+    relatedProductId: 'journal',
+    coverGifNumber: 9,
+    sections: [
+      {
+        heading: 'The base is the real difference, not the bottle',
+        body: [
+          'A spray fragrance is dissolved in a denatured alcohol base, which is what carries the scent off the skin and into the air — that is why sprays project further and are easy to apply evenly. A perfume oil (sometimes called an attar) has no alcohol; the fragrance is suspended in a carrier oil, usually jojoba or a similar light oil, which sits closer to the skin instead of evaporating outward.',
+        ],
+      },
+      {
+        heading: 'How that changes wear and projection',
+        body: [
+          'Because alcohol evaporates and oil does not, sprays tend to have a louder, more noticeable opening and then fade in stages as the alcohol carries off the lighter top notes first. Oils skip that loud opening almost entirely — they smell more intimate, warmer, and stay closer to the skin, which is why oils are often described as "skin scents." Oils frequently last just as long as a spray, sometimes longer, but at a much lower volume that only people close to you will notice.',
+        ],
+      },
+      {
+        heading: 'Applying each one correctly',
+        body: [
+          'Sprays are built for a light mist from a few centimeters away — over-spraying does not make a fragrance last longer, it just overwhelms the room. Oils are applied by dabbing, not rubbing, directly onto pulse points; a little goes further than expected since there is no alcohol diluting the concentration.',
+          'If you want a fragrance that is noticed across a room, lean toward a spray. If you want something that feels more personal and lasts through a long day without needing a reapply, an oil is usually the better fit — and it is worth noting in a journal which format actually outperforms the other on your own skin, since that varies more by person than most guides admit.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'how-to-spot-a-fake-perfume-before-you-buy',
+    title: 'How to Spot a Fake Perfume Before You Buy',
+    metaTitle: 'How to Spot a Fake Perfume | Scent Stack',
+    metaDescription:
+      'Practical red flags for counterfeit perfume — packaging, batch codes, pricing, and scent cues — before you hand over your money.',
+    keyword: 'how to spot fake perfume',
+    excerpt:
+      "Counterfeit perfume is a real market, especially online. A few checks before buying can save you from an expensive, unpleasant surprise.",
+    readTime: '5 min read',
+    publishedLabel: 'Buying Guide',
+    relatedProductId: 'collector',
+    coverGifNumber: 10,
+    sections: [
+      {
+        heading: 'Price is the first and strongest signal',
+        body: [
+          'If a bottle is listed well below the price every other retailer sells it at, that is the single biggest red flag, full stop. Legitimate retailers rarely discount recent, popular releases by 40–60%. A steep "deal" on a current bestseller is far more likely to be counterfeit, diluted, or an old, degraded batch than genuine stock someone is offloading out of generosity.',
+        ],
+      },
+      {
+        heading: 'Check the batch code before you open it',
+        body: [
+          'Almost every genuine fragrance bottle has a small engraved or printed batch code, usually on the bottom of the bottle or the base of the box. You can cross-check that code against the brand\'s official site or a batch-code lookup tool — a missing code, a code that does not match the brand\'s format, or a seller who gets evasive when asked for a clear photo of it are all warning signs.',
+        ],
+      },
+      {
+        heading: 'Packaging and seal details rarely lie',
+        body: [
+          'Look closely at the box print quality, font weight, and color accuracy against official product photos — counterfeiters are good at bottles but often slip up on box printing. Cellophane wrapping that is too loose, glued unevenly, or missing the brand\'s usual tamper seal is also worth pausing on. Spray mechanisms that feel flimsy, leak, or produce an uneven mist are a common counterfeit tell as well, since cheap atomizers are one of the easiest parts to cut costs on.',
+        ],
+      },
+      {
+        heading: 'Trust your nose, but only as a last check',
+        body: [
+          'A counterfeit often smells "close but off" — thinner, more alcohol-forward, or missing the development you would expect as it dries down. The problem is that by the time you can smell it, you have usually already paid. That is why price, batch code, and packaging checks matter most: they catch the problem before the sale, not after.',
+        ],
+      },
+    ],
+  },
 ];
 
 export function getBlogPost(slug: string): BlogPost | undefined {

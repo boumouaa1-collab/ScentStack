@@ -3,6 +3,7 @@ import { ArrowLeft, Lock, Mail, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { bundle, testProduct, getProductBySlugOrId, products, type Product } from '@/data/products';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import { useCart } from '@/lib/cartContext';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const PAYPAL_SCRIPT_URL = 'https://www.paypal.com/sdk/js';
 const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || '';
@@ -363,8 +364,11 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
             </div>
 
             <div className="mt-6">
+              {!paypalReady && status !== 'error' && (
+                <LoadingSpinner label="Loading secure checkout" />
+              )}
               <div id="paypal-button-container" className="min-h-[220px]" />
-              {!emailValid && (
+              {!emailValid && paypalReady && (
                 <p className="mt-3 text-center text-xs text-charcoal/50">
                   The PayPal button appears once your email above is valid.
                 </p>

@@ -753,6 +753,97 @@
     }
   }
 
+  /* Loading spinner — used by <LoadingSpinner> */
+  .loading-spinner-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    padding: 1.5rem 0;
+  }
+
+  .loading-spinner {
+    position: relative;
+    display: inline-flex;
+    width: 56px;
+    height: 56px;
+  }
+
+  .loading-spinner-ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: 50% 50%;
+  }
+
+  .loading-spinner-ring circle {
+    stroke: var(--burgundy);
+    opacity: 0.85;
+  }
+
+  .loading-spinner-ring-outer {
+    animation: spinner-rotate 1.4s linear infinite;
+  }
+
+  .loading-spinner-ring-inner {
+    animation: spinner-rotate-reverse 1s linear infinite;
+  }
+
+  .loading-spinner-ring-inner circle {
+    stroke: var(--gold);
+  }
+
+  .loading-spinner-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    border-radius: 9999px;
+    background: var(--gold);
+    animation: spinner-pulse 1.4s ease-in-out infinite;
+  }
+
+  .loading-spinner-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    opacity: 0.6;
+    animation: spinner-label-fade 1.8s ease-in-out infinite;
+  }
+
+  @keyframes spinner-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes spinner-rotate-reverse {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+  }
+
+  @keyframes spinner-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.6; }
+  }
+
+  @keyframes spinner-label-fade {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.85; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .loading-spinner-ring,
+    .loading-spinner-core,
+    .loading-spinner-label {
+      animation: none;
+    }
+  }
+
   /* Hero: slow-drifting gradient blobs for an "alive" background */
   .hero-blob {
     position: absolute;
