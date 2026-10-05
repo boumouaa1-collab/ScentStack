@@ -68,16 +68,16 @@ export const productCatalog = {
 };
 
 // Hidden $1 product used only to verify the live PayPal flow end-to-end before
-// trusting it with real products. Reuses prod1.pdf so there's a real file to deliver.
+// trusting it with real products. Delivers a harmless test.pdf (upload any small PDF with that name).
 productCatalog.livetest = {
   id: 'livetest',
   slug: 'live-checkout-test',
   name: 'Live Checkout Test',
   price: 1.00,
   currency: 'USD',
-  fileName: 'prod1.pdf',
+  fileName: 'test.pdf',
   storageBucket: 'digital-products',
-  storagePath: 'prod1.pdf',
+  storagePath: 'test.pdf',
   hostedButtonId: '',
 };
 
@@ -111,4 +111,44 @@ export function getProduct(productIdOrSlug) {
 export function getProductPrice(productIdOrSlug) {
   const product = getProduct(productIdOrSlug);
   return product ? Number(product.price) : null;
+}
+
+
+// ---------------------------------------------------------------------------
+// Order resolution — the ONE place that decides what an order contains and costs.
+// create-order stores `ref` on the PayPal order; capture-order reads it back from
+// PayPal (never from the browser) so nobody can pay for one thing and receive another.
+// ---------------------------------------------------------------------------
+const toCents = (value) => Math.round(Number(value) * 100);
+
+export function resolveOrder(ids) {
+  const list = (Array.isArray(ids) ? ids : [ids])
+    .map((id) => String(id || '').toLowerCase().trim())
+    .filter(Boolean);
+
+  if (list.includes(bundleProduct.id)) {
+    return {
+      isBundle: true,
+      products: bundleProduct.productIds.map((id) => productCatalog[id]),
+      total: toCents(bundleProduct.price) / 100,
+      ref: bundleProduct.id,
+    };
+  }
+
+  const seen = new Set();
+  const products = [];
+  for (const id of list) {
+    const product = getProduct(id);
+    if (product && !seen.has(product.id)) {
+      seen.add(product.id);
+      products.push(product);
+    }
+  }
+
+  const cents = products.reduce((sum, product) => sum + toCents(product.price), 0);
+  return { isBundle: false, products, total: cents / 100, ref: products.map((product) => product.id).join(',') };
+}
+
+export function resolveOrderFromReference(reference) {
+  return resolveOrder(String(reference || '').split(/[,+]/));
 }

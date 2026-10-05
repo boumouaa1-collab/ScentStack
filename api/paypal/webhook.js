@@ -2,7 +2,7 @@ import { registerWebhookEvent, createOrderRecord, getOrderRecord, markOrder } fr
 import { paypalRequest, verifyWebhook } from '../lib/paypal.js';
 import { createSignedDownloadUrl } from '../lib/supabase.js';
 import { sendDownloadEmail, sendBundleDownloadEmail, sendUnmatchedPurchaseAlert } from '../lib/email.js';
-import { getProduct, productCatalog, bundleProduct } from '../lib/products.js';
+import { getProduct, productCatalog, bundleProduct, resolveOrderFromReference } from '../lib/products.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -41,6 +41,11 @@ export default async function handler(req, res) {
       purchaseUnit.custom_id ||
       resource.reference_id ||
       purchaseUnit.reference_id;
+    // Orders created by our own checkout are fulfilled (and emailed) by /api/paypal/capture-order.
+    // Handling them here too would send the customer duplicate emails, so the webhook skips them.
+    if (eventType === 'PAYMENT.CAPTURE.COMPLETED' && resolveOrderFromReference(productReference).products.length > 0) {
+      return res.status(200).json({ ok: true, handledBy: 'capture-order' });
+    }
     const itemName = purchaseUnit.items?.[0]?.name || purchaseUnit.description;
     const capturedAmountForMatch = Number(resource.amount?.value || purchaseUnit.amount?.value || 0);
     const priceMatches = Object.values(productCatalog).filter(
@@ -116,7 +121,7 @@ export default async function handler(req, res) {
         const items = [];
         for (const id of bundleProduct.productIds) {
           const p = productCatalog[id];
-          const url = await createSignedDownloadUrl(p.storagePath, p.storageBucket, 3600);
+          const url = await createSignedDownloadUrl(p.storagePath, p.storageBucket, 604800);
           items.push({ name: p.name, url: url || `${process.env.APP_URL || 'https://scentstack.store'}/thank-you?product=bundle` });
         }
         const emailResult = await sendBundleDownloadEmail({
@@ -131,7 +136,7 @@ export default async function handler(req, res) {
           email_error: emailResult.ok ? null : emailResult.reason || 'EMAIL_FAILED',
         });
       } else if (product) {
-        const signedUrl = await createSignedDownloadUrl(product.storagePath, product.storageBucket, 3600);
+        const signedUrl = await createSignedDownloadUrl(product.storagePath, product.storageBucket, 604800);
         if (signedUrl && order) {
           markOrder(orderId, { secure_download_url: signedUrl, download_created_at: new Date().toISOString() });
         }

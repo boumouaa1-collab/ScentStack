@@ -1,7 +1,14 @@
+import { getPublishAt, isSlugPublished } from '@/lib/blogSchedule';
+
 export type BlogSection = {
   heading: string;
   body: string[];
+  list?: string[];
+  quote?: { text: string; cite?: string };
+  image?: { src: string; alt: string; caption?: string };
 };
+
+export type BlogFaq = { q: string; a: string };
 
 export type BlogPost = {
   slug: string;
@@ -13,7 +20,12 @@ export type BlogPost = {
   readTime: string;
   publishedLabel: string;
   relatedProductId: string;
-  coverGifNumber: number;
+  // Older posts use an animated cover (coverGifNumber); newer product articles use coverImage.
+  coverGifNumber?: number;
+  coverImage?: string;
+  coverAlt?: string;
+  subtitle?: string;
+  faq?: BlogFaq[];
   sections: BlogSection[];
 };
 
@@ -867,8 +879,472 @@ export const blogPosts: BlogPost[] = [
       },
     ],
   },
+  // ───────────────────────── Product articles (drip-published, see blog-schedule.json) ─────────────────────────
+  {
+    slug: 'fragrance-discovery-workbook-understand-your-taste',
+    title: 'How to Understand Your Fragrance Taste (Before You Buy Another Bottle)',
+    subtitle: 'A simple way to turn “I like how it smells” into a taste profile you can actually shop with.',
+    metaTitle: 'Fragrance Discovery Workbook: Find Your Taste | Scent Stack',
+    metaDescription:
+      'Map your perfume preferences, favorite notes and notes to avoid with the Fragrance Discovery Workbook — a digital guide to a more personal collection.',
+    keyword: 'fragrance discovery workbook',
+    excerpt:
+      'Most of us buy perfume on impulse and hope for the best. Here is how to put words to your taste so every future bottle is a better match.',
+    readTime: '6 min read',
+    publishedLabel: 'Fragrance Discovery',
+    relatedProductId: 'discovery',
+    coverImage: '/productImages/pro1/01_HERO_ScentStack.jpg',
+    coverAlt: 'The Fragrance Discovery Workbook by Scent Stack on a styled perfume flat lay',
+    sections: [
+      {
+        heading: 'Why “I just like it” is not enough',
+        body: [
+          'Ask a perfume lover what they like and you will usually hear something vague: “fresh but not too sweet”, “warm, kind of cozy”. Those are real preferences, but they are hard to shop with. A fragrance counter, a decant shop and a sample set all speak in notes, accords and families — and if you cannot name yours, you are guessing every time.',
+          'The cost of guessing adds up quietly: blind buys that never leave the shelf, three bottles that smell almost the same, and a nagging sense that your collection does not quite feel like you. Understanding your taste is the cheapest fragrance upgrade there is, and it starts before you spend anything.',
+        ],
+      },
+      {
+        heading: 'Start with what you already love',
+        body: ['You do not need to learn perfumery first. Start from your own history and ask yourself a few honest questions:'],
+        list: [
+          'Which three fragrances have you worn the most, and what do they have in common?',
+          'Which scents outside perfume — a candle, a bakery, a forest walk — instantly make you happy?',
+          'Which fragrances have you tried and quietly disliked, and what was it about them?',
+          'When you imagine your ideal scent, is it bright and airy, warm and enveloping, or somewhere in between?',
+        ],
+        quote: { text: 'Taste is not a mystery. It is a pattern you have not written down yet.' },
+      },
+      {
+        heading: 'Name your favorite notes — and your no-go notes',
+        body: [
+          'Once you have a few answers, look for repeats. Maybe vanilla and sandalwood keep appearing, or citrus, or something green and herbal. Those repeats are your favorite notes, and they are the most useful shopping filter you will ever have: when you read a note list, you can spot a likely match in seconds.',
+          'Just as important is the list nobody keeps: notes to avoid. If heavy musk gives you a headache or sharp aldehydes feel like cleaning products, write that down. A short “no” list prevents more bad purchases than any review you will read.',
+        ],
+      },
+      {
+        heading: 'Build a one-page taste profile',
+        body: [
+          'Put it all on one page: the fragrance families you lean toward, your favorite notes, the notes you avoid, and the moods you want fragrance to give you. It does not need to be fancy — it needs to be somewhere you can look at it before you buy or before you open a sample set.',
+          'Revisit it every few months. Taste evolves, and a profile you update stays useful instead of becoming a snapshot of who you were two years ago.',
+        ],
+        image: {
+          src: '/blog/taste-profile.svg',
+          alt: 'Example fragrance taste profile showing fragrance families, favorite notes and notes to avoid',
+          caption: 'An example taste profile: families you lean toward, notes you love, notes you avoid.',
+        },
+      },
+      {
+        heading: 'Where the Fragrance Discovery Workbook fits in',
+        body: [
+          'The Fragrance Discovery Workbook is built around exactly this process. It gives you fragrance preference worksheets to find your patterns, a fragrance collection tracker to record what you own, and favorite-note and notes-to-avoid trackers so your taste lives on the page instead of in your head.',
+          'It is a digital PDF, delivered to your email right after purchase, and it is designed for anyone who wants to wear fragrance with intention — whether you own two bottles or twenty.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: 'Is the Fragrance Discovery Workbook good for beginners?',
+        a: 'Yes. It starts from what you already like rather than assuming any perfume knowledge, so you can learn the vocabulary as you fill it in.',
+      },
+      {
+        q: 'Do I need to own a big perfume collection to use it?',
+        a: 'No. The preference worksheets work even if you only own a bottle or two, and the collection tracker grows with you.',
+      },
+      {
+        q: 'How do I receive the workbook?',
+        a: 'It is a digital PDF. After checkout, a private download link is sent to the email address you enter.',
+      },
+    ],
+  },
+  {
+    slug: 'perfume-collection-tracker-inventory-dashboard',
+    title: 'The Perfume Collection Tracker: Inventory, Dashboard & Wishlist in One Place',
+    subtitle: 'Know what you own, what you actually wear, and what you really need next.',
+    metaTitle: 'Perfume Collection Tracker: Inventory & Organizer | Scent Stack',
+    metaDescription:
+      'Track your perfume inventory, see your collection by fragrance family, spot duplicates and gaps, and manage a wishlist with The Fragrance Collection Tracker.',
+    keyword: 'perfume collection tracker',
+    excerpt:
+      'A collection you cannot see is a collection you cannot improve. Here is what a good perfume inventory tracks — and what it quietly saves you from buying.',
+    readTime: '6 min read',
+    publishedLabel: 'Collection Management',
+    relatedProductId: 'collector',
+    coverImage: '/productImages/prod2/preview_page_1.png',
+    coverAlt: 'A preview page from The Fragrance Collection Tracker perfume inventory by Scent Stack',
+    sections: [
+      {
+        heading: 'The hidden cost of an untracked collection',
+        body: [
+          'Collections rarely get out of hand all at once. A gift here, a duty-free bottle there, a decant swap that turned into a full bottle — and suddenly you own twenty fragrances and could not list ten of them from memory.',
+          'The real problem is not clutter. It is that you stop making good decisions: you re-buy scents that overlap, you forget favorites hidden behind the shelf, and you leave bottles long enough that they are no longer at their best.',
+        ],
+      },
+      {
+        heading: 'What a good perfume inventory includes',
+        body: ['A useful inventory is less about data and more about the few details that change what you do next:'],
+        list: [
+          'The basics: brand, fragrance name and bottle size.',
+          'Its fragrance family, so you can see the shape of your collection.',
+          'How often you actually wear it — the most honest column in any tracker.',
+          'Occasion or season it suits best.',
+          'Whether it is a keeper, a maybe, or ready to pass on.',
+        ],
+        quote: { text: 'Your most-worn bottles tell the truth about your taste. Your shelf only tells the truth about your shopping.' },
+      },
+      {
+        heading: 'Read your collection by fragrance family',
+        body: [
+          'Once everything is logged, step back and look at the mix. A family-by-family breakdown shows you instantly whether you are heavy on woody and gourmand scents and missing anything fresh, or whether half your shelf is variations on one idea.',
+          'That one view is why a dashboard beats a plain list. A list tells you what you own; a breakdown tells you what your collection is missing.',
+        ],
+        image: {
+          src: '/blog/collection-dashboard.svg',
+          alt: 'Example perfume collection dashboard showing bottles by fragrance family, most-worn family and a possible duplicate',
+          caption: 'An example dashboard: your collection by family, your most-worn scents and possible duplicates.',
+        },
+      },
+      {
+        heading: 'Spot duplicates and gaps before you shop',
+        body: [
+          'Duplicates are easy to miss when you are looking at a shelf and obvious when you are looking at a tracker. If three bottles share the same vanilla-and-woods core, you will see it — and you will probably rediscover which one you reach for.',
+          'Gaps work the same way. Maybe you own nothing for hot weather, or nothing for work. Knowing the gap turns “I want something new” into “I need a fresh daytime scent”, which is a far better brief to take into a store or a sample set.',
+        ],
+      },
+      {
+        heading: 'Keep a wishlist that protects your budget',
+        body: [
+          'A wishlist is not a shopping list — it is a pause button. Writing a fragrance down and sitting with it for a few weeks filters out impulse buys, and checking it against your gaps tells you which wish actually earns a place.',
+          'The Fragrance Collection Tracker brings all of this together: a collection inventory, a collection dashboard, a fragrance-family breakdown, most-worn tracking, gap and duplicate spotting, and a wishlist manager — in a digital PDF delivered to your email.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: 'What can I track with The Fragrance Collection Tracker?',
+        a: 'You can keep a full inventory of what you own, organize it by fragrance family, see your most-worn scents, spot gaps and duplicates, and manage a wishlist.',
+      },
+      {
+        q: 'Is this better than a spreadsheet?',
+        a: 'A spreadsheet works if you enjoy building one. The tracker gives you the structure already designed, so you can start logging bottles straight away.',
+      },
+      {
+        q: 'Is it a physical product?',
+        a: 'No. It is a digital PDF, delivered by email right after checkout.',
+      },
+    ],
+  },
+  {
+    slug: 'digital-fragrance-journal-reviews-dry-down-wear-log',
+    title: 'How to Keep a Fragrance Journal: Reviews, Dry-Downs and a Wear Log',
+    subtitle: 'Remember what you smelled, how it felt, and which scents you keep reaching for.',
+    metaTitle: 'Digital Fragrance Journal: Reviews & Wear Log | Scent Stack',
+    metaDescription:
+      'Document first impressions, dry-downs, performance, moods and memories with the Digital Fragrance Journal — a refined perfume review journal and wear log.',
+    keyword: 'fragrance journal',
+    excerpt:
+      'Perfume is fleeting, which is exactly why writing it down helps. Here is a simple way to journal first impressions, dry-downs and the scents you wear most.',
+    readTime: '6 min read',
+    publishedLabel: 'Fragrance Reviews',
+    relatedProductId: 'journal',
+    coverImage: '/productImages/prod3/luxury_fragrance_journal_flatlay.jpg',
+    coverAlt: 'The Digital Fragrance Journal by Scent Stack styled on a luxury flat lay',
+    sections: [
+      {
+        heading: 'Why write about perfume at all?',
+        body: [
+          'Scent is one of the hardest senses to remember. A week after you try a sample, you may recall that you liked it but not why — or you remember a vague unease about something that, on paper, should have been perfect.',
+          'A fragrance journal turns that fleeting experience into something you can reread. It is part diary, part reference library, and over time it becomes the best guide you have to your own taste.',
+        ],
+      },
+      {
+        heading: 'Capture the first impression',
+        body: [
+          'Write down your reaction in the first minute, before you have time to talk yourself into a verdict. Was it bright, sweet, sharp, smoky? Did it make you smile or hesitate? First impressions are not always right, but they are always informative.',
+          'Keep it short and honest. “Warm and creamy, a little too sweet” is more useful in six months than a paragraph of borrowed perfume vocabulary.',
+        ],
+      },
+      {
+        heading: 'Follow it through to the dry-down',
+        body: [
+          'Most disappointments — and most love stories — happen later. A fragrance can open fresh and settle into something heavy, or start sharp and become a soft skin scent you adore. Come back to the same spray an hour in and again a few hours later, and note what changed.',
+        ],
+        image: {
+          src: '/blog/dry-down-timeline.svg',
+          alt: 'Timeline of a perfume from opening in the first minutes to heart within the first hour and dry-down hours later',
+          caption: 'Opening, heart and dry-down: one line at each stage is all the journal needs.',
+        },
+        quote: { text: 'Never judge a perfume by its first ten seconds. Judge it by the person you are three hours later.' },
+      },
+      {
+        heading: 'Record performance, mood and memory',
+        body: ['Beyond the scent itself, the details that make a journal personal are the ones a spec sheet will never tell you:'],
+        list: [
+          'Performance: how long it lasted and how far it traveled.',
+          'Mood: how it made you feel, and what you wore it for.',
+          'Memory: what or who it reminded you of.',
+          'Weather and setting, if they changed how it smelled.',
+        ],
+      },
+      {
+        heading: 'Let the wear log reveal your real favorites',
+        body: [
+          'The quiet power of a journal is the pattern. After a month or two, you can see which scents you reach for again and again, which ones were only exciting for a day, and which moods you keep chasing. That is the information that makes your next purchase smarter.',
+          'The Digital Fragrance Journal is built for exactly this: fragrance diary pages, a first-impression tracker, dry-down reflections, and space for performance, moods, memories and the scents you wear most — as a refined digital PDF delivered by email.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: 'What goes into a fragrance journal?',
+        a: 'First impressions, how the scent develops into the dry-down, how long it lasts, the mood or memory it brings, and how often you wear it.',
+      },
+      {
+        q: 'How often should I write in it?',
+        a: 'Whenever you try or wear something that interests you. A few lines each time is enough — consistency matters more than length.',
+      },
+      {
+        q: 'Is the Digital Fragrance Journal a PDF?',
+        a: 'Yes. It is a digital product delivered to your email after checkout.',
+      },
+    ],
+  },
+  {
+    slug: 'printable-perfume-journal-scent-review-diary',
+    title: 'A Printable Perfume Journal: The Simple Scent Review Page You’ll Actually Use',
+    subtitle: 'No complicated system — just one clean page for every fragrance you try.',
+    metaTitle: 'Printable Perfume Journal: Scent Review Diary | Scent Stack',
+    metaDescription:
+      'A simple printable perfume journal for recording notes, impressions, performance, moods, memories and ratings — without needing a complicated system.',
+    keyword: 'printable perfume journal',
+    excerpt:
+      'The best fragrance journal is the one you will actually fill in. Here is why one simple review page per perfume beats an elaborate system.',
+    readTime: '5 min read',
+    publishedLabel: 'Quick Reference',
+    relatedProductId: 'printable',
+    coverImage: '/productImages/pro1/01_HERO_ScentStack.jpg',
+    coverAlt: 'The Perfume Journal Printable by Scent Stack shown with a perfume flat lay',
+    sections: [
+      {
+        heading: 'Complicated systems fail',
+        body: [
+          'Most fragrance journaling habits die the same way: an ambitious setup, a few enthusiastic entries, then silence. When recording a perfume takes ten minutes and six different fields, you skip it — and the notes you needed are never written.',
+          'The fix is not more discipline. It is a lighter format. If a review takes three minutes, you will do it while the scent is still on your skin.',
+        ],
+      },
+      {
+        heading: 'One page per perfume',
+        body: ['A good review page asks for just enough, in an order that follows how you actually experience a fragrance:'],
+        list: [
+          'Name and brand, so you can find it later.',
+          'Notes and accords you can pick out.',
+          'The opening: your first impression.',
+          'The dry-down: what it becomes.',
+          'Performance, mood and memory.',
+          'A rating that reflects how much you want to wear it again.',
+        ],
+        image: {
+          src: '/blog/review-page.svg',
+          alt: 'One-page perfume review layout with fields for notes, opening, dry-down, performance, mood and rating',
+          caption: 'One page, a handful of fields, three minutes — that is the whole review.',
+        },
+      },
+      {
+        heading: 'The three-minute review',
+        body: [
+          'Spray, wait, write. Note the opening within the first minute, then come back after the scent has settled for the dry-down and performance. Add the mood or memory last, since that is the part you will forget first.',
+          'Do not edit yourself. Rough, honest notes are far more valuable than polished ones, because you are writing for the future you who is standing in a store, trying to decide.',
+        ],
+        quote: { text: 'A journal you fill in beats a beautiful one you abandon.' },
+      },
+      {
+        heading: 'Why print it?',
+        body: [
+          'There is something about pen on paper that suits fragrance. A printed page sits next to your bottles, travels with your sample set, and has no notifications competing for your attention. You can print as many review pages as you need and keep them in a binder that grows with your collection.',
+          'The Perfume Journal Printable is made for this: perfume review pages, notes and accords, opening and dry-down sections, performance, moods, memories and ratings — an elegant, simple diary without a complicated system.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: 'What is the difference between the Perfume Journal Printable and the Digital Fragrance Journal?',
+        a: 'The printable is a simple, quick-reference review diary. The Digital Fragrance Journal is a fuller journal with diary pages, a first-impression tracker, dry-down reflections and a wear log.',
+      },
+      {
+        q: 'Can I print as many pages as I need?',
+        a: 'Yes. It is a digital PDF, so you can print the review pages whenever you try a new fragrance.',
+      },
+      {
+        q: 'Do I need any special setup?',
+        a: 'No. Print a page, grab a pen and start writing — that is the point of the format.',
+      },
+    ],
+  },
+  {
+    slug: 'fragrance-personality-signature-scent-workbook',
+    title: 'Fragrance Personality: How to Discover Your Signature Scent with a Guided Workbook',
+    subtitle: 'Find the notes, moods and styles that feel most like you — then choose a scent that does too.',
+    metaTitle: 'Fragrance Personality & Signature Scent Workbook | Scent Stack',
+    metaDescription:
+      'Discover your fragrance personality, favorite notes and notes to avoid with Find Your Signature Scent — a guided workbook for choosing a scent that feels like you.',
+    keyword: 'fragrance personality',
+    excerpt:
+      'A signature scent is not about finding the “best” perfume. It is about finding the one that feels like you. Here is a guided way to get there.',
+    readTime: '6 min read',
+    publishedLabel: 'Self-Discovery',
+    relatedProductId: 'signature',
+    coverImage: '/productImages/pro1/01_HERO_ScentStack.jpg',
+    coverAlt: 'Find Your Signature Scent personal fragrance discovery workbook by Scent Stack',
+    sections: [
+      {
+        heading: 'A signature scent is a feeling, not a bottle',
+        body: [
+          'People often chase a signature scent by asking what the best perfume is, or what everyone else wears. But a signature fragrance is personal: it is the one you reach for without thinking, the one friends connect with you, the one that feels like an extension of how you want to come across.',
+          'That means the search starts with you, not with the shelf. Before you compare bottles, it helps to know your fragrance personality — the styles, notes and moods you are naturally drawn to.',
+        ],
+      },
+      {
+        heading: 'Start with your fragrance personality',
+        body: [
+          'Think about how you want a scent to feel: polished and quiet, warm and inviting, fresh and energetic, bold and memorable. Then think about how you want others to experience it — close and intimate, or noticeable from across the room.',
+          'These answers shape your fragrance personality. They do not give you a perfume name, but they narrow a world of thousands of fragrances into a handful of directions worth sampling.',
+        ],
+        quote: { text: 'The scent that suits you is rarely the loudest one on the shelf. It is the one you stop thinking about.' },
+      },
+      {
+        heading: 'Narrow it down: notes you love, notes you avoid',
+        body: ['Once you have a direction, get specific. A guided process usually moves through three layers:'],
+        list: [
+          'Favorite notes: the ingredients that keep showing up in the scents you love.',
+          'Notes to avoid: the ingredients that never sit right on your skin.',
+          'Mood and occasion: when you want to wear it, and how you want it to make you feel.',
+        ],
+        image: {
+          src: '/blog/signature-scent-steps.svg',
+          alt: 'Three steps to a signature scent: notice what you love, narrow notes and moods, then commit',
+          caption: 'Notice, narrow, commit — the shortest path to a scent that feels like you.',
+        },
+      },
+      {
+        heading: 'Test with intention, then commit',
+        body: [
+          'With a shortlist in hand, sample on skin and wear each one for a full day. Note how it opens, how it settles and whether you still like it at the end of the evening. The right signature scent usually reveals itself by being the one you keep wanting to wear.',
+          'Give yourself permission to take your time. A signature scent chosen slowly and deliberately is one you will still love years from now.',
+        ],
+      },
+      {
+        heading: 'How Find Your Signature Scent helps',
+        body: [
+          'Find Your Signature Scent is a guided workbook that walks you through this exact journey: a fragrance personality quiz, favorite-note discovery, a notes-to-avoid tracker, and prompts that help you identify fragrance styles, notes and moods that feel most like you. It is a digital PDF delivered to your email.',
+          'If you want the broader how-to first, our guide on finding your signature scent is a good companion read.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: 'What is a signature scent?',
+        a: 'A signature scent is a fragrance you wear often enough that it becomes part of how people recognize you — one that suits your taste, your skin and your personality.',
+      },
+      {
+        q: 'Does the workbook tell me which perfume to buy?',
+        a: 'It helps you understand your own fragrance personality and preferences so you can choose with confidence, rather than naming a single bottle for everyone.',
+      },
+      {
+        q: 'How is it different from the Fragrance Discovery Workbook?',
+        a: 'Find Your Signature Scent is focused on identifying one scent that feels like you, with a fragrance personality quiz. The Discovery Workbook is a broader tool for understanding your taste and organizing your collection.',
+      },
+    ],
+  },
+  {
+    slug: 'fragrance-wardrobe-planner-scent-rotation',
+    title: 'Fragrance Wardrobe Planner: Build a Scent Rotation for Work, Dates and Travel',
+    subtitle: 'The right scent for the right moment — without owning fifty bottles.',
+    metaTitle: 'Fragrance Wardrobe Planner: Build a Scent Rotation | Scent Stack',
+    metaDescription:
+      'Plan a fragrance wardrobe around everyday wear, work, dates, evenings, seasons and travel with The Fragrance Wardrobe Planner and build a scent rotation that fits your life.',
+    keyword: 'fragrance wardrobe planner',
+    excerpt:
+      'A fragrance wardrobe is just a scent rotation planned around your real life. Here is how to build one that covers everyday, work, evenings and everything in between.',
+    readTime: '6 min read',
+    publishedLabel: 'Collection Planning',
+    relatedProductId: 'wardrobe',
+    coverImage: '/productImages/pro1/01_HERO_ScentStack.jpg',
+    coverAlt: 'The Fragrance Wardrobe Planner by Scent Stack for building a perfume rotation',
+    sections: [
+      {
+        heading: 'What a fragrance wardrobe really is',
+        body: [
+          'Think about how you dress: you do not wear the same outfit to the office, a dinner and a beach holiday. A fragrance wardrobe applies the same idea to scent — a small, deliberate rotation of fragrances chosen for the different parts of your life.',
+          'It is not about owning more. It is about owning the right few, and knowing exactly when to reach for each one.',
+        ],
+      },
+      {
+        heading: 'Start with how you actually live',
+        body: ['Skip the fantasy collection and map the moments you actually dress for. Most wardrobes begin with a handful of core slots:'],
+        list: [
+          'Everyday: your reliable, easy, go-to scent.',
+          'Work: polished and unobtrusive, suited to shared spaces.',
+          'Dates and evenings: warmer, more memorable, more personal.',
+          'Vacation and travel: light, fresh and happy in the heat.',
+          'Special occasions: the one you save for moments that matter.',
+        ],
+        image: {
+          src: '/blog/scent-rotation-grid.svg',
+          alt: 'Fragrance wardrobe rotation grid with everyday, work, date night, evening, vacation and special occasion slots plus seasons',
+          caption: 'A scent rotation grid: occasions across the top, seasons underneath.',
+        },
+      },
+      {
+        heading: 'Add the seasons',
+        body: [
+          'Weather changes how fragrance behaves. Lighter, fresher scents tend to feel better in the heat, while richer, warmer ones come into their own in cold weather. Layering the seasons over your occasions shows you quickly where a single bottle can do double duty and where you genuinely have a gap.',
+          'If you want a deeper dive on this, our guide to building a fragrance wardrobe for every season goes season by season.',
+        ],
+        quote: { text: 'A good wardrobe is not a bigger shelf. It is a clearer answer to ‘what do I wear today?’' },
+      },
+      {
+        heading: 'Rotate on purpose',
+        body: [
+          'Once your slots are filled, rotation becomes easy. You are no longer staring at a shelf and defaulting to the same bottle — you have a plan. That also protects the rest of your collection: fragrances that live in a rotation get worn, instead of waiting for a perfect moment that never comes.',
+          'Review your plan every season. Swap a slot when your life or your taste changes, and let gaps guide your next purchase.',
+        ],
+      },
+      {
+        heading: 'Plan it on the page',
+        body: [
+          'The Fragrance Wardrobe Planner is designed to do this work for you. It helps you organize your scents around everyday wear, work, dates, evenings, seasons, vacations and special occasions, with a signature scent planner, an everyday fragrance section and work and professional planning. It is a digital PDF delivered to your email.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: 'How many perfumes do I need for a fragrance wardrobe?',
+        a: 'There is no magic number. Many people start with a handful covering everyday, work, evening and a seasonal option, then expand only where they find a real gap.',
+      },
+      {
+        q: 'Can one fragrance fill more than one slot?',
+        a: 'Absolutely. A versatile scent can cover everyday wear and work, for example. The planner helps you see where bottles overlap and where you need something new.',
+      },
+      {
+        q: 'Is the planner printable?',
+        a: 'It is a digital PDF delivered to your email after checkout, so you can use it digitally or print the pages you want.',
+      },
+    ],
+  },
 ];
 
-export function getBlogPost(slug: string): BlogPost | undefined {
-  return blogPosts.find((post) => post.slug === slug);
+/** Posts that are live right now (scheduled posts appear automatically at their publish time). */
+export function getPublishedPosts(now: number = Date.now()): BlogPost[] {
+  const live = blogPosts.filter((post) => isSlugPublished(post.slug, now));
+  const scheduled = live
+    .filter((post) => getPublishAt(post.slug) !== null)
+    .sort((a, b) => (getPublishAt(b.slug) as number) - (getPublishAt(a.slug) as number));
+  const evergreen = live.filter((post) => getPublishAt(post.slug) === null);
+  return [...scheduled, ...evergreen];
 }
+
+/** Returns a post only if it is live — unpublished articles behave like they do not exist yet. */
+export function getBlogPost(slug: string): BlogPost | undefined {
+  return blogPosts.find((post) => post.slug === slug && isSlugPublished(post.slug));
+}
+
+export { getPublishAt };

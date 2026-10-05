@@ -1,0 +1,13 @@
+{
+  "_help": "One line per scheduled article: \"slug\": \"YYYY-MM-DD\" goes live at 'time' (Morocco time) on that date. A full timestamp like 2026-10-06T00:00:00+01:00 is also accepted. Articles NOT listed here are always live.",
+  "time": "20:30",
+  "timeZone": "Africa/Casablanca",
+  "posts": {
+    "fragrance-discovery-workbook-understand-your-taste": "2026-10-06T00:00:00+01:00",
+    "perfume-collection-tracker-inventory-dashboard": "2026-10-07",
+    "digital-fragrance-journal-reviews-dry-down-wear-log": "2026-10-08",
+    "printable-perfume-journal-scent-review-diary": "2026-10-09",
+    "fragrance-personality-signature-scent-workbook": "2026-10-10",
+    "fragrance-wardrobe-planner-scent-rotation": "2026-10-11"
+  }
+}

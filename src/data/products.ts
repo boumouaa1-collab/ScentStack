@@ -400,9 +400,9 @@ export const testProduct = {
   title: 'Live Checkout Test — $1',
   subtitle: 'Internal test purchase used to verify the live PayPal flow end-to-end.',
   price: 1,
-  format: 'Digital PDF (test — delivers the Fragrance Discovery Workbook file)',
-  fileName: 'prod1.pdf',
-  storagePath: 'prod1.pdf',
+  format: 'Digital PDF (test — delivers a small test.pdf)',
+  fileName: 'test.pdf',
+  storagePath: 'test.pdf',
   hostedButtonId: '',
 };
 
