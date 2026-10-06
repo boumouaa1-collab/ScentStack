@@ -1,3 +1,8 @@
+// Strict address check used before any send: needs a real TLD (so "name@gmail.c" is rejected).
+export function isValidEmail(value) {
+  return typeof value === 'string' && /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(value.trim());
+}
+
 export async function sendDownloadEmail({ to, productName, fileName, downloadUrl, amount, idempotencyKey }) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM || process.env.RESEND_SUPPORT_FROM || 'Scent Stack <onboarding@resend.dev>';
@@ -201,8 +206,9 @@ export async function sendUnmatchedPurchaseAlert({ orderId, amount, customerEmai
 export async function sendFulfillmentAlert({ orderId, amount, customerEmail, problem, links }) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM || process.env.RESEND_SUPPORT_FROM || 'Scent Stack <onboarding@resend.dev>';
-  const to = process.env.SUPPORT_EMAIL || 'aymaneelmj@gmail.com';
-  if (!apiKey || !to) return { ok: false, reason: 'NOT_CONFIGURED' };
+  // Alerts go to SUPPORT_EMAIL AND a second address, so a dead/suppressed mailbox can never swallow one.
+  const to = [...new Set([process.env.SUPPORT_EMAIL, process.env.ALERT_EMAIL, 'aymaneelmj@gmail.com'].filter(isValidEmail).map((a) => a.trim()))];
+  if (!apiKey || to.length === 0) return { ok: false, reason: 'NOT_CONFIGURED' };
 
   const linkLines = (links || []).map((item) => `${item.name}: ${item.url}`).join('\n');
   const response = await fetch('https://api.resend.com/emails', {
@@ -210,7 +216,7 @@ export async function sendFulfillmentAlert({ orderId, amount, customerEmail, pro
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       from,
-      to: [to],
+      to,
       subject: `⚠️ Scent Stack order needs attention (order ${orderId})`,
       text: `${problem}\n\nOrder ID: ${orderId}\nAmount: ${amount}\nCustomer email: ${customerEmail || 'unknown'}${linkLines ? `\n\nDownload links (valid 7 days):\n${linkLines}` : ''}`,
     }),

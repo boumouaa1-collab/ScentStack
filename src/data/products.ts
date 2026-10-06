@@ -403,6 +403,8 @@ export const testProduct = {
   format: 'Digital PDF (test — delivers a small test.pdf)',
   fileName: 'test.pdf',
   storagePath: 'test.pdf',
+  coverImage: '/productImages/test/test-cover.svg',
+  previewImages: ['/productImages/test/test-cover.svg'],
   hostedButtonId: '',
 };
 

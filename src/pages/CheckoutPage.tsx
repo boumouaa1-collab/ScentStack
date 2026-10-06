@@ -2,12 +2,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Lock, Mail, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { bundle, testProduct, getProductBySlugOrId, products, type Product } from '@/data/products';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
+import { outOfStock, stockMessage } from '@/lib/stock';
+import { STRICT_EMAIL_RE, suggestEmailFix, maskEmail } from '@/lib/emailCheck';
 import { useCart } from '@/lib/cartContext';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 const PAYPAL_SCRIPT_URL = 'https://www.paypal.com/sdk/js';
 const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || '';
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type CheckoutState = 'idle' | 'loading' | 'processing' | 'success' | 'error';
 
@@ -45,7 +46,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   // cart instead of charging for it in isolation — so if you already had other
   // items picked, "Get [Product]" adds to what you're buying rather than replacing it.
   useEffect(() => {
-    if (isSpecialMode || requestedProductId === 'cart') return;
+    if (isSpecialMode || requestedProductId === 'cart' || outOfStock) return;
     const match = getProductBySlugOrId(requestedProductId);
     if (match) addItem(match.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,8 +78,15 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   const cartIsEmpty = !isSpecialMode && cartProducts.length === 0;
 
   const [email, setEmail] = useState('');
+  const [emailConfirm, setEmailConfirm] = useState('');
   const [emailTouched, setEmailTouched] = useState(false);
-  const emailValid = EMAIL_RE.test(email.trim());
+  // The download goes to this exact address, so it must be well-formed, free of common typos
+  // (like "gmail.c") and typed twice the same way before the PayPal button appears.
+  const emailFix = suggestEmailFix(email);
+  const emailsMatch = email.trim().toLowerCase() === emailConfirm.trim().toLowerCase();
+  const emailValid = STRICT_EMAIL_RE.test(email.trim()) && !emailFix && emailsMatch;
+  // Real products are not for sale while the shop is marked out of stock (the $1 test always is).
+  const blocked = outOfStock && !isTestMode;
 
   const [status, setStatus] = useState<CheckoutState>('idle');
   const [message, setMessage] = useState<string>('Enter your email to unlock secure checkout. 📩');
@@ -132,9 +140,9 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
     if (!container) return;
     container.innerHTML = '';
 
-    if (!paypalReady || cartIsEmpty || lineItems.length === 0) return;
+    if (blocked || !paypalReady || cartIsEmpty || lineItems.length === 0) return;
     if (!emailValid) {
-      setMessage(emailTouched ? '⚠️ Enter a valid email — that\u2019s where your download goes.' : 'Enter your email to unlock secure checkout. 📩');
+      setMessage(emailTouched ? '⚠️ Enter your email twice, exactly the same — that\u2019s where your download goes.' : 'Enter your email to unlock secure checkout. 📩');
       return;
     }
 
@@ -180,6 +188,14 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
             return;
           }
           setStatus('success');
+          try {
+            sessionStorage.setItem(
+              'scentstack_last_order',
+              JSON.stringify({ orderId: data.orderID, emailSent: Boolean(result.emailSent), sentTo: result.sentTo || [] })
+            );
+          } catch {
+            // Storage unavailable — the thank-you page just shows its generic message.
+          }
           if (isSpecialMode) {
             onNavigate(isBundleMode ? 'thankyou-bundle' : `thankyou-${selectedProduct!.id}`);
           } else {
@@ -208,6 +224,21 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paypalReady, emailValid, isSpecialMode, cartIsEmpty, cartProducts, selectedProduct]);
+
+  if (blocked) {
+    return (
+      <div className="fade-in flex min-h-screen flex-col items-center justify-center gap-4 bg-[#f7f1e8] px-6 pt-24 pb-16 text-center">
+        <p className="section-eyebrow">Out of stock</p>
+        <h1 className="font-serif-display text-3xl text-burgundy">{stockMessage}</h1>
+        <p className="max-w-md text-sm text-charcoal/60">
+          Our PDFs are being restocked. Follow Scent Stack on Pinterest or check back soon — they will be available again very shortly.
+        </p>
+        <button onClick={() => onNavigate('shop')} className="btn-primary mt-2">
+          Back to the shop
+        </button>
+      </div>
+    );
+  }
 
   if (cartIsEmpty) {
     return (
@@ -350,8 +381,41 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                 placeholder="you@example.com"
                 className="w-full rounded-xl border border-[#b08d57]/25 bg-white px-4 py-3 text-sm text-charcoal outline-none transition-colors focus:border-burgundy"
               />
+              {emailFix && (
+                <p className="mt-2 text-xs text-red-700">
+                  Did you mean <strong>{emailFix}</strong>?{' '}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmail(emailFix);
+                      setEmailConfirm(emailFix);
+                    }}
+                    className="font-semibold underline"
+                  >
+                    Yes, use it
+                  </button>
+                </p>
+              )}
+              <label htmlFor="checkout-email-confirm" className="mb-2 mt-4 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.15em] text-charcoal/60">
+                <Mail size={13} className="text-gold" />
+                Confirm your email
+              </label>
+              <input
+                id="checkout-email-confirm"
+                type="email"
+                inputMode="email"
+                autoComplete="off"
+                required
+                value={emailConfirm}
+                onChange={(e) => setEmailConfirm(e.target.value)}
+                onBlur={() => setEmailTouched(true)}
+                placeholder="Type it again"
+                className="w-full rounded-xl border border-[#b08d57]/25 bg-white px-4 py-3 text-sm text-charcoal outline-none transition-colors focus:border-burgundy"
+              />
+              {emailConfirm && !emailsMatch && <p className="mt-2 text-xs text-red-700">The two emails don’t match yet.</p>}
               <p className="mt-2 text-xs text-charcoal/50">
                 Your download link{lineItems.length > 1 ? 's are' : ' is'} sent to this exact address — double-check it before paying.
+                {email && emailValid ? ` We’ll send it to ${maskEmail(email.trim())}.` : ''}
               </p>
             </div>
 

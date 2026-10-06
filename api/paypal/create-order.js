@@ -1,5 +1,6 @@
 import { resolveOrder } from '../lib/products.js';
 import { getPaypalAccessToken, paypalRequest } from '../lib/paypal.js';
+import { isOutOfStock } from '../lib/stock.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -17,6 +18,11 @@ export default async function handler(req, res) {
   const order = resolveOrder(ids);
   if (order.products.length === 0) {
     return res.status(400).json({ message: 'Invalid product selected.' });
+  }
+
+  // Shop switch (src/data/stock.json): while out of stock, only the $1 test product can be bought.
+  if (isOutOfStock() && order.products.some((p) => p.id !== 'livetest')) {
+    return res.status(409).json({ message: 'These products are out of stock right now — we will be back very soon.' });
   }
 
   const currency = order.products[0].currency || 'USD';

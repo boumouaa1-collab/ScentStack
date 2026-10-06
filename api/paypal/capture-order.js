@@ -7,6 +7,7 @@ import {
   sendCartDownloadEmail,
   sendBundleDownloadEmail,
   sendFulfillmentAlert,
+  isValidEmail,
 } from '../lib/email.js';
 
 // Download links stay valid for 7 days so a customer who opens the email late still gets their files.
@@ -44,7 +45,11 @@ export default async function handler(req, res) {
 
     const order = resolveOrderFromReference(reference);
     const paidAmount = Number(capture?.amount?.value || 0);
-    const emailAddress = customerEmail || captureResult.payer?.email_address || '';
+    const typedEmail = typeof customerEmail === 'string' ? customerEmail.trim() : '';
+    const payerEmail = (captureResult.payer?.email_address || '').trim();
+    // Deliver to the address typed at checkout AND the (PayPal-verified) payer address, so one typo can never lose a paid order.
+    const recipients = [...new Set([typedEmail, payerEmail].filter(isValidEmail).map((a) => a.toLowerCase()))];
+    const emailAddress = typedEmail || payerEmail;
 
     if (order.products.length === 0 || Math.abs(paidAmount - order.total) > 0.005) {
       console.error('Order/amount mismatch — not delivering.', JSON.stringify({ orderId, reference, paidAmount, expected: order.total }));
@@ -95,25 +100,36 @@ export default async function handler(req, res) {
       }).catch(() => null);
     }
 
-    let emailResult = { ok: false, reason: 'NO_FILES_AVAILABLE' };
-    if (ready.length > 0) {
-      if (order.isBundle) {
-        emailResult = await sendBundleDownloadEmail({ to: emailAddress, items: ready, amount: amountLabel, idempotencyKey: orderId });
-      } else if (ready.length === 1) {
-        emailResult = await sendDownloadEmail({
-          to: emailAddress,
+    const sendOne = (to, key) => {
+      if (order.isBundle) return sendBundleDownloadEmail({ to, items: ready, amount: amountLabel, idempotencyKey: key });
+      if (ready.length === 1) {
+        return sendDownloadEmail({
+          to,
           productName: ready[0].name,
           fileName: ready[0].fileName,
           downloadUrl: ready[0].url,
           amount: amountLabel,
-          idempotencyKey: orderId,
+          idempotencyKey: key,
         });
-      } else {
-        emailResult = await sendCartDownloadEmail({ to: emailAddress, items: ready, amount: amountLabel, idempotencyKey: orderId });
+      }
+      return sendCartDownloadEmail({ to, items: ready, amount: amountLabel, idempotencyKey: key });
+    };
+
+    let emailResult = { ok: false, reason: ready.length === 0 ? 'NO_FILES_AVAILABLE' : 'NO_VALID_EMAIL_ADDRESS' };
+    const sentTo = [];
+    if (ready.length > 0) {
+      for (const [index, to] of recipients.entries()) {
+        const result = await sendOne(to, index === 0 ? orderId : `${orderId}-${index + 1}`).catch((error) => ({ ok: false, reason: error.message }));
+        if (result.ok) {
+          sentTo.push(to);
+          emailResult = result;
+        } else if (!emailResult.ok) {
+          emailResult = result;
+        }
       }
     }
 
-    if (emailResult.ok) {
+    if (sentTo.length > 0) {
       markOrder(orderId, { email_sent: true, email_sent_at: new Date().toISOString() });
     } else {
       markOrder(orderId, { email_sent: false, email_error: emailResult.reason || 'EMAIL_FAILED' });
@@ -137,7 +153,8 @@ export default async function handler(req, res) {
       amount: paidAmount.toFixed(2),
       currency,
       downloadUrl: ready.length === 1 && !order.isBundle ? ready[0].url : null,
-      emailSent: emailResult.ok,
+      emailSent: sentTo.length > 0,
+      sentTo: sentTo.map((a) => `${a.split('@')[0].slice(0, 1)}***@${a.split('@')[1]}`),
     });
   } catch (error) {
     return res.status(500).json({ message: error.message || 'Payment could not be completed.' });

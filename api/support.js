@@ -7,7 +7,8 @@ export default async function handler(request, response) {
   }
 
   const message = typeof request.body?.message === 'string' ? request.body.message.trim() : '';
-  const issue = typeof request.body?.issue === 'string' ? request.body.issue.trim() : 'General support';
+  // Single short line only: this text is echoed back in an auto-reply, so it must not be a free-form message.
+  const issue = (typeof request.body?.issue === 'string' ? request.body.issue : 'General support').replace(/\s+/g, ' ').trim().slice(0, 80) || 'General support';
   const clientEmail = typeof request.body?.clientEmail === 'string' ? request.body.clientEmail.trim() : '';
   if (!message || message.length > 2000 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clientEmail)) {
     return response.status(400).json({ error: 'Please enter a message up to 2,000 characters.' });

@@ -1,5 +1,6 @@
 import { Check, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/lib/cartContext';
+import { isBuyable, stockMessage } from '@/lib/stock';
 
 type AddToCartButtonProps = {
   productId: string;
@@ -9,6 +10,19 @@ type AddToCartButtonProps = {
 export default function AddToCartButton({ productId, className = '' }: AddToCartButtonProps) {
   const { hasItem, toggleItem } = useCart();
   const inCart = hasItem(productId);
+
+  if (!isBuyable(productId)) {
+    return (
+      <button
+        type="button"
+        disabled
+        aria-disabled="true"
+        className={`inline-flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-full border border-[#b08d57]/40 bg-[#efe4d4] px-6 py-3 text-sm font-semibold uppercase tracking-widest text-charcoal/60 ${className}`}
+      >
+        {stockMessage}
+      </button>
+    );
+  }
 
   return (
     <button

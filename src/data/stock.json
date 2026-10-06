@@ -1,0 +1,6 @@
+{
+  "_help": "Set outOfStock to false when your PDFs are ready to sell. The $1 test product (livetest) can always be bought.",
+  "outOfStock": true,
+  "badge": "Out of stock",
+  "message": "Out of stock — we’ll be back very soon."
+}

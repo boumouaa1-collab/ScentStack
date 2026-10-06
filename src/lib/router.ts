@@ -63,6 +63,8 @@ export function pageForPath(pathname: string, products: Product[]): string {
   if (clean === '/thank-you') {
     const product = params.get('product');
     if (product === 'bundle') return 'thankyou-bundle';
+    if (product === 'livetest') return 'thankyou-livetest';
+    if (product === 'cart') return 'thankyou-cart';
     if (product) {
       const productRecord = products.find((p) => p.id === product || p.slug === product);
       if (productRecord) return `thankyou-${productRecord.id}`;

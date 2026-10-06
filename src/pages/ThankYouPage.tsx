@@ -1,5 +1,6 @@
-import { Check, Heart, Mail, Sparkles } from 'lucide-react';
-import { bundle, getProductById, siteConfig, isConfigured } from '@/data/products';
+import { useState } from 'react';
+import { AlertTriangle, Check, Heart, Mail, Sparkles } from 'lucide-react';
+import { bundle, getProductById, siteConfig, isConfigured, testProduct } from '@/data/products';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 
 type ThankYouPageProps = {
@@ -13,7 +14,36 @@ export default function ThankYouPage({ itemId, onNavigate }: ThankYouPageProps) 
   const related = !isBundle && product ? product.relatedIds.map((id) => getProductById(id)).filter(Boolean) : [];
   const cross = related[0];
 
-  const purchasedTitle = isBundle ? bundle.name : product?.title || 'your order';
+  const isTest = itemId === testProduct.id;
+  const purchasedTitle = isBundle ? bundle.name : isTest ? testProduct.title : product?.title || 'your order';
+
+  // What happened to the delivery email (saved by the checkout page right after payment).
+  const lastOrder = (() => {
+    try {
+      const raw = sessionStorage.getItem('scentstack_last_order');
+      return raw ? (JSON.parse(raw) as { orderId?: string; emailSent?: boolean; sentTo?: string[] }) : null;
+    } catch {
+      return null;
+    }
+  })();
+  const [resend, setResend] = useState<{ state: 'idle' | 'sending' | 'sent' | 'error'; to?: string; error?: string }>({ state: 'idle' });
+
+  const resendDownload = async () => {
+    if (!lastOrder?.orderId) return;
+    setResend({ state: 'sending' });
+    try {
+      const response = await fetch('/api/paypal/resend-download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: lastOrder.orderId }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (response.ok && result.ok) setResend({ state: 'sent', to: result.sentTo });
+      else setResend({ state: 'error', error: result.message || 'We could not resend it right now.' });
+    } catch {
+      setResend({ state: 'error', error: 'We could not resend it right now.' });
+    }
+  };
 
   useDocumentMeta('Thank You | Scent Stack', 'Your Scent Stack order is confirmed — check your email for your download.', true);
 
@@ -35,12 +65,36 @@ export default function ThankYouPage({ itemId, onNavigate }: ThankYouPageProps) 
             <Mail className="text-gold" size={28} />
           </div>
           <h2 className="font-serif-display text-2xl text-burgundy">Check your email</h2>
-          <p className="mt-2 text-sm text-charcoal/70">
-            Scent Stack will email you a secure download link for {isBundle ? 'all three PDFs' : 'your PDF'} after PayPal confirms your payment.
-          </p>
+          {lastOrder?.emailSent === false ? (
+            <div className="mt-3 flex items-start gap-3 rounded-2xl bg-amber-50 p-4 text-left text-sm text-amber-900">
+              <AlertTriangle size={18} className="mt-0.5 shrink-0" />
+              <p>
+                Your payment went through, but we couldn’t send the email to the address you typed. Don’t worry — we’ve been alerted and will send your
+                download manually. You can also try sending it again to your PayPal email below.
+              </p>
+            </div>
+          ) : (
+            <p className="mt-2 text-sm text-charcoal/70">
+              {lastOrder?.sentTo && lastOrder.sentTo.length > 0
+                ? `We sent a secure download link for ${isBundle ? 'all six PDFs' : 'your PDF'} to ${lastOrder.sentTo.join(' and ')}. If you can’t see it, check your spam or Promotions folder.`
+                : `Scent Stack will email you a secure download link for ${isBundle ? 'all six PDFs' : 'your PDF'} after PayPal confirms your payment.`}
+            </p>
+          )}
+          {lastOrder?.orderId && (
+            <div className="mt-4">
+              {resend.state === 'sent' ? (
+                <p className="text-sm text-green-700">Sent again to {resend.to}. It can take a minute to arrive.</p>
+              ) : (
+                <button type="button" onClick={resendDownload} disabled={resend.state === 'sending'} className="btn-secondary">
+                  {resend.state === 'sending' ? 'Sending…' : 'Didn’t get it? Send it again to my PayPal email'}
+                </button>
+              )}
+              {resend.state === 'error' && <p className="mt-2 text-sm text-red-700">{resend.error}</p>}
+            </div>
+          )}
         </div>
 
-        {cross && !isBundle && product && (
+        {cross && !isBundle && !isTest && product && (
           <div className="mt-8 overflow-hidden rounded-3xl p-8 text-left" style={{ background: cross.accent }}>
             <p className="text-xs uppercase tracking-[0.3em] text-[#b08d57]">One more thing</p>
             <h3 className="mt-2 font-serif-display text-2xl text-[#f7f1e8]">
@@ -57,10 +111,10 @@ export default function ThankYouPage({ itemId, onNavigate }: ThankYouPageProps) 
           </div>
         )}
 
-        {!isBundle && (
+        {!isBundle && !isTest && (
           <div className="mt-6 rounded-2xl border border-[#b08d57]/20 bg-white p-6">
             <p className="text-sm text-charcoal/70">
-              Want all three? Grab the <strong className="text-burgundy">{bundle.name}</strong> for{' '}
+              Want the complete set? Grab the <strong className="text-burgundy">{bundle.name}</strong> for{' '}
               <strong className="text-burgundy">${bundle.price}</strong> and complete your collection.
             </p>
             <button onClick={() => onNavigate('bundle')} className="mt-4 btn-secondary">
