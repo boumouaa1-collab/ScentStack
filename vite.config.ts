@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
 import { loadEnv } from 'vite';
-import { createSupportAcknowledgement, createSupportEmail } from './api/lib/support-email.js';
+import { createSupportAcknowledgement, createSupportEmail } from './server/support-email.js';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
