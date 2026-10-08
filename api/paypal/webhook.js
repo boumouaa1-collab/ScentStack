@@ -1,0 +1,178 @@
+import { registerWebhookEvent, createOrderRecord, getOrderRecord, markOrder } from '../../server/store.js';
+import { paypalRequest, verifyWebhook } from '../../server/paypal.js';
+import { createSignedDownloadUrl } from '../../server/supabase.js';
+import { sendDownloadEmail, sendBundleDownloadEmail, sendUnmatchedPurchaseAlert } from '../../server/email.js';
+import { getProduct, productCatalog, bundleProduct, resolveOrderFromReference } from '../../server/products.js';
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed.' });
+  }
+
+  const event = req.body || {};
+  const headers = req.headers || {};
+  const eventId = event && (event.id || event.resource?.id || event.event_version || event.resource?.purchase_units?.[0]?.reference_id);
+
+  if (!eventId) {
+    return res.status(400).json({ message: 'Missing webhook event id.' });
+  }
+
+  try {
+    const valid = await verifyWebhook(event, headers);
+    if (!valid) {
+      return res.status(401).json({ message: 'Signature verification failed.' });
+    }
+
+    if (!registerWebhookEvent(event.id || event.resource?.id || event.event_version, event)) {
+      return res.status(200).json({ ok: true, duplicate: true });
+    }
+
+    const eventType = event.event_type;
+    const resource = event.resource || {};
+    const orderId = resource.supplementary_data?.related_ids?.order_id || resource.id || resource.purchase_units?.[0]?.reference_id || resource.invoice_id;
+    let paypalOrder = null;
+    if (eventType === 'PAYMENT.CAPTURE.COMPLETED' && orderId) {
+      paypalOrder = await paypalRequest(`/v2/checkout/orders/${orderId}`, { method: 'GET' }).catch(() => null);
+    }
+
+    const purchaseUnit = paypalOrder?.purchase_units?.[0] || resource.purchase_units?.[0] || {};
+    const productReference =
+      resource.custom_id ||
+      purchaseUnit.custom_id ||
+      resource.reference_id ||
+      purchaseUnit.reference_id;
+    // Orders created by our own checkout are fulfilled (and emailed) by /api/paypal/capture-order.
+    // Handling them here too would send the customer duplicate emails, so the webhook skips them.
+    if (eventType === 'PAYMENT.CAPTURE.COMPLETED' && resolveOrderFromReference(productReference).products.length > 0) {
+      return res.status(200).json({ ok: true, handledBy: 'capture-order' });
+    }
+    const itemName = purchaseUnit.items?.[0]?.name || purchaseUnit.description;
+    const capturedAmountForMatch = Number(resource.amount?.value || purchaseUnit.amount?.value || 0);
+    const priceMatches = Object.values(productCatalog).filter(
+      (item) => Math.abs(Number(item.price) - capturedAmountForMatch) < 0.005
+    );
+
+    const isBundleMatch =
+      productReference === bundleProduct.id ||
+      productReference === bundleProduct.hostedButtonId ||
+      (itemName && itemName === bundleProduct.name) ||
+      Math.abs(bundleProduct.price - capturedAmountForMatch) < 0.005;
+
+    const product = isBundleMatch
+      ? null
+      : (productReference && getProduct(productReference)) ||
+        Object.values(productCatalog).find((item) => item.hostedButtonId === productReference) ||
+        (itemName && Object.values(productCatalog).find((item) => item.name === itemName)) ||
+        // Only trust an amount match when exactly one product has that price — never guess between two.
+        (priceMatches.length === 1 ? priceMatches[0] : null) ||
+        null;
+
+    if (!product && !isBundleMatch) {
+      console.error(
+        'Webhook could not identify which product was purchased.',
+        JSON.stringify({ orderId, productReference, itemName, capturedAmountForMatch, priceMatchCount: priceMatches.length })
+      );
+      if (eventType === 'PAYMENT.CAPTURE.COMPLETED') {
+        await sendUnmatchedPurchaseAlert({
+          orderId,
+          amount: capturedAmountForMatch,
+          customerEmail: resource.payer?.email_address || paypalOrder?.payer?.email_address,
+          debugInfo: { productReference, itemName, priceMatchCount: priceMatches.length },
+        }).catch(() => null);
+      }
+    }
+    let order = orderId ? getOrderRecord(orderId) : null;
+
+    if (eventType === 'PAYMENT.CAPTURE.COMPLETED') {
+      const capture = resource || {};
+      const capturedAmount = capture.amount?.value || purchaseUnit.amount?.value || product?.price || bundleProduct.price || 0;
+      const emailAddress = order?.customer_email || resource.payer?.email_address || paypalOrder?.payer?.email_address || '';
+      const matched = isBundleMatch ? bundleProduct : product;
+
+      if (!order && matched && orderId) {
+        order = createOrderRecord({
+          id: orderId,
+          paypal_order_id: orderId,
+          paypal_capture_id: capture.id || orderId,
+          product_id: matched.id,
+          product_name: matched.name,
+          amount: Number(capturedAmount).toFixed(2),
+          currency: capture.amount?.currency_code || matched.currency || 'USD',
+          customer_email: emailAddress,
+          payment_status: 'paid',
+          fulfillment_status: 'fulfilled',
+          email_sent: false,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          product_slug: matched.slug || matched.id,
+        });
+      }
+
+      if (order) {
+        markOrder(orderId, {
+          payment_status: 'paid',
+          fulfillment_status: 'fulfilled',
+          amount: capturedAmount,
+          customer_email: emailAddress,
+        });
+      }
+
+      if (isBundleMatch && order && emailAddress && !order.email_sent) {
+        const items = [];
+        for (const id of bundleProduct.productIds) {
+          const p = productCatalog[id];
+          const url = await createSignedDownloadUrl(p.storagePath, p.storageBucket, 604800);
+          items.push({ name: p.name, url: url || `${process.env.APP_URL || 'https://scentstack.store'}/thank-you?product=bundle` });
+        }
+        const emailResult = await sendBundleDownloadEmail({
+          to: emailAddress,
+          items,
+          amount: `$${Number(capturedAmount).toFixed(2)} USD`,
+          idempotencyKey: orderId,
+        });
+        markOrder(orderId, {
+          email_sent: !!emailResult.ok,
+          email_sent_at: emailResult.ok ? new Date().toISOString() : null,
+          email_error: emailResult.ok ? null : emailResult.reason || 'EMAIL_FAILED',
+        });
+      } else if (product) {
+        const signedUrl = await createSignedDownloadUrl(product.storagePath, product.storageBucket, 604800);
+        if (signedUrl && order) {
+          markOrder(orderId, { secure_download_url: signedUrl, download_created_at: new Date().toISOString() });
+        }
+
+        if (order && emailAddress && !order.email_sent) {
+          const emailResult = await sendDownloadEmail({
+            to: emailAddress,
+            productName: product.name,
+            fileName: product.fileName,
+            downloadUrl: signedUrl || `${process.env.APP_URL || 'https://scentstack.store'}/thank-you?product=${product.id}`,
+            amount: `$${Number(capturedAmount).toFixed(2)} USD`,
+            idempotencyKey: orderId,
+          });
+          markOrder(orderId, {
+            email_sent: !!emailResult.ok,
+            email_sent_at: emailResult.ok ? new Date().toISOString() : null,
+            email_error: emailResult.ok ? null : emailResult.reason || 'EMAIL_FAILED',
+          });
+        }
+      }
+    }
+
+    if (eventType === 'PAYMENT.CAPTURE.DENIED' || eventType === 'CHECKOUT.PAYMENT-APPROVAL.REVERSED' || eventType === 'PAYMENT.CAPTURE.REVERSED' || eventType === 'PAYMENT.CAPTURE.REFUNDED') {
+      if (orderId) {
+        markOrder(orderId, { payment_status: 'payment_failed', fulfillment_status: 'refunded' });
+      }
+    }
+
+    if (eventType === 'PAYMENT.CAPTURE.PENDING') {
+      if (orderId) {
+        markOrder(orderId, { payment_status: 'payment_pending', fulfillment_status: 'pending' });
+      }
+    }
+
+    return res.status(200).json({ ok: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message || 'Webhook processing failed.' });
+  }
+}
