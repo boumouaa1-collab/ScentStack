@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-labelledby="t"><title id="t">Scent Stack live checkout test</title>
-<rect width="800" height="1000" fill="#f7f1e8"/><rect x="30" y="30" width="740" height="940" rx="24" fill="none" stroke="#b08d57" stroke-opacity=".5" stroke-width="2"/>
-<circle cx="400" cy="330" r="120" fill="#4a1c2c"/><rect x="372" y="236" width="56" height="40" rx="8" fill="#b08d57"/><rect x="340" y="276" width="120" height="120" rx="22" fill="#f7f1e8" fill-opacity=".92"/><text x="400" y="352" text-anchor="middle" font-family="Georgia,serif" font-size="46" fill="#4a1c2c">SS</text>
-<text x="400" y="560" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="58" fill="#4a1c2c">Live Checkout Test</text>
-<text x="400" y="620" text-anchor="middle" font-family="Georgia,serif" font-size="44" fill="#b08d57">$1</text>
-<line x1="250" y1="670" x2="550" y2="670" stroke="#b08d57" stroke-opacity=".6"/>
-<text x="400" y="725" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" letter-spacing="4" fill="#806b55">TEST PDF · INSTANT BY EMAIL</text>
-<text x="400" y="920" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" letter-spacing="8" fill="#b08d57">SCENT STACK</text></svg>

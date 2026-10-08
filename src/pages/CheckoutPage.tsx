@@ -84,7 +84,36 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   // (like "gmail.c") and typed twice the same way before the PayPal button appears.
   const emailFix = suggestEmailFix(email);
   const emailsMatch = email.trim().toLowerCase() === emailConfirm.trim().toLowerCase();
-  const emailValid = STRICT_EMAIL_RE.test(email.trim()) && !emailFix && emailsMatch;
+  const emailLooksOk = STRICT_EMAIL_RE.test(email.trim()) && !emailFix && emailsMatch;
+  // The server also confirms the address can really receive mail (its domain has a mail server).
+  const [emailCheck, setEmailCheck] = useState<{ email: string; ok: boolean; message?: string } | null>(null);
+  const emailKey = email.trim().toLowerCase();
+  const emailChecked = emailCheck?.email === emailKey;
+  const checkingEmail = emailLooksOk && !emailChecked;
+  const emailValid = emailLooksOk && emailChecked && Boolean(emailCheck?.ok);
+
+  useEffect(() => {
+    if (!emailLooksOk || emailChecked) return;
+    let cancelled = false;
+    const timer = window.setTimeout(async () => {
+      try {
+        const response = await fetch('/api/check-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailKey }),
+        });
+        const result = await response.json();
+        if (!cancelled) setEmailCheck({ email: emailKey, ok: Boolean(result.ok), message: result.message });
+      } catch {
+        // Network hiccup: let them continue — the server checks again before any payment starts.
+        if (!cancelled) setEmailCheck({ email: emailKey, ok: true });
+      }
+    }, 450);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [emailKey, emailLooksOk, emailChecked]);
   // Real products are not for sale while the shop is marked out of stock (the $1 test always is).
   const blocked = outOfStock && !isTestMode;
 
@@ -413,6 +442,9 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                 className="w-full rounded-xl border border-[#b08d57]/25 bg-white px-4 py-3 text-sm text-charcoal outline-none transition-colors focus:border-burgundy"
               />
               {emailConfirm && !emailsMatch && <p className="mt-2 text-xs text-red-700">The two emails don’t match yet.</p>}
+              {checkingEmail && <p className="mt-2 text-xs text-charcoal/60">Checking your email…</p>}
+              {emailLooksOk && emailChecked && !emailCheck?.ok && <p className="mt-2 text-xs text-red-700">{emailCheck?.message}</p>}
+              {emailValid && <p className="mt-2 text-xs text-green-700">✓ Email verified</p>}
               <p className="mt-2 text-xs text-charcoal/50">
                 Your download link{lineItems.length > 1 ? 's are' : ' is'} sent to this exact address — double-check it before paying.
                 {email && emailValid ? ` We’ll send it to ${maskEmail(email.trim())}.` : ''}
