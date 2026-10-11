@@ -6,4 +6,7 @@ export const outOfStock: boolean = stock.outOfStock;
 export const stockBadge: string = stock.badge;
 export const stockMessage: string = stock.message;
 
-export const isBuyable = (id?: string): boolean => !outOfStock || id === 'livetest';
+export const availableIds: string[] = (stock as { availableIds?: string[] }).availableIds ?? [];
+
+export const isBuyable = (id?: string): boolean =>
+  !outOfStock || id === 'livetest' || (id !== undefined && availableIds.includes(id));

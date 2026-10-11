@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
-import { ArrowLeft, ArrowRight, Check, FileText, Globe, Lock, PenLine, Zap } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowLeft, ArrowRight, Check, FileText, Globe, Lock, PenLine, Zap, ZoomIn } from 'lucide-react';
 import type { Product } from '@/data/products';
 import { getProductById, bundle } from '@/data/products';
 import BuyButton from '@/components/BuyButton';
 import AddToCartButton from '@/components/AddToCartButton';
 import CanvaBadge from '@/components/CanvaBadge';
+import ImageLightbox from '@/components/ImageLightbox';
 import ScentGif from '@/components/ScentGif';
 import { track } from '@/lib/analytics';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
@@ -35,6 +36,10 @@ const faqs = [
 
 export default function ProductPage({ product, onNavigate }: ProductPageProps) {
   useDocumentMeta(product.seoTitle, product.seoDescription);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const gallery = product.previewImages.length > 0 ? product.previewImages : [product.coverImage];
+  // The cover is already the big hero image, so the grid starts after it when the gallery begins with it.
+  const gridStart = gallery.length > 1 && gallery[0] === product.coverImage ? 1 : 0;
 
   useEffect(() => {
     track('product_view', { item: product.id });
@@ -61,14 +66,24 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
           {/* Cover */}
           <div className="lg:sticky lg:top-28 lg:self-start">
             <div
-              className="relative flex aspect-[4/5] items-center justify-center overflow-hidden rounded-2xl p-6 shadow-xl"
+              className="relative aspect-square overflow-hidden rounded-2xl shadow-xl"
               style={{ background: product.accent }}
             >
-              <img
-                src={product.coverImage}
-                alt={`${product.title} cover`}
-                className="float-cover max-h-full w-auto max-w-full rounded-sm object-contain shadow-lg"
-              />
+              <button
+                type="button"
+                onClick={() => setLightboxIndex(0)}
+                className="block h-full w-full cursor-zoom-in"
+                aria-label={`Enlarge ${product.title} cover`}
+              >
+                <img
+                  src={product.coverImage}
+                  alt={`${product.title} cover`}
+                  width={1200}
+                  height={1200}
+                  decoding="async"
+                  className="h-full w-full object-contain"
+                />
+              </button>
               <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif" />
               <CanvaBadge />
             </div>
@@ -178,7 +193,7 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
             className="aspect-square w-full rounded-2xl border border-[#b08d57]/15 bg-[#efe4d4]/40 shadow-lg"
             controls
             playsInline
-            preload="metadata"
+            preload="none"
             poster={product.video.poster}
             aria-label={`${product.title} preview video`}
           >
@@ -193,16 +208,30 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
           <p className="section-eyebrow">See What's Inside</p>
           <h2 className="font-serif-display text-3xl text-burgundy">A closer look</h2>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {product.previewImages.map((image, i) => (
-            <div
+        <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3">
+          {gallery.slice(gridStart).map((image, i) => (
+            <button
+              type="button"
               key={image + i}
-              className="overflow-hidden rounded-2xl border border-[#b08d57]/15 bg-[#efe4d4]/40 shadow-sm"
+              onClick={() => setLightboxIndex(i + gridStart)}
+              className="group relative block aspect-[1199/1551] w-full cursor-zoom-in overflow-hidden rounded-2xl border border-[#b08d57]/15 bg-[#efe4d4]/40 shadow-sm transition-shadow hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b08d57]"
+              aria-label={`Enlarge ${product.title} preview ${i + 1 + gridStart}`}
             >
-              <img src={image} alt={`${product.title} preview ${i + 1}`} className="h-full w-full object-cover" />
-            </div>
+              <img
+                src={image}
+                alt={`${product.title} preview ${i + 1 + gridStart}`}
+                width={1199}
+                height={1551}
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+              />
+              <span className="pointer-events-none absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white opacity-80 sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100">
+                <ZoomIn size={16} />
+              </span>
+            </button>
           ))}
-          {product.previewImages.length <= 1 && (
+          {gallery.length <= 1 && (
             <div className="flex aspect-[4/5] items-center justify-center rounded-2xl border border-dashed border-[#b08d57]/30 bg-white/40 p-6 text-center text-xs uppercase tracking-widest text-charcoal/40">
               More interior pages coming soon
             </div>
@@ -304,6 +333,15 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
           </div>
         </div>
       </section>
+      {lightboxIndex !== null && (
+        <ImageLightbox
+          images={gallery}
+          index={lightboxIndex}
+          alt={product.title}
+          onClose={() => setLightboxIndex(null)}
+          onIndexChange={setLightboxIndex}
+        />
+      )}
     </div>
   );
 }

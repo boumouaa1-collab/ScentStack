@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Lock, Mail, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { bundle, testProduct, getProductBySlugOrId, products, type Product } from '@/data/products';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
-import { outOfStock, stockMessage } from '@/lib/stock';
+import { outOfStock, isBuyable, stockMessage } from '@/lib/stock';
 import { STRICT_EMAIL_RE, suggestEmailFix, maskEmail } from '@/lib/emailCheck';
 import { useCart } from '@/lib/cartContext';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -46,9 +46,9 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   // cart instead of charging for it in isolation — so if you already had other
   // items picked, "Get [Product]" adds to what you're buying rather than replacing it.
   useEffect(() => {
-    if (isSpecialMode || requestedProductId === 'cart' || outOfStock) return;
+    if (isSpecialMode || requestedProductId === 'cart') return;
     const match = getProductBySlugOrId(requestedProductId);
-    if (match) addItem(match.id);
+    if (match && isBuyable(match.id)) addItem(match.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestedProductId, isSpecialMode]);
 
@@ -115,7 +115,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
     };
   }, [emailKey, emailLooksOk, emailChecked]);
   // Real products are not for sale while the shop is marked out of stock (the $1 test always is).
-  const blocked = outOfStock && !isTestMode;
+  const blocked = !isTestMode && (isBundleMode ? outOfStock : cartProducts.some((p) => !isBuyable(p.id)));
 
   const [status, setStatus] = useState<CheckoutState>('idle');
   const [message, setMessage] = useState<string>('Enter your email to unlock secure checkout. 📩');

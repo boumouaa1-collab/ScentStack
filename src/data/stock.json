@@ -1,6 +1,7 @@
 {
-  "_help": "Set outOfStock to false when your PDFs are ready to sell. The $1 test product (livetest) can always be bought.",
+  "_help": "availableIds lists products whose PDFs are uploaded and ready to sell (they stay buyable while outOfStock is true). Set outOfStock to false when ALL your PDFs are ready. The $1 test product (livetest) can always be bought.",
   "outOfStock": true,
+  "availableIds": ["discovery"],
   "badge": "Out of stock",
   "message": "Out of stock — we’ll be back very soon."
 }
