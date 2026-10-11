@@ -15,6 +15,8 @@ export type Product = {
   importantNote: string;
   coverImage: string;
   previewImages: string[];
+  // Optional product video (mp4), shown in a "See it in action" section when present.
+  video?: { src: string; poster?: string };
   accent: string;
   seoTitle: string;
   seoDescription: string;
@@ -75,16 +77,18 @@ export const products: Product[] = [
     whoFor:
       'Perfume lovers who want to understand their taste, organize what they own, and make more intentional choices.',
     importantNote: 'This is a digital product. No physical perfume or physical product is included.',
-    coverImage: '/productImages/pro1/01_HERO_ScentStack.jpg',
+    coverImage: '/productImages/prod1/cover.jpg',
+    video: { src: '/productImages/prod1/preview.mp4', poster: '/productImages/prod1/cover.jpg' },
     previewImages: [
-      '/productImages/pro1/01_HERO_ScentStack.jpg',
-      '/productImages/pro1/02_COLLECTION_ScentStack.jpg',
-      '/productImages/pro1/03_REVIEW_ScentStack.jpg',
-      '/productImages/pro1/04_NOTES_WISHLIST_ScentStack.jpg',
-      '/productImages/pro1/05_SAMPLE_AUDIT_ScentStack.jpg',
-      '/productImages/pro1/06_WEAR_LOG_ScentStack.jpg',
-      '/productImages/pro1/07_WHAT_YOU_GET_ScentStack.jpg',
-      '/productImages/pro1/08_LUXURY_LIFESTYLE_ScentStack.jpg',
+      '/productImages/prod1/cover.jpg',
+      '/productImages/prod1/page_02.jpg',
+      '/productImages/prod1/page_06.jpg',
+      '/productImages/prod1/page_08.jpg',
+      '/productImages/prod1/page_15.jpg',
+      '/productImages/prod1/page_20.jpg',
+      '/productImages/prod1/page_27.jpg',
+      '/productImages/prod1/page_33.jpg',
+      '/productImages/prod1/page_35.jpg',
     ],
     accent: '#4a1c2c',
     seoTitle: 'Fragrance Discovery Workbook | Scent Stack',
@@ -252,8 +256,8 @@ export const products: Product[] = [
     whoFor:
       'Casual fragrance lovers who want a simple, printable way to track their scents without a complex system.',
     importantNote: 'This is a digital product. No physical perfume or physical product is included.',
-    coverImage: '/productImages/pro1/01_HERO_ScentStack.jpg',
-    previewImages: ['/productImages/pro1/01_HERO_ScentStack.jpg'],
+    coverImage: '/productImages/prod1/page_01.jpg',
+    previewImages: ['/productImages/prod1/page_01.jpg'],
     accent: '#7a5c5c',
     seoTitle: 'Perfume Journal Printable | Scent Stack',
     seoDescription:
@@ -303,8 +307,8 @@ export const products: Product[] = [
     whoFor:
       'Perfume lovers seeking to discover or refine their signature scent that matches their personality and lifestyle.',
     importantNote: 'This is a digital product. No physical perfume or physical product is included.',
-    coverImage: '/productImages/pro1/01_HERO_ScentStack.jpg',
-    previewImages: ['/productImages/pro1/01_HERO_ScentStack.jpg'],
+    coverImage: '/productImages/prod1/page_01.jpg',
+    previewImages: ['/productImages/prod1/page_01.jpg'],
     accent: '#8b5a5a',
     seoTitle: 'Find Your Signature Scent | Scent Stack',
     seoDescription:
@@ -356,8 +360,8 @@ export const products: Product[] = [
     whoFor:
       'Perfume lovers who want their collection to match their everyday life, seasons, moods, and occasions.',
     importantNote: 'This is a digital product. No physical perfume or physical product is included.',
-    coverImage: '/productImages/pro1/01_HERO_ScentStack.jpg',
-    previewImages: ['/productImages/pro1/01_HERO_ScentStack.jpg'],
+    coverImage: '/productImages/prod1/page_01.jpg',
+    previewImages: ['/productImages/prod1/page_01.jpg'],
     accent: '#6b4b2a',
     seoTitle: 'The Fragrance Wardrobe Planner | Scent Stack',
     seoDescription:

@@ -893,7 +893,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '6 min read',
     publishedLabel: 'Fragrance Discovery',
     relatedProductId: 'discovery',
-    coverImage: '/productImages/pro1/01_HERO_ScentStack.jpg',
+    coverImage: '/productImages/prod1/cover.jpg',
     coverAlt: 'The Fragrance Discovery Workbook by Scent Stack on a styled perfume flat lay',
     sections: [
       {
@@ -1121,7 +1121,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '5 min read',
     publishedLabel: 'Quick Reference',
     relatedProductId: 'printable',
-    coverImage: '/productImages/pro1/01_HERO_ScentStack.jpg',
+    coverImage: '/productImages/prod1/page_01.jpg',
     coverAlt: 'The Perfume Journal Printable by Scent Stack shown with a perfume flat lay',
     sections: [
       {
@@ -1192,7 +1192,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '6 min read',
     publishedLabel: 'Self-Discovery',
     relatedProductId: 'signature',
-    coverImage: '/productImages/pro1/01_HERO_ScentStack.jpg',
+    coverImage: '/productImages/prod1/page_01.jpg',
     coverAlt: 'Find Your Signature Scent personal fragrance discovery workbook by Scent Stack',
     sections: [
       {
@@ -1267,7 +1267,7 @@ export const blogPosts: BlogPost[] = [
     readTime: '6 min read',
     publishedLabel: 'Collection Planning',
     relatedProductId: 'wardrobe',
-    coverImage: '/productImages/pro1/01_HERO_ScentStack.jpg',
+    coverImage: '/productImages/prod1/page_01.jpg',
     coverAlt: 'The Fragrance Wardrobe Planner by Scent Stack for building a perfume rotation',
     sections: [
       {

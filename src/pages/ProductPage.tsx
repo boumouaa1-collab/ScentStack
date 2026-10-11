@@ -167,6 +167,26 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
         </div>
       </section>
 
+      {/* Product video (only when the product has one) */}
+      {product.video && (
+        <section className="mx-auto max-w-3xl px-6 pt-6 lg:px-10">
+          <div className="mb-6 text-center">
+            <p className="section-eyebrow">See It In Action</p>
+            <h2 className="font-serif-display text-3xl text-burgundy">A quick look inside</h2>
+          </div>
+          <video
+            className="aspect-square w-full rounded-2xl border border-[#b08d57]/15 bg-[#efe4d4]/40 shadow-lg"
+            controls
+            playsInline
+            preload="metadata"
+            poster={product.video.poster}
+            aria-label={`${product.title} preview video`}
+          >
+            <source src={product.video.src} type="video/mp4" />
+          </video>
+        </section>
+      )}
+
       {/* See what's inside */}
       <section id="preview" className="mx-auto max-w-7xl scroll-mt-24 px-6 py-16 lg:px-10">
         <div className="mb-10 text-center">
