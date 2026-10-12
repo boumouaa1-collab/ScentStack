@@ -1,10 +1,9 @@
 import { ArrowRight, Check, Layers } from 'lucide-react';
-import { coverFor, isBuyable } from '@/lib/stock';
+import { coverFor } from '@/lib/stock';
 import CoverImage from '@/components/CoverImage';
 import { bundle, products } from '@/data/products';
 import BuyButton from '@/components/BuyButton';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
-import ScentGif from '@/components/ScentGif';
 import CanvaBadge from '@/components/CanvaBadge';
 
 type BundlePageProps = {
@@ -51,9 +50,6 @@ export default function BundlePage({ onNavigate }: BundlePageProps) {
             <div key={product.id} className="overflow-hidden rounded-2xl border border-[#b08d57]/15 bg-white">
               <div className="card-visual relative aspect-square overflow-hidden" style={{ background: product.accent }}>
                 <CoverImage src={coverFor(product)} alt={`${product.title} cover`} />
-                {isBuyable(product.id) && (
-                  <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif product-gif--corner" />
-                )}
                 <CanvaBadge />
               </div>
               <div className="p-6">

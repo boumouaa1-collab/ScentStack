@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { track } from '@/lib/analytics';
 
-type NewsletterFormProps = { source?: string; buttonLabel?: string; successMessage?: string; className?: string };
+type NewsletterFormProps = { source?: string; productTitle?: string; productUrl?: string; buttonLabel?: string; successMessage?: string; className?: string };
 
 export default function NewsletterForm({
   source = 'home',
+  productTitle,
+  productUrl,
   buttonLabel = 'Join the list',
   successMessage = "You're on the list. Watch your inbox for the next Scent Letter.",
   className = 'mx-auto mt-8 max-w-xl',
@@ -19,7 +21,7 @@ export default function NewsletterForm({
       const response = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source }),
+        body: JSON.stringify({ email, source, productTitle, productUrl }),
       });
       if (!response.ok) throw new Error('Newsletter signup failed');
       track('newsletter_signup');

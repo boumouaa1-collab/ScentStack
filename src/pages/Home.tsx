@@ -4,7 +4,8 @@ import type { Product } from '@/data/products';
 import { bundle } from '@/data/products';
 import BuyButton from '@/components/BuyButton';
 import NewsletterForm from '@/components/NewsletterForm';
-import { coverFor, isBuyable } from '@/lib/stock';
+import TrustVideos from '@/components/TrustVideos';
+import { coverFor } from '@/lib/stock';
 import CoverImage from '@/components/CoverImage';
 import CanvaBadge from '@/components/CanvaBadge';
 import ScentGif from '@/components/ScentGif';
@@ -234,6 +235,8 @@ export default function Home({ products, onNavigate }: HomeProps) {
         </div>
       </section>
 
+      <TrustVideos />
+
       {/* Bundle banner */}
       <section className="bg-burgundy py-20 text-[#f7f1e8]">
         <Reveal className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 text-center lg:px-10">
@@ -322,9 +325,6 @@ function ProductShowcase({ product, onNavigate }: { product: Product; onNavigate
         alt={`${product.title} cover`}
         className="transition-transform duration-500 group-hover:scale-[1.03]"
       />
-      {isBuyable(product.id) && (
-        <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif product-gif--corner" />
-      )}
       <CanvaBadge />
       <button
         type="button"

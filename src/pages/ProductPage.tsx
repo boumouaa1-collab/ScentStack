@@ -9,7 +9,6 @@ import ImageLightbox from '@/components/ImageLightbox';
 import NewsletterForm from '@/components/NewsletterForm';
 import PinItButton from '@/components/PinItButton';
 import { coverFor, galleryFor, isBuyable } from '@/lib/stock';
-import ScentGif from '@/components/ScentGif';
 import { track } from '@/lib/analytics';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 
@@ -160,9 +159,6 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
                   className="fade-in h-full w-full object-contain"
                 />
               </button>
-              {heroIndex === 0 && (
-                <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif" />
-              )}
               <CanvaBadge />
 
               {gallery.length > 1 && (
@@ -255,6 +251,8 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
                 </p>
                 <NewsletterForm
                   source={`restock-${product.id}`}
+                  productTitle={product.title}
+                  productUrl={`${siteConfig.siteUrl}/products/${product.slug}`}
                   buttonLabel="Notify me"
                   successMessage="Done — we will email you as soon as it is available."
                   className="mt-4"

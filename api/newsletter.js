@@ -14,6 +14,11 @@ export default async function handler(request, response) {
   }
 
   const isRestock = source.startsWith('restock-');
+  // Product details come from the product page so the email says exactly what the visitor wants.
+  const productTitle = typeof request.body?.productTitle === 'string' ? request.body.productTitle.replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, 120) : '';
+  const rawUrl = typeof request.body?.productUrl === 'string' ? request.body.productUrl.trim().slice(0, 200) : '';
+  const productUrl = rawUrl.startsWith('https://scentstack.store/') ? rawUrl : '';
+  const productName = productTitle || source.replace('restock-', '');
   const headers = { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' };
 
   // 1) Save the contact in your Resend audience (when one is configured).
@@ -36,7 +41,7 @@ export default async function handler(request, response) {
   let notified = false;
   try {
     const subject = isRestock
-      ? `Restock request: ${source.replace('restock-', '')}`
+      ? `Restock request: ${productName}`
       : 'New Scent Stack newsletter subscriber';
     const emailResult = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -45,7 +50,9 @@ export default async function handler(request, response) {
         from,
         to: [recipient],
         subject,
-        text: `${isRestock ? 'Someone wants to be told when this product is back' : 'New subscriber'}: ${email}${source ? `\nSource: ${source}` : ''}`,
+        text: isRestock
+          ? `A visitor wants to be told when this product is back in stock.\n\nProduct: ${productName}${productUrl ? `\nPage: ${productUrl}` : ''}\nTheir email: ${email}\n\nReply to this email to reach them directly.`
+          : `New subscriber: ${email}${source ? `\nSource: ${source}` : ''}`,
         reply_to: email,
       }),
     });
