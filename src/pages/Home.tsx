@@ -4,7 +4,8 @@ import type { Product } from '@/data/products';
 import { bundle } from '@/data/products';
 import BuyButton from '@/components/BuyButton';
 import NewsletterForm from '@/components/NewsletterForm';
-import { coverFor } from '@/lib/stock';
+import { coverFor, isBuyable } from '@/lib/stock';
+import CoverImage from '@/components/CoverImage';
 import CanvaBadge from '@/components/CanvaBadge';
 import ScentGif from '@/components/ScentGif';
 import PurchaseActivityToast from '@/components/PurchaseActivityToast';
@@ -315,15 +316,15 @@ export default function Home({ products, onNavigate }: HomeProps) {
 
 function ProductShowcase({ product, onNavigate }: { product: Product; onNavigate: (page: string) => void }) {
   return (
-    <div className="relative overflow-hidden bg-[#efe4d4]">
-      <div className="relative mx-auto flex h-[27rem] max-w-[23rem] items-center justify-center p-5 sm:h-[31rem]">
-        <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif" />
-        <img
-          src={coverFor(product)}
-          alt={`${product.title} cover`}
-          className="max-h-[25rem] w-auto max-w-[88%] rounded-sm object-contain shadow-xl transition-transform duration-500 group-hover:scale-[1.02] sm:max-h-[29rem]"
-        />
-      </div>
+    <div className="card-visual relative aspect-square overflow-hidden" style={{ background: product.accent }}>
+      <CoverImage
+        src={coverFor(product)}
+        alt={`${product.title} cover`}
+        className="transition-transform duration-500 group-hover:scale-[1.03]"
+      />
+      {isBuyable(product.id) && (
+        <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif product-gif--corner" />
+      )}
       <CanvaBadge />
       <button
         type="button"

@@ -230,6 +230,31 @@
   .canva-badge:hover {
     transform: translateY(-3px) scale(1.03);
   }
+  /* Card pictures: fill the box edge to edge; keep the decorations small so the cover stays readable. */
+  .card-visual .product-gif--corner {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: clamp(3.5rem, 18%, 5.5rem);
+    max-height: 6rem;
+  }
+
+  .card-visual .canva-badge {
+    bottom: 0.6rem;
+    right: 0.6rem;
+  }
+
+  .card-visual .canva-badge svg {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .card-visual .canva-badge svg {
+      width: 3.25rem;
+      height: 3.25rem;
+    }
+  }
+
 
   .support-button {
     position: fixed;

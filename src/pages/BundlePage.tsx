@@ -1,5 +1,6 @@
 import { ArrowRight, Check, Layers } from 'lucide-react';
-import { coverFor } from '@/lib/stock';
+import { coverFor, isBuyable } from '@/lib/stock';
+import CoverImage from '@/components/CoverImage';
 import { bundle, products } from '@/data/products';
 import BuyButton from '@/components/BuyButton';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
@@ -48,16 +49,11 @@ export default function BundlePage({ onNavigate }: BundlePageProps) {
         <div className="grid gap-8 md:grid-cols-3">
           {products.map((product) => (
             <div key={product.id} className="overflow-hidden rounded-2xl border border-[#b08d57]/15 bg-white">
-              <div
-                className="relative flex aspect-[4/5] items-center justify-center overflow-hidden p-6"
-                style={{ background: product.accent }}
-              >
-                <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif" />
-                <img
-                  src={coverFor(product)}
-                  alt={`${product.title} cover`}
-                  className="max-h-full w-auto max-w-full rounded-sm object-contain shadow-lg"
-                />
+              <div className="card-visual relative aspect-square overflow-hidden" style={{ background: product.accent }}>
+                <CoverImage src={coverFor(product)} alt={`${product.title} cover`} />
+                {isBuyable(product.id) && (
+                  <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif product-gif--corner" />
+                )}
                 <CanvaBadge />
               </div>
               <div className="p-6">

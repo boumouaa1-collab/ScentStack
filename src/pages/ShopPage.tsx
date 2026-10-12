@@ -1,6 +1,7 @@
 import { ArrowRight, Check } from 'lucide-react';
 import { products } from '@/data/products';
-import { coverFor } from '@/lib/stock';
+import { coverFor, isBuyable } from '@/lib/stock';
+import CoverImage from '@/components/CoverImage';
 import BuyButton from '@/components/BuyButton';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import ScentGif from '@/components/ScentGif';
@@ -30,9 +31,11 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
           {products.map((product, i) => (
             <Reveal key={product.id} delay={i * 90}>
             <TiltCard className="product-card relative flex h-full cursor-pointer flex-col overflow-hidden">
-              <div className="product-visual relative flex aspect-[4/5] items-center justify-center overflow-hidden bg-[#efe4d4] p-6" style={{ background: product.accent }}>
-                <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif" />
-                <img src={coverFor(product)} alt={`${product.title} cover`} width={600} height={600} loading="lazy" decoding="async" className="max-h-[300px] w-auto rounded-sm object-contain shadow-xl" />
+              <div className="product-visual card-visual relative aspect-square overflow-hidden" style={{ background: product.accent }}>
+                <CoverImage src={coverFor(product)} alt={`${product.title} cover`} />
+                {isBuyable(product.id) && (
+                  <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif product-gif--corner" />
+                )}
                 <CanvaBadge />
               </div>
               <div className="flex flex-1 flex-col p-7">
