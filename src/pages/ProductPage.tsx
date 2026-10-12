@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
-import { ArrowLeft, ArrowRight, Check, FileText, Globe, Lock, PenLine, Zap, ZoomIn } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowLeft, ArrowRight, Check, ChevronLeft, ChevronRight, FileText, Globe, Lock, PenLine, Zap, ZoomIn } from 'lucide-react';
 import type { Product } from '@/data/products';
-import { getProductById, bundle } from '@/data/products';
+import { getProductById, bundle, siteConfig } from '@/data/products';
 import BuyButton from '@/components/BuyButton';
 import AddToCartButton from '@/components/AddToCartButton';
 import CanvaBadge from '@/components/CanvaBadge';
 import ImageLightbox from '@/components/ImageLightbox';
+import NewsletterForm from '@/components/NewsletterForm';
+import PinItButton from '@/components/PinItButton';
+import { coverFor, galleryFor, isBuyable } from '@/lib/stock';
 import ScentGif from '@/components/ScentGif';
 import { track } from '@/lib/analytics';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
@@ -37,13 +40,59 @@ const faqs = [
 export default function ProductPage({ product, onNavigate }: ProductPageProps) {
   useDocumentMeta(product.seoTitle, product.seoDescription);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const gallery = product.previewImages.length > 0 ? product.previewImages : [product.coverImage];
+  const [heroIndex, setHeroIndex] = useState(0);
+  const swipeStart = useRef<{ x: number; y: number } | null>(null);
+  const gallery = galleryFor(product);
+  const cover = coverFor(product);
+  const inStock = isBuyable(product.id);
   // The cover is already the big hero image, so the grid starts after it when the gallery begins with it.
-  const gridStart = gallery.length > 1 && gallery[0] === product.coverImage ? 1 : 0;
+  const goHero = (delta: number) => setHeroIndex((i) => (i + delta + gallery.length) % gallery.length);
+  const gridStart = gallery.length > 1 && gallery[0] === cover ? 1 : 0;
 
   useEffect(() => {
     track('product_view', { item: product.id });
   }, [product]);
+
+  useEffect(() => {
+    setHeroIndex(0);
+  }, [product.id]);
+
+  // Structured data so Google can show price and availability for this product.
+  useEffect(() => {
+    const data = {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.title,
+      description: product.seoDescription,
+      image: [`${siteConfig.siteUrl}${product.coverImage}`],
+      brand: { '@type': 'Brand', name: 'Scent Stack' },
+      category: 'Digital download',
+      offers: {
+        '@type': 'Offer',
+        url: `${siteConfig.siteUrl}/products/${product.slug}`,
+        priceCurrency: 'USD',
+        price: Number(product.price).toFixed(2),
+        availability: inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      },
+    };
+    const id = 'product-schema';
+    document.getElementById(id)?.remove();
+    const el = document.createElement('script');
+    el.id = id;
+    el.type = 'application/ld+json';
+    el.text = JSON.stringify(data);
+    document.head.appendChild(el);
+    return () => document.getElementById(id)?.remove();
+  }, [product, inStock]);
+
+  // Warm the cache for the next/previous page so arrows feel instant.
+  useEffect(() => {
+    if (gallery.length < 2) return;
+    [1, -1].forEach((d) => {
+      const img = new Image();
+      img.src = gallery[(heroIndex + d + gallery.length) % gallery.length];
+    });
+  }, [heroIndex, gallery]);
 
   const related = product.relatedIds.map((id) => getProductById(id)).filter(Boolean) as Product[];
 
@@ -63,30 +112,106 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
       {/* Product hero */}
       <section className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
         <div className="grid gap-12 lg:grid-cols-2">
-          {/* Cover */}
+          {/* Cover / page carousel */}
           <div className="lg:sticky lg:top-28 lg:self-start">
             <div
-              className="relative aspect-square overflow-hidden rounded-2xl shadow-xl"
+              className="relative aspect-square overflow-hidden rounded-2xl shadow-xl outline-none focus-visible:ring-2 focus-visible:ring-[#b08d57]"
               style={{ background: product.accent }}
+              tabIndex={0}
+              role="group"
+              aria-roledescription="carousel"
+              aria-label={`${product.title} preview pages`}
+              onKeyDown={(event) => {
+                if (event.key === 'ArrowRight') goHero(1);
+                if (event.key === 'ArrowLeft') goHero(-1);
+              }}
+              onTouchStart={(event) => {
+                swipeStart.current = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+              }}
+              onTouchEnd={(event) => {
+                const start = swipeStart.current;
+                swipeStart.current = null;
+                if (!start || gallery.length < 2) return;
+                const dx = event.changedTouches[0].clientX - start.x;
+                const dy = event.changedTouches[0].clientY - start.y;
+                if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) goHero(dx < 0 ? 1 : -1);
+              }}
             >
+              {/* Blurred copy fills the box behind portrait pages, so nothing is cropped and there are no empty bars. */}
+              <img
+                src={gallery[heroIndex]}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 h-full w-full scale-110 object-cover opacity-60 blur-2xl"
+              />
               <button
                 type="button"
-                onClick={() => setLightboxIndex(0)}
-                className="block h-full w-full cursor-zoom-in"
-                aria-label={`Enlarge ${product.title} cover`}
+                onClick={() => setLightboxIndex(heroIndex)}
+                className="relative block h-full w-full cursor-zoom-in"
+                aria-label={`Enlarge ${product.title} page ${heroIndex + 1}`}
               >
                 <img
-                  src={product.coverImage}
-                  alt={`${product.title} cover`}
+                  key={gallery[heroIndex]}
+                  src={gallery[heroIndex]}
+                  alt={heroIndex === 0 ? `${product.title} cover` : `${product.title} page preview ${heroIndex + 1}`}
                   width={1200}
                   height={1200}
                   decoding="async"
-                  className="h-full w-full object-contain"
+                  className="fade-in h-full w-full object-contain"
                 />
               </button>
-              <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif" />
+              {heroIndex === 0 && (
+                <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif" />
+              )}
               <CanvaBadge />
+
+              {gallery.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => goHero(-1)}
+                    aria-label="Previous page"
+                    className="absolute left-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-burgundy shadow-lg backdrop-blur transition hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b08d57]"
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => goHero(1)}
+                    aria-label="Next page"
+                    className="absolute right-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-burgundy shadow-lg backdrop-blur transition hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b08d57]"
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                  <span className="pointer-events-none absolute bottom-3 left-3 z-10 rounded-full bg-black/55 px-3 py-1 text-xs tabular-nums text-white">
+                    {heroIndex + 1} / {gallery.length}
+                  </span>
+                  <span className="pointer-events-none absolute left-3 top-3 z-10 flex items-center gap-1 rounded-full bg-black/55 px-3 py-1 text-xs text-white">
+                    <ZoomIn size={13} /> Tap to enlarge
+                  </span>
+                </>
+              )}
             </div>
+
+            {gallery.length > 1 && (
+              <div className="mt-3 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Preview pages">
+                {gallery.map((image, i) => (
+                  <button
+                    key={image + i}
+                    type="button"
+                    role="tab"
+                    aria-selected={i === heroIndex}
+                    aria-label={`Show page ${i + 1}`}
+                    onClick={() => setHeroIndex(i)}
+                    className={`relative h-16 w-14 shrink-0 overflow-hidden rounded-lg border-2 bg-[#efe4d4]/40 transition sm:h-20 sm:w-16 ${
+                      i === heroIndex ? 'border-[#b08d57] opacity-100' : 'border-transparent opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={image} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Details */}
@@ -121,6 +246,27 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
                 {product.previewCtaLabel}
               </a>
             </div>
+
+            {!inStock && (
+              <div className="mt-6 rounded-2xl border border-[#b08d57]/30 bg-[#efe4d4]/50 p-5">
+                <p className="font-serif-display text-xl text-burgundy">Get notified when it is back</p>
+                <p className="mt-1 text-sm text-charcoal/70">
+                  This one is out of stock for now. Leave your email and we will message you the moment it is available.
+                </p>
+                <NewsletterForm
+                  source={`restock-${product.id}`}
+                  buttonLabel="Notify me"
+                  successMessage="Done — we will email you as soon as it is available."
+                  className="mt-4"
+                />
+              </div>
+            )}
+
+            {inStock && (
+              <div className="mt-5">
+                <PinItButton path={`/products/${product.slug}`} image={cover} description={`${product.title} — ${product.subtitle}`} />
+              </div>
+            )}
 
             <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-charcoal/60">
               <span className="inline-flex items-center gap-2">
@@ -339,7 +485,10 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
           index={lightboxIndex}
           alt={product.title}
           onClose={() => setLightboxIndex(null)}
-          onIndexChange={setLightboxIndex}
+          onIndexChange={(i) => {
+            setLightboxIndex(i);
+            setHeroIndex(i);
+          }}
         />
       )}
     </div>

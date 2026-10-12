@@ -1,10 +1,11 @@
 import { Mail, MessageCircle } from 'lucide-react';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
+import { siteConfig } from '@/data/products';
 
 export default function ContactPage({ onNavigate }: { onNavigate: (page: string) => void }) {
   useDocumentMeta('Contact | Scent Stack', 'Contact Scent Stack customer support for digital product delivery and order help.');
 
-  const supportEmail = import.meta.env.VITE_SUPPORT_EMAIL || 'aymaneelmj@gmail.com';
+  const supportEmail = import.meta.env.VITE_SUPPORT_EMAIL || siteConfig.supportEmail;
 
   return (
     <div className="fade-in min-h-screen bg-[#f7f1e8] pt-24 pb-20">

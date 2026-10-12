@@ -1,4 +1,5 @@
 import { ArrowRight, Check, Layers } from 'lucide-react';
+import { coverFor } from '@/lib/stock';
 import { bundle, products } from '@/data/products';
 import BuyButton from '@/components/BuyButton';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
@@ -53,7 +54,7 @@ export default function BundlePage({ onNavigate }: BundlePageProps) {
               >
                 <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif" />
                 <img
-                  src={product.coverImage}
+                  src={coverFor(product)}
                   alt={`${product.title} cover`}
                   className="max-h-full w-auto max-w-full rounded-sm object-contain shadow-lg"
                 />

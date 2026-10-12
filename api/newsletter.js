@@ -1,6 +1,7 @@
 export default async function handler(request, response) {
   if (request.method !== 'POST') return response.status(405).json({ error: 'Method not allowed' });
   const email = typeof request.body?.email === 'string' ? request.body.email.trim() : '';
+  const source = typeof request.body?.source === 'string' ? request.body.source.replace(/[^a-z0-9:_-]/gi, '').slice(0, 40) : '';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return response.status(400).json({ error: 'Enter a valid email address.' });
 
   const apiKey = process.env.RESEND_API_KEY;
@@ -21,7 +22,7 @@ export default async function handler(request, response) {
   await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from, to: [recipient], subject: 'New Scent Stack newsletter subscriber', text: `New subscriber: ${email}`, reply_to: email }),
+    body: JSON.stringify({ from, to: [recipient], subject: 'New Scent Stack newsletter subscriber', text: `New subscriber: ${email}${source ? ` (from: ${source})` : ''}`, reply_to: email }),
   }).catch(() => null);
   return response.status(200).json({ ok: true });
 }

@@ -24,6 +24,8 @@ export type BlogPost = {
   coverGifNumber?: number;
   coverImage?: string;
   coverAlt?: string;
+  // Tall (2:3) image made for Pinterest; falls back to the cover.
+  pinImage?: string;
   subtitle?: string;
   faq?: BlogFaq[];
   sections: BlogSection[];
@@ -1329,6 +1331,415 @@ export const blogPosts: BlogPost[] = [
         a: 'It is a digital PDF delivered to your email after checkout, so you can use it digitally or print the pages you want.',
       },
     ],
+  },
+  {
+    "slug": "why-cant-i-smell-my-perfume-nose-blindness",
+    "title": "Why Can’t I Smell My Perfume? Nose Blindness (and How to Work Around It)",
+    "subtitle": "You haven’t lost your scent — your nose has simply stopped reporting it.",
+    "metaTitle": "Why Can’t I Smell My Perfume? Nose Blindness | Scent Stack",
+    "metaDescription": "Can’t smell your perfume after a few minutes? That’s nose blindness, not a weak fragrance. Learn why it happens and how to avoid over-spraying.",
+    "keyword": "why can’t I smell my perfume",
+    "excerpt": "If your perfume seems to vanish within minutes, your nose is probably adapting — not your fragrance failing. Here is why it happens and how to check your scent without over-spraying.",
+    "readTime": "6 min read",
+    "publishedLabel": "Fragrance Basics",
+    "relatedProductId": "journal",
+    "coverImage": "/blog/why-cant-i-smell-my-perfume-nose-blindness.jpg",
+    "pinImage": "/blog/pins/why-cant-i-smell-my-perfume-nose-blindness.jpg",
+    "coverAlt": "Why can’t I smell my perfume — a guide to nose blindness by Scent Stack",
+    "sections": [
+      {
+        "heading": "It is not your perfume — it is your nose",
+        "body": [
+          "You spray your favourite fragrance, enjoy it for a few minutes, and then it seems to disappear. A coworker leans in and says you smell lovely. So was it fading, or were you just not noticing?",
+          "Most of the time it is the second one. The effect is called olfactory adaptation (many people call it nose blindness or smell fatigue). When a scent stays the same for long enough, your brain gradually stops treating it as important news and turns the volume down."
+        ]
+      },
+      {
+        "heading": "Why it happens so quickly with perfume",
+        "body": [
+          "Your brain is built to notice change, not constants. It is the same reason you stop smelling your own home, your laundry detergent or the candle that has been burning all afternoon.",
+          "Perfume is the perfect trigger for this: it sits a few inches from your nose, it does not change much for hours, and you wear it all day. The result is that the person who smells it least is you."
+        ],
+        "image": {
+          "src": "/blog/nose-blindness-curve.svg",
+          "alt": "Illustrative chart showing how your own awareness of a perfume fades faster than what people around you notice",
+          "caption": "Illustration of the idea — not measured data."
+        }
+      },
+      {
+        "heading": "The over-spraying trap",
+        "body": [
+          "Here is where things go wrong. You cannot smell your perfume, so you add three more sprays. Now you are comfortable and everyone within a few metres is not.",
+          "A useful rule: judge a fragrance by how it smells in the first few minutes, and by what trusted people tell you — not by whether you can still smell it at lunchtime. If it was the right amount at the start, it is still the right amount now."
+        ]
+      },
+      {
+        "heading": "Ways to check your fragrance without adding more",
+        "body": [
+          "You do not have to guess. These simple checks work better than another spritz:"
+        ],
+        "list": [
+          "Take a short break: step into fresh air or another room for a few minutes, then smell your wrist or sleeve again.",
+          "Smell the fabric: a scarf or collar where you sprayed often holds scent in a way your skin no longer seems to.",
+          "Ask someone honest: one trusted friend is worth more than your own nose here.",
+          "Notice reactions: if people mention your scent often, it is not too faint.",
+          "Keep your first-impression rule: the amount that felt right at 8 a.m. is the amount that is right at 3 p.m."
+        ],
+        "quote": {
+          "text": "If you can still smell your perfume strongly after hours, that is a good moment to ask a friend. It is usually very different for them."
+        }
+      },
+      {
+        "heading": "Rotating fragrances can keep your nose engaged",
+        "body": [
+          "Many fragrance fans find that wearing the same scent every single day makes the effect stronger, and that switching between a few fragrances keeps each one feeling fresh. It is also a good reason to build a small rotation instead of relying on one bottle — our guide to building a fragrance wardrobe for every season covers how."
+        ]
+      },
+      {
+        "heading": "Track it so you stop guessing",
+        "body": [
+          "The easiest way to take the guesswork out is to write it down. A simple wear log — what you wore, how many sprays, when you noticed it fade and what people said — turns a vague feeling into something you can compare across days and fragrances.",
+          "The Digital Fragrance Journal has review pages, dry-down notes and a wear log built for exactly this, so you can see how each perfume performs on you over time instead of relying on a nose that gets tired."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "Is nose blindness permanent?",
+        "a": "No. It is a temporary adaptation. Your sensitivity recovers once you are away from the scent for a while. If you notice a lasting or sudden change in your sense of smell in general, it is worth talking to a doctor."
+      },
+      {
+        "q": "Does it mean my perfume is weak?",
+        "a": "Not necessarily. Perfume can seem to vanish to you while remaining noticeable to people near you. Ask a trusted person before assuming it has faded."
+      },
+      {
+        "q": "Should I reapply when I stop smelling it?",
+        "a": "Usually not. Reapplying because you cannot smell it is the most common way people end up wearing too much. If you want a top-up, reapply lightly and check with someone you trust."
+      },
+      {
+        "q": "Do I notice other people’s perfume more than my own?",
+        "a": "Often, yes. You are meeting their scent fresh, while your own has been constant for hours."
+      }
+    ]
+  },
+  {
+    "slug": "how-to-describe-perfume-smells-fragrance-vocabulary",
+    "title": "How to Describe Perfume Smells: A Beginner’s Fragrance Vocabulary",
+    "subtitle": "Find the words for what you smell — and you will finally know what to buy next.",
+    "metaTitle": "How to Describe Perfume Smells (Vocabulary) | Scent Stack",
+    "metaDescription": "Struggling to put perfume into words? Use this beginner fragrance vocabulary and simple sentence formula to describe what you smell and what you like.",
+    "keyword": "how to describe perfume smells",
+    "excerpt": "“It just smells good” is a start. Here is a beginner-friendly fragrance vocabulary and a simple three-part formula for describing what you smell — and what you actually like.",
+    "readTime": "7 min read",
+    "publishedLabel": "Fragrance Discovery",
+    "relatedProductId": "signature",
+    "coverImage": "/blog/how-to-describe-perfume-smells-fragrance-vocabulary.jpg",
+    "pinImage": "/blog/pins/how-to-describe-perfume-smells-fragrance-vocabulary.jpg",
+    "coverAlt": "How to describe perfume smells with a beginner fragrance vocabulary by Scent Stack",
+    "sections": [
+      {
+        "heading": "Why having the words matters",
+        "body": [
+          "Most people can tell whether they like a perfume. Far fewer can say why. That gap is exactly why shopping for fragrance feels like guesswork: if you cannot describe what you enjoy, you cannot search for it, ask for it or recognise it in a new bottle.",
+          "The good news is that you do not need a perfumer’s training. You just need a small, reliable vocabulary and a habit of using it."
+        ]
+      },
+      {
+        "heading": "Start with the big picture, then get specific",
+        "body": [
+          "Begin with a broad reaction: is it fresh, warm, sweet, dry, soft? Then narrow down. Fresh might become citrusy or watery; warm might become spicy, woody or vanilla-like. If you want a refresher on the main groups, our guide to fragrance families explains floral, woody, oriental and fresh in plain language."
+        ]
+      },
+      {
+        "heading": "A starter vocabulary you can borrow",
+        "body": [
+          "Keep this list nearby the next time you smell something. You will not use every word — pick the ones that feel true."
+        ],
+        "image": {
+          "src": "/blog/perfume-vocabulary-chips.svg",
+          "alt": "Beginner perfume vocabulary grouped into fresh, floral, warm, sweet and woody word lists",
+          "caption": "A small word bank to describe what you smell."
+        }
+      },
+      {
+        "heading": "Use texture words, not just smell words",
+        "body": [
+          "Scents have texture, the same way fabrics do. Borrowing texture words is often easier than naming notes:"
+        ],
+        "list": [
+          "Airy or sheer: light, almost see-through.",
+          "Creamy or smooth: rounded, with no sharp edges.",
+          "Powdery: soft and cosmetic-like.",
+          "Sharp or crisp: bright, with a clear edge.",
+          "Dense or rich: heavy, enveloping and slow to fade."
+        ]
+      },
+      {
+        "heading": "A three-part sentence formula",
+        "body": [
+          "When you are stuck, fill in this sentence: “It opens ____, settles into ____, and feels ____.” The first blank is your first impression, the second is what is left after the first half hour, and the third is a mood or texture.",
+          "For example: “It opens bright and citrusy, settles into soft woods, and feels clean and calm.” That one sentence tells you far more than “smells nice” and is easy to compare with the next fragrance you try."
+        ],
+        "quote": {
+          "text": "You do not need to name every note. You only need to describe what you notice, honestly, in your own words."
+        }
+      },
+      {
+        "heading": "Practise in small, easy ways",
+        "body": [
+          "Smell things in daily life and give them words: a citrus peel, black tea, fresh-cut grass, a wooden drawer. The more you connect real smells to words, the easier it gets to describe a perfume.",
+          "A guided worksheet speeds this up. The Fragrance Discovery Workbook includes preference worksheets, favourite-notes trackers and a test log designed to turn “I like it” into “I like warm, creamy, slightly woody scents” — and from there it is much easier to choose a signature scent."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "What if I cannot pick out the notes in a perfume?",
+        "a": "That is normal. Notes lists are a guide, not a test. Describing the overall feel — fresh, warm, creamy, sharp — is just as useful for finding scents you like."
+      },
+      {
+        "q": "Is there a right or wrong word?",
+        "a": "No. If “soapy” or “like clean laundry” is what you smell, that is correct for you. Your words are what you will use to remember and compare fragrances."
+      },
+      {
+        "q": "How do I remember what I smelled?",
+        "a": "Write it down straight away. A short note with your three-part sentence is enough, and it builds a record of your taste over time."
+      }
+    ]
+  },
+  {
+    "slug": "how-to-buy-perfume-online-without-smelling-it",
+    "title": "How to Buy Perfume Online Without Smelling It First (a Five-Step Blind-Buy Guide)",
+    "subtitle": "A calm checklist to run before you spend money on a scent you have never worn.",
+    "metaTitle": "Buy Perfume Online Without Smelling It | Scent Stack",
+    "metaDescription": "Thinking of blind-buying perfume online? Use this five-step checklist to protect your money: know your taste, read notes, compare, sample and check returns.",
+    "keyword": "how to buy perfume online without smelling it",
+    "excerpt": "Blind-buying a fragrance can work — or end up as an unused bottle in a drawer. This five-step checklist helps you decide before you click “buy”.",
+    "readTime": "7 min read",
+    "publishedLabel": "Smart Buying",
+    "relatedProductId": "discovery",
+    "coverImage": "/blog/how-to-buy-perfume-online-without-smelling-it.jpg",
+    "pinImage": "/blog/pins/how-to-buy-perfume-online-without-smelling-it.jpg",
+    "coverAlt": "How to buy perfume online without smelling it — a five-step blind-buy checklist by Scent Stack",
+    "sections": [
+      {
+        "heading": "Why blind buys go wrong",
+        "body": [
+          "A perfume that gets rave reviews can still smell completely different on you. Reviews are personal opinions, marketing copy is written to sell, and skin chemistry, climate and your own taste all change the result.",
+          "That does not mean you can never buy a fragrance you have not smelled. It means you need a process that replaces hype with information."
+        ],
+        "image": {
+          "src": "/blog/blind-buy-checklist.svg",
+          "alt": "Five-step checklist before blind-buying perfume: know your taste, read the notes, compare, sample first and check returns",
+          "caption": "The five-step check, at a glance."
+        }
+      },
+      {
+        "heading": "Step 1: Know your own taste first",
+        "body": [
+          "The best defence against a bad blind buy is knowing what you actually like. Which fragrance families do you reach for? Which notes do you love and which do you avoid? If you are not sure yet, spend time mapping it out before you buy anything new."
+        ]
+      },
+      {
+        "heading": "Step 2: Read the notes for structure, not individual words",
+        "body": [
+          "A notes list is most useful for the overall direction — fresh, floral, woody, gourmand — rather than for any one ingredient. If a list is dominated by notes you already dislike, you have your answer. If it matches the families you enjoy, it moves to the next step."
+        ]
+      },
+      {
+        "heading": "Step 3: Compare it with scents you already know",
+        "body": [
+          "Look for descriptions that compare the fragrance to something you own or have tried: “in the same family as…”, “a softer take on…”. A comparison to a scent you love is more reliable than a stranger’s star rating."
+        ]
+      },
+      {
+        "heading": "Step 4: Sample or decant before the full bottle",
+        "body": [
+          "If you can, buy a small sample or decant first. Wear it for a full day, not just a few minutes, and pay attention to how it changes. A few dollars on a sample can save a lot more on a bottle you would not finish.",
+          "Whatever you buy, use a reputable seller. Our guide to spotting a fake perfume before you buy covers the warning signs worth checking."
+        ]
+      },
+      {
+        "heading": "Step 5: Check the return policy, then wait",
+        "body": [
+          "Before you order, find out whether the seller accepts returns on opened fragrance, because many do not. Then add the perfume to a wishlist and wait a couple of days. If you still want it after the excitement fades, it is a much safer purchase.",
+          "A purchase checklist and wishlist keep this honest. The Fragrance Collection Tracker includes a wishlist manager and a purchase decision checklist so you can compare what you own with what you are tempted to buy — and spot duplicates before they happen."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "Is it ever okay to blind-buy a full bottle?",
+        "a": "It can be reasonable when you are re-buying a fragrance you already know, or when it is very close to something you love and the return policy is clear. Otherwise a sample first is the safer option."
+      },
+      {
+        "q": "How long should I test a sample?",
+        "a": "Wear it for at least a full day, ideally on more than one day, so you see the opening, the dry-down and how it behaves in different weather and moods."
+      },
+      {
+        "q": "Can I trust online reviews?",
+        "a": "Use them as clues, not verdicts. Look for reviewers whose taste matches yours and focus on descriptions of how the scent smells, not just ratings."
+      }
+    ]
+  },
+  {
+    "slug": "perfume-cost-per-wear-is-expensive-perfume-worth-it",
+    "title": "Perfume Cost Per Wear: Is an Expensive Fragrance Actually Worth It?",
+    "subtitle": "The simple maths that makes a pricey bottle — and a cheap bottle you never wear — look very different.",
+    "metaTitle": "Perfume Cost Per Wear: Is It Worth It? | Scent Stack",
+    "metaDescription": "Is expensive perfume worth it? Use cost per wear — price divided by times worn — to compare fragrances and stop paying for bottles you never reach for.",
+    "keyword": "perfume cost per wear",
+    "excerpt": "A bottle’s price tag tells you very little. Cost per wear — what you paid divided by how often you wear it — tells you much more. Here is how to use it.",
+    "readTime": "6 min read",
+    "publishedLabel": "Smart Buying",
+    "relatedProductId": "collector",
+    "coverImage": "/blog/perfume-cost-per-wear-is-expensive-perfume-worth-it.jpg",
+    "pinImage": "/blog/pins/perfume-cost-per-wear-is-expensive-perfume-worth-it.jpg",
+    "coverAlt": "Perfume cost per wear — is expensive perfume worth it — guide by Scent Stack",
+    "sections": [
+      {
+        "heading": "What cost per wear means",
+        "body": [
+          "Cost per wear is borrowed from fashion and it is simple: take what you paid for the bottle and divide it by the number of times you wear it.",
+          "A fragrance is only “expensive” or “cheap” in relation to how much you use it. Something you wear every week for a year can cost far less per wear than a bargain bottle that sits in a drawer."
+        ]
+      },
+      {
+        "heading": "A quick example",
+        "body": [
+          "Here is the idea with made-up numbers, purely for illustration. A moderately priced bottle you wear constantly can end up costing pennies per wear, an expensive favourite can still be good value, and a bottle you buy on impulse and wear a handful of times can be the priciest of all."
+        ],
+        "image": {
+          "src": "/blog/cost-per-wear.svg",
+          "alt": "Illustrated example of perfume cost per wear comparing three imaginary bottles by price and how often they are worn",
+          "caption": "Example numbers for illustration only."
+        }
+      },
+      {
+        "heading": "The hidden cost: bottles you never reach for",
+        "body": [
+          "The cheapest perfume is the one you actually finish. The most expensive is the one you never use. Impulse buys, duty-free temptations and gifts that do not suit you all quietly push your average cost per wear up."
+        ]
+      },
+      {
+        "heading": "What else belongs in the equation",
+        "body": [
+          "Price and wears are the core numbers, but a few other things matter:"
+        ],
+        "list": [
+          "Bottle size and how many sprays you use per wear. As a rough guide, a spray is often around a tenth of a millilitre, so a 50 ml bottle can last well over a hundred wears at a few sprays each.",
+          "Shelf life and storage: a bottle kept away from heat and light stays good for longer, which protects what you paid.",
+          "Whether it is a duplicate: owning three similar scents means each one gets worn less.",
+          "How much you genuinely enjoy it: a fragrance that makes you happy every time is doing its job."
+        ],
+        "quote": {
+          "text": "Price is what you pay. Cost per wear is what you actually spend — and the second number is the one you control."
+        }
+      },
+      {
+        "heading": "How to track your wears",
+        "body": [
+          "The only way to know your cost per wear is to count. A simple tally mark each time you wear a fragrance is enough, and over a few months it shows you which bottles earn their place and which are just taking up space.",
+          "The Fragrance Collection Tracker has a most-worn tracker, a duplicate check and a collection audit, so you can see this at a glance instead of working it out from memory."
+        ]
+      },
+      {
+        "heading": "A simple rule before you buy",
+        "body": [
+          "Pick a number that feels right to you — for example, “will I realistically wear this at least twenty times?” — and ask it before every purchase. If the honest answer is no, a sample or decant is probably the better choice."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "Is expensive perfume always better?",
+        "a": "No. A higher price can reflect ingredients, branding, packaging or exclusivity. What matters is whether you enjoy it and wear it. Cost per wear helps you judge value on your own terms."
+      },
+      {
+        "q": "How many times can I wear a 50 ml bottle?",
+        "a": "It depends on your atomizer and how many sprays you use, but at a few sprays per wear it is often well over a hundred wears."
+      },
+      {
+        "q": "Does perfume expire?",
+        "a": "Perfume does not last forever, especially if it is exposed to heat, light or air. Store it somewhere cool and dark and it will stay in good condition for longer."
+      }
+    ]
+  },
+  {
+    "slug": "what-perfume-to-wear-for-work-dates-gym-and-every-occasion",
+    "title": "What Perfume to Wear for Work, Dates, the Gym and Every Occasion",
+    "subtitle": "A simple occasion guide for choosing the right scent — and the right amount.",
+    "metaTitle": "What Perfume to Wear for Work, Dates & More | Scent Stack",
+    "metaDescription": "Not sure what perfume to wear for work, a date or the gym? This occasion guide shows what to aim for in each setting and how to build a small rotation.",
+    "keyword": "what perfume to wear for work",
+    "excerpt": "The “best” perfume depends on where you are going. Here is an easy occasion-by-occasion guide to choosing a scent for work, dates, the gym and more.",
+    "readTime": "6 min read",
+    "publishedLabel": "Collection Planning",
+    "relatedProductId": "wardrobe",
+    "coverImage": "/blog/what-perfume-to-wear-for-work-dates-gym-and-every-occasion.jpg",
+    "pinImage": "/blog/pins/what-perfume-to-wear-for-work-dates-gym-and-every-occasion.jpg",
+    "coverAlt": "What perfume to wear for work, dates, the gym and every occasion — guide by Scent Stack",
+    "sections": [
+      {
+        "heading": "Occasion beats “best perfume”",
+        "body": [
+          "There is no single best fragrance, only the right one for the moment. A scent that is lovely at a candlelit dinner can feel too much in a quiet office, and a light citrus that is perfect for a summer walk may disappear at a winter event.",
+          "Thinking in occasions gives you a quick answer to the daily question: what should I wear today?"
+        ],
+        "image": {
+          "src": "/blog/perfume-occasion-guide.svg",
+          "alt": "Occasion guide showing what to aim for in a perfume for work, everyday, date night, active days and formal events",
+          "caption": "What to aim for, occasion by occasion."
+        }
+      },
+      {
+        "heading": "Work and shared spaces",
+        "body": [
+          "In an office, aim for soft, clean and close to the skin. Lighter fresh, green, tea-like or gently woody scents tend to suit shared spaces, and applying lightly matters as much as the fragrance itself.",
+          "Some workplaces have scent-free policies and some colleagues are sensitive to fragrance, so check what is expected where you work."
+        ]
+      },
+      {
+        "heading": "Everyday and errands",
+        "body": [
+          "For everyday wear, choose something easy and comfortable that you never feel like you have to think about. This is usually your most-worn fragrance, so it should be one you enjoy being around all day."
+        ]
+      },
+      {
+        "heading": "Date night and evenings",
+        "body": [
+          "Evenings suit warmer, richer and more personal fragrances: think soft woods, amber, vanilla or gentle spice. These tend to sit closer and feel more intimate, which suits being near someone rather than across a room.",
+          "Test your date-night scent beforehand. Wearing a brand-new fragrance for the first time on an important night is a gamble."
+        ]
+      },
+      {
+        "heading": "The gym, outdoors and warm weather",
+        "body": [
+          "Heavy fragrance and exercise rarely mix. Many people skip perfume for a workout altogether, or choose something very light and fresh afterwards. Heat also changes how fragrance behaves, so lighter citrus, aromatic and watery scents are popular choices when it is warm."
+        ]
+      },
+      {
+        "heading": "Turn it into a rotation",
+        "body": [
+          "Once you know your occasions, you can match a fragrance to each one — and see where you have gaps or too many similar scents. That is the whole idea behind a fragrance wardrobe, and our guide to building a fragrance wardrobe for every season shows how the seasons fit in.",
+          "The Fragrance Wardrobe Planner lays this out on the page, with sections for everyday wear, work, dates, evenings, seasons and travel, so choosing becomes a plan rather than a daily guess."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "How much perfume should I wear to work?",
+        "a": "Start light and keep it subtle — many people use a spray or two, depending on how strong the fragrance is. If colleagues can smell you from across the room, it is too much."
+      },
+      {
+        "q": "Can one perfume work for every occasion?",
+        "a": "A versatile scent can cover several, such as everyday and work. Most people still enjoy having a lighter option and a warmer option so they can match the moment."
+      },
+      {
+        "q": "Should I wear perfume to the gym?",
+        "a": "It is usually better to skip it, or keep it very light. Strong fragrance in a warm, shared space is not for everyone."
+      }
+    ]
   },
 ];
 

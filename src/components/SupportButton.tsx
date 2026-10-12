@@ -1,8 +1,9 @@
 import { FormEvent, useState } from 'react';
 import { MessageCircle, Send, X } from 'lucide-react';
+import { siteConfig } from '@/data/products';
 
 type ChatMessage = { from: 'visitor' | 'support'; text: string };
-const supportEmail = 'aymaneelmj@gmail.com';
+const supportEmail = siteConfig.supportEmail;
 const quickIssues = [
   '💳 I have a payment problem',
   '📥 I cannot download my product',

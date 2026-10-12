@@ -35,7 +35,7 @@ export type Product = {
 export const siteConfig = {
   siteUrl: 'https://scentstack.store',
   pinterestUrl: '',
-  supportEmail: 'aymaneelmj@gmail.com',
+  supportEmail: 'support@scentstack.store',
 };
 
 export const isConfigured = (value: string) => {

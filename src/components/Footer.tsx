@@ -25,12 +25,12 @@ export default function Footer({ onNavigate }: FooterProps) {
             <ScentGif number={10} alt="Illustrated perfume bottle" className="footer-gif" />
           </Reveal>
 
-          <Reveal delay={90} className="grid gap-10 sm:grid-cols-2">
+          <Reveal delay={90} className="grid gap-10 sm:grid-cols-[1.5fr_1fr]">
                 <nav aria-label="Store products">
                   <h4 className="mb-5 text-xs font-medium uppercase tracking-[0.2em] text-gold">Products</h4>
-                  <ul className="grid grid-cols-1 gap-2 text-sm text-charcoal/80">
+                  <ul className="grid grid-cols-1 gap-3 text-left text-sm leading-snug text-charcoal/80">
                     {products.map((p) => (
-                      <li key={p.id}><button onClick={() => onNavigate(`product-${p.slug}`)} className="transition-colors hover:text-burgundy">{p.title}</button></li>
+                      <li key={p.id}><button onClick={() => onNavigate(`product-${p.slug}`)} className="text-left transition-colors hover:text-burgundy">{p.title}</button></li>
                     ))}
                   </ul>
                 </nav>
@@ -38,7 +38,7 @@ export default function Footer({ onNavigate }: FooterProps) {
                 <nav aria-label="Legal">
                   <h4 className="mb-5 text-xs font-medium uppercase tracking-[0.2em] text-gold">Legal</h4>
                   <ul className="grid grid-cols-1 gap-2 text-sm text-charcoal/80">
-                    <li><button onClick={() => onNavigate('privacy')} className="transition-colors hover:text-burgundy">Privacy Policy</button></li>
+                    <li><button onClick={() => onNavigate('privacy')} className="text-left transition-colors hover:text-burgundy">Privacy Policy</button></li>
                     <li><button onClick={() => onNavigate('terms')} className="transition-colors hover:text-burgundy">Terms</button></li>
                     <li><button onClick={() => onNavigate('refund-policy')} className="transition-colors hover:text-burgundy">Refund Policy</button></li>
                   </ul>

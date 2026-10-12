@@ -5,6 +5,7 @@ import { getProduct, siteConfig } from '@/data/products';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import BuyButton from '@/components/BuyButton';
 import ScentGif from '@/components/ScentGif';
+import PinItButton from '@/components/PinItButton';
 import Reveal from '@/components/Reveal';
 
 type BlogPostPageProps = {
@@ -69,7 +70,11 @@ export default function BlogPostPage({ post, onNavigate }: BlogPostPageProps) {
   }, [post, heroProduct]);
 
   const product = heroProduct;
-  const related = getPublishedPosts().filter((p) => p.slug !== post.slug).slice(0, 2);
+  // Prefer articles about the same product, then the newest, so readers keep moving through the site.
+  const related = getPublishedPosts()
+    .filter((p) => p.slug !== post.slug)
+    .sort((a, b) => Number(b.relatedProductId === post.relatedProductId) - Number(a.relatedProductId === post.relatedProductId))
+    .slice(0, 4);
 
   return (
     <article className="fade-in mx-auto max-w-3xl px-6 py-28 lg:px-10">
@@ -97,6 +102,14 @@ export default function BlogPostPage({ post, onNavigate }: BlogPostPageProps) {
         ) : (
           <ScentGif number={post.coverGifNumber ?? 1} alt={post.title} className="blog-hero-gif" />
         )}
+      </div>
+
+      <div className="mt-4 flex justify-end">
+        <PinItButton
+          path={`/blog/${post.slug}`}
+          image={post.pinImage || post.coverImage || heroProduct?.coverImage || '/productImages/prod1/cover.jpg'}
+          description={post.title}
+        />
       </div>
 
       <div className="mt-10 space-y-8">

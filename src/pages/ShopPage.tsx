@@ -1,5 +1,6 @@
 import { ArrowRight, Check } from 'lucide-react';
 import { products } from '@/data/products';
+import { coverFor } from '@/lib/stock';
 import BuyButton from '@/components/BuyButton';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import ScentGif from '@/components/ScentGif';
@@ -28,10 +29,10 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
         <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
           {products.map((product, i) => (
             <Reveal key={product.id} delay={i * 90}>
-            <TiltCard className="product-card flex h-full flex-col overflow-hidden">
+            <TiltCard className="product-card relative flex h-full cursor-pointer flex-col overflow-hidden">
               <div className="product-visual relative flex aspect-[4/5] items-center justify-center overflow-hidden bg-[#efe4d4] p-6" style={{ background: product.accent }}>
                 <ScentGif number={product.id === 'workbook' ? 3 : product.id === 'layering' ? 7 : 9} alt="Animated fragrance accent" className="product-gif" />
-                <img src={product.coverImage} alt={`${product.title} cover`} className="max-h-[300px] w-auto rounded-sm object-contain shadow-xl" />
+                <img src={coverFor(product)} alt={`${product.title} cover`} width={600} height={600} loading="lazy" decoding="async" className="max-h-[300px] w-auto rounded-sm object-contain shadow-xl" />
                 <CanvaBadge />
               </div>
               <div className="flex flex-1 flex-col p-7">
@@ -39,7 +40,15 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
                   <span className="text-xs uppercase tracking-[0.2em] text-gold">{product.category}</span>
                   <span className="font-serif-display text-3xl text-burgundy">${product.price}</span>
                 </div>
-                <h2 className="font-serif-display text-3xl text-burgundy">{product.title}</h2>
+                <h2 className="font-serif-display text-3xl text-burgundy">
+                  <button
+                    type="button"
+                    onClick={() => onNavigate(`product-${product.slug}`)}
+                    className="text-left after:absolute after:inset-0 after:z-[5] after:content-[''] focus:outline-none focus-visible:after:ring-2 focus-visible:after:ring-[#b08d57]"
+                  >
+                    {product.title}
+                  </button>
+                </h2>
                 <p className="mt-2 text-sm text-charcoal/60">{product.subtitle}</p>
                 <p className="mt-4 flex-1 text-sm leading-relaxed text-charcoal/70">{product.shortDescription}</p>
                 <ul className="mt-5 space-y-2">

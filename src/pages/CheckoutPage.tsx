@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Lock, Mail, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { bundle, testProduct, getProductBySlugOrId, products, type Product } from '@/data/products';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
-import { outOfStock, isBuyable, stockMessage } from '@/lib/stock';
+import { outOfStock, isBuyable, stockMessage, coverFor } from '@/lib/stock';
 import { STRICT_EMAIL_RE, suggestEmailFix, maskEmail } from '@/lib/emailCheck';
 import { useCart } from '@/lib/cartContext';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -308,7 +308,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
               <div className="mt-6 overflow-hidden rounded-2xl border border-[#b08d57]/15 bg-[#efe4d4]/60 p-4">
                 <div className="flex justify-center rounded-xl p-4" style={{ background: selectedProduct!.accent }}>
                   <img
-                    src={selectedProduct!.coverImage}
+                    src={coverFor(selectedProduct!)}
                     alt={`${selectedProduct!.title} cover`}
                     className="max-h-[260px] w-auto rounded-sm object-contain shadow-xl"
                   />
@@ -319,7 +319,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                 {cartProducts.map((p) => (
                   <div key={p.id} className="flex items-center gap-3 rounded-2xl border border-[#b08d57]/15 bg-[#efe4d4]/40 p-3">
                     <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl" style={{ background: p.accent }}>
-                      <img src={p.coverImage} alt={`${p.title} cover`} className="max-h-full max-w-full object-contain" />
+                      <img src={coverFor(p)} alt={`${p.title} cover`} className="max-h-full max-w-full object-contain" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium text-charcoal">{p.title}</p>
