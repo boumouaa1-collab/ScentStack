@@ -1,5 +1,4 @@
 import type { Product } from '@/data/products';
-import { getBlogPost } from '@/data/blog';
 
 export function pathForPage(page: string): string {
   if (page === 'home') return '/';
@@ -57,7 +56,7 @@ export function pageForPath(pathname: string, products: Product[]): string {
   const blogMatch = clean.match(/^\/blog\/([a-z0-9-]+)$/);
   if (blogMatch) {
     const slug = blogMatch[1];
-    if (getBlogPost(slug)) return `blog-${slug}`;
+    return `blog-${slug}`;
   }
 
   if (clean === '/thank-you') {

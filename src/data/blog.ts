@@ -34,7 +34,9 @@ export type BlogPost = {
 export const blogPosts: BlogPost[] = [
   {
     slug: 'how-to-organize-your-perfume-collection',
-    coverGifNumber: 1,
+    coverImage: '/blog/covers/how-to-organize-your-perfume-collection.jpg',
+    pinImage: '/blog/pins/how-to-organize-your-perfume-collection.jpg',
+    coverAlt: 'How to Organize Your Perfume Collection (Without It Becoming a Mess) — Scent Stack guide',
     title: 'How to Organize Your Perfume Collection (Without It Becoming a Mess)',
     metaTitle: 'How to Organize Your Perfume Collection | Scent Stack',
     metaDescription:
@@ -78,7 +80,9 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'how-to-layer-perfume-beginners-guide',
-    coverGifNumber: 2,
+    coverImage: '/blog/covers/how-to-layer-perfume-beginners-guide.jpg',
+    pinImage: '/blog/pins/how-to-layer-perfume-beginners-guide.jpg',
+    coverAlt: 'How to Layer Perfume: A Beginner\'s Guide to Scent Layering — Scent Stack guide',
     title: "How to Layer Perfume: A Beginner's Guide to Scent Layering",
     metaTitle: 'How to Layer Perfume: A Beginner Guide | Scent Stack',
     metaDescription:
@@ -121,7 +125,9 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'how-to-find-your-signature-scent',
-    coverGifNumber: 3,
+    coverImage: '/blog/covers/how-to-find-your-signature-scent.jpg',
+    pinImage: '/blog/pins/how-to-find-your-signature-scent.jpg',
+    coverAlt: 'How to Find Your Signature Scent (Even If Nothing Feels "You" Yet) — Scent Stack guide',
     title: 'How to Find Your Signature Scent (Even If Nothing Feels "You" Yet)',
     metaTitle: 'How to Find Your Signature Scent | Scent Stack',
     metaDescription:
@@ -161,7 +167,9 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'perfume-notes-explained-top-middle-base',
-    coverGifNumber: 4,
+    coverImage: '/blog/covers/perfume-notes-explained-top-middle-base.jpg',
+    pinImage: '/blog/pins/perfume-notes-explained-top-middle-base.jpg',
+    coverAlt: 'Perfume Notes Explained: Top, Middle, and Base Notes — Scent Stack guide',
     title: 'Perfume Notes Explained: Top, Middle, and Base Notes',
     metaTitle: 'Perfume Notes Explained: Top, Middle, Base | Scent Stack',
     metaDescription:
@@ -202,7 +210,9 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'build-a-fragrance-wardrobe-for-every-season',
-    coverGifNumber: 5,
+    coverImage: '/blog/covers/build-a-fragrance-wardrobe-for-every-season.jpg',
+    pinImage: '/blog/pins/build-a-fragrance-wardrobe-for-every-season.jpg',
+    coverAlt: 'How to Build a Fragrance Wardrobe for Every Season — Scent Stack guide',
     title: 'How to Build a Fragrance Wardrobe for Every Season',
     metaTitle: 'Build a Fragrance Wardrobe for Every Season | Scent Stack',
     metaDescription:
@@ -242,7 +252,9 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'how-long-does-perfume-last-shelf-life-storage',
-    coverGifNumber: 6,
+    coverImage: '/blog/covers/how-long-does-perfume-last-shelf-life-storage.jpg',
+    pinImage: '/blog/pins/how-long-does-perfume-last-shelf-life-storage.jpg',
+    coverAlt: 'How Long Does Perfume Last? Shelf Life and Storage Tips — Scent Stack guide',
     title: 'How Long Does Perfume Last? Shelf Life and Storage Tips',
     metaTitle: 'How Long Does Perfume Last? Storage Tips | Scent Stack',
     metaDescription:
@@ -283,7 +295,9 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'niche-vs-designer-perfume-difference',
-    coverGifNumber: 7,
+    coverImage: '/blog/covers/niche-vs-designer-perfume-difference.jpg',
+    pinImage: '/blog/pins/niche-vs-designer-perfume-difference.jpg',
+    coverAlt: 'Niche vs. Designer Perfume: What\'s Actually Different — Scent Stack guide',
     title: "Niche vs. Designer Perfume: What's Actually Different",
     metaTitle: 'Niche vs Designer Perfume: The Real Difference | Scent Stack',
     metaDescription:
@@ -323,7 +337,9 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'how-to-test-perfume-samples-properly',
-    coverGifNumber: 8,
+    coverImage: '/blog/covers/how-to-test-perfume-samples-properly.jpg',
+    pinImage: '/blog/pins/how-to-test-perfume-samples-properly.jpg',
+    coverAlt: 'How to Test Perfume Samples the Right Way (Without Wasting Money) — Scent Stack guide',
     title: 'How to Test Perfume Samples the Right Way (Without Wasting Money)',
     metaTitle: 'How to Test Perfume Samples Properly | Scent Stack',
     metaDescription:
@@ -363,7 +379,9 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'perfume-mistakes-beginners-make',
-    coverGifNumber: 9,
+    coverImage: '/blog/covers/perfume-mistakes-beginners-make.jpg',
+    pinImage: '/blog/pins/perfume-mistakes-beginners-make.jpg',
+    coverAlt: '7 Perfume Mistakes Beginners Make (and How to Avoid Them) — Scent Stack guide',
     title: '7 Perfume Mistakes Beginners Make (and How to Avoid Them)',
     metaTitle: '7 Perfume Mistakes Beginners Make | Scent Stack',
     metaDescription:
@@ -409,7 +427,9 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'perfume-journal-vs-spreadsheet',
-    coverGifNumber: 10,
+    coverImage: '/blog/covers/perfume-journal-vs-spreadsheet.jpg',
+    pinImage: '/blog/pins/perfume-journal-vs-spreadsheet.jpg',
+    coverAlt: 'Perfume Journal vs. Spreadsheet: The Best Way to Track Your Collection — Scent Stack guide',
     title: 'Perfume Journal vs. Spreadsheet: The Best Way to Track Your Collection',
     metaTitle: 'Perfume Journal vs Spreadsheet: Which Is Better? | Scent Stack',
     metaDescription:
@@ -459,7 +479,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '5 min read',
     publishedLabel: 'Fragrance Basics',
     relatedProductId: 'discovery',
-    coverGifNumber: 11,
+    coverImage: '/blog/covers/perfume-concentrations-explained-parfum-edp-edt-edc.jpg',
+    pinImage: '/blog/pins/perfume-concentrations-explained-parfum-edp-edt-edc.jpg',
+    coverAlt: 'Parfum vs. EDP vs. EDT vs. EDC: What the Labels Actually Mean — Scent Stack guide',
     sections: [
       {
         heading: 'It all comes down to one number: concentration',
@@ -496,7 +518,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '5 min read',
     publishedLabel: 'Application & Technique',
     relatedProductId: 'journal',
-    coverGifNumber: 12,
+    coverImage: '/blog/covers/how-to-make-perfume-last-longer-on-skin.jpg',
+    pinImage: '/blog/pins/how-to-make-perfume-last-longer-on-skin.jpg',
+    coverAlt: 'How to Make Perfume Last Longer on Skin (Without Buying a New Bottle) — Scent Stack guide',
     sections: [
       {
         heading: 'Moisturized skin holds scent — dry skin does not',
@@ -537,7 +561,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '5 min read',
     publishedLabel: 'Gifting Guide',
     relatedProductId: 'printable',
-    coverGifNumber: 2,
+    coverImage: '/blog/covers/how-to-choose-a-fragrance-gift.jpg',
+    pinImage: '/blog/pins/how-to-choose-a-fragrance-gift.jpg',
+    coverAlt: 'How to Choose a Fragrance Gift for Someone Else (Without Guessing Wrong) — Scent Stack guide',
     sections: [
       {
         heading: 'Do not buy their favorite public figure\'s fragrance as a shortcut',
@@ -578,7 +604,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '5 min read',
     publishedLabel: 'Fragrance Basics',
     relatedProductId: 'discovery',
-    coverGifNumber: 3,
+    coverImage: '/blog/covers/fragrance-families-explained-floral-woody-oriental-fresh.jpg',
+    pinImage: '/blog/pins/fragrance-families-explained-floral-woody-oriental-fresh.jpg',
+    coverAlt: 'Fragrance Families Explained: Floral, Woody, Oriental, Fresh — Scent Stack guide',
     sections: [
       {
         heading: 'Why families matter more than individual notes at first',
@@ -621,7 +649,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '4 min read',
     publishedLabel: 'Travel & Practical Tips',
     relatedProductId: 'wardrobe',
-    coverGifNumber: 4,
+    coverImage: '/blog/covers/how-to-travel-with-perfume-decanting-tsa-rules.jpg',
+    pinImage: '/blog/pins/how-to-travel-with-perfume-decanting-tsa-rules.jpg',
+    coverAlt: 'How to Travel With Perfume: Decanting, TSA Rules, and What Actually Works — Scent Stack guide',
     sections: [
       {
         heading: 'TSA liquid rules, specifically for perfume',
@@ -663,7 +693,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '4 min read',
     publishedLabel: 'Fragrance Basics',
     relatedProductId: 'signature',
-    coverGifNumber: 5,
+    coverImage: '/blog/covers/why-perfume-smells-different-on-everyone-skin-chemistry.jpg',
+    pinImage: '/blog/pins/why-perfume-smells-different-on-everyone-skin-chemistry.jpg',
+    coverAlt: 'Why the Same Perfume Smells Different on Everyone (Skin Chemistry, Explained) — Scent Stack guide',
     sections: [
       {
         heading: "It is not just \"skin chemistry\" as one vague thing",
@@ -704,7 +736,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '4 min read',
     publishedLabel: 'Application & Technique',
     relatedProductId: 'journal',
-    coverGifNumber: 6,
+    coverImage: '/blog/covers/layering-perfume-with-lotion-does-it-work.jpg',
+    pinImage: '/blog/pins/layering-perfume-with-lotion-does-it-work.jpg',
+    coverAlt: 'Layering Perfume With Lotion and Body Products: Does It Actually Work? — Scent Stack guide',
     sections: [
       {
         heading: 'The theory is sound — but the product you pick matters a lot',
@@ -745,7 +779,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '5 min read',
     publishedLabel: 'Fragrance Basics',
     relatedProductId: 'signature',
-    coverGifNumber: 7,
+    coverImage: '/blog/covers/unisex-perfume-do-masculine-feminine-labels-mean-anything.jpg',
+    pinImage: '/blog/pins/unisex-perfume-do-masculine-feminine-labels-mean-anything.jpg',
+    coverAlt: 'Unisex Perfume: Do "Masculine" and "Feminine" Labels Actually Mean Anything? — Scent Stack guide',
     sections: [
       {
         heading: 'The labels are marketing history, not chemistry',
@@ -782,7 +818,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '4 min read',
     publishedLabel: 'Getting Started',
     relatedProductId: 'discovery',
-    coverGifNumber: 8,
+    coverImage: '/blog/covers/how-many-perfumes-should-you-own-starter-collection.jpg',
+    pinImage: '/blog/pins/how-many-perfumes-should-you-own-starter-collection.jpg',
+    coverAlt: 'How Many Perfumes Should You Actually Own? Building a Starter Collection — Scent Stack guide',
     sections: [
       {
         heading: 'Start smaller than you think',
@@ -818,7 +856,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '4 min read',
     publishedLabel: 'Fragrance Basics',
     relatedProductId: 'journal',
-    coverGifNumber: 9,
+    coverImage: '/blog/covers/perfume-oils-vs-sprays-whats-the-difference.jpg',
+    pinImage: '/blog/pins/perfume-oils-vs-sprays-whats-the-difference.jpg',
+    coverAlt: 'Perfume Oils vs. Sprays: What\'s Actually the Difference — Scent Stack guide',
     sections: [
       {
         heading: 'The base is the real difference, not the bottle',
@@ -853,7 +893,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '5 min read',
     publishedLabel: 'Buying Guide',
     relatedProductId: 'collector',
-    coverGifNumber: 10,
+    coverImage: '/blog/covers/how-to-spot-a-fake-perfume-before-you-buy.jpg',
+    pinImage: '/blog/pins/how-to-spot-a-fake-perfume-before-you-buy.jpg',
+    coverAlt: 'How to Spot a Fake Perfume Before You Buy — Scent Stack guide',
     sections: [
       {
         heading: 'Price is the first and strongest signal',
@@ -971,8 +1013,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '6 min read',
     publishedLabel: 'Collection Management',
     relatedProductId: 'collector',
-    coverImage: '/productImages/prod2/preview_page_1.png',
-    coverAlt: 'A preview page from The Fragrance Collection Tracker perfume inventory by Scent Stack',
+    coverImage: '/blog/covers/perfume-collection-tracker-inventory-dashboard.jpg',
+    pinImage: '/blog/pins/perfume-collection-tracker-inventory-dashboard.jpg',
+    coverAlt: 'The Perfume Collection Tracker: Inventory, Dashboard & Wishlist in One Place — Scent Stack guide',
     sections: [
       {
         heading: 'The hidden cost of an untracked collection',
@@ -1048,8 +1091,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '6 min read',
     publishedLabel: 'Fragrance Reviews',
     relatedProductId: 'journal',
-    coverImage: '/productImages/prod3/luxury_fragrance_journal_flatlay.jpg',
-    coverAlt: 'The Digital Fragrance Journal by Scent Stack styled on a luxury flat lay',
+    coverImage: '/blog/covers/digital-fragrance-journal-reviews-dry-down-wear-log.jpg',
+    pinImage: '/blog/pins/digital-fragrance-journal-reviews-dry-down-wear-log.jpg',
+    coverAlt: 'How to Keep a Fragrance Journal: Reviews, Dry-Downs and a Wear Log — Scent Stack guide',
     sections: [
       {
         heading: 'Why write about perfume at all?',
@@ -1123,8 +1167,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '5 min read',
     publishedLabel: 'Quick Reference',
     relatedProductId: 'printable',
-    coverImage: '/productImages/prod1/page_01.webp',
-    coverAlt: 'The Perfume Journal Printable by Scent Stack shown with a perfume flat lay',
+    coverImage: '/blog/covers/printable-perfume-journal-scent-review-diary.jpg',
+    pinImage: '/blog/pins/printable-perfume-journal-scent-review-diary.jpg',
+    coverAlt: 'A Printable Perfume Journal: The Simple Scent Review Page You’ll Actually Use — Scent Stack guide',
     sections: [
       {
         heading: 'Complicated systems fail',
@@ -1194,8 +1239,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '6 min read',
     publishedLabel: 'Self-Discovery',
     relatedProductId: 'signature',
-    coverImage: '/productImages/prod1/page_01.webp',
-    coverAlt: 'Find Your Signature Scent personal fragrance discovery workbook by Scent Stack',
+    coverImage: '/blog/covers/fragrance-personality-signature-scent-workbook.jpg',
+    pinImage: '/blog/pins/fragrance-personality-signature-scent-workbook.jpg',
+    coverAlt: 'Fragrance Personality: How to Discover Your Signature Scent with a Guided Workbook — Scent Stack guide',
     sections: [
       {
         heading: 'A signature scent is a feeling, not a bottle',
@@ -1269,8 +1315,9 @@ export const blogPosts: BlogPost[] = [
     readTime: '6 min read',
     publishedLabel: 'Collection Planning',
     relatedProductId: 'wardrobe',
-    coverImage: '/productImages/prod1/page_01.webp',
-    coverAlt: 'The Fragrance Wardrobe Planner by Scent Stack for building a perfume rotation',
+    coverImage: '/blog/covers/fragrance-wardrobe-planner-scent-rotation.jpg',
+    pinImage: '/blog/pins/fragrance-wardrobe-planner-scent-rotation.jpg',
+    coverAlt: 'Fragrance Wardrobe Planner: Build a Scent Rotation for Work, Dates and Travel — Scent Stack guide',
     sections: [
       {
         heading: 'What a fragrance wardrobe really is',

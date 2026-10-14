@@ -148,7 +148,7 @@ export default function TrustVideos() {
               >
                 <ChevronRight size={24} />
               </button>
-              <p className="mt-2 text-center text-xs uppercase tracking-[0.2em] text-charcoal/40 sm:hidden">Swipe for more →</p>
+              <p className="mt-2 text-center text-xs uppercase tracking-[0.2em] text-charcoal/65 sm:hidden">Swipe for more →</p>
             </>
           )}
         </div>

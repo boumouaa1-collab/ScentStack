@@ -5,6 +5,7 @@ import { getProduct, siteConfig } from '@/data/products';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import BuyButton from '@/components/BuyButton';
 import ScentGif from '@/components/ScentGif';
+import CoverImage from '@/components/CoverImage';
 import PinItButton from '@/components/PinItButton';
 import Reveal from '@/components/Reveal';
 
@@ -89,16 +90,11 @@ export default function BlogPostPage({ post, onNavigate }: BlogPostPageProps) {
       <p className="section-eyebrow">{post.publishedLabel}</p>
       <h1 className="font-serif-display mt-3 text-4xl leading-tight text-burgundy md:text-5xl">{post.title}</h1>
       {post.subtitle && <p className="mt-4 text-lg leading-relaxed text-charcoal/70">{post.subtitle}</p>}
-      <p className="mt-4 text-sm text-charcoal/50">{post.readTime}</p>
+      <p className="mt-4 text-sm text-charcoal/65">{post.readTime}</p>
 
-      <div className="mt-8 aspect-[16/9] overflow-hidden rounded-2xl bg-[#efe4d4]/60">
+      <div className="relative mt-8 aspect-video overflow-hidden rounded-2xl bg-[#efe4d4]/60">
         {post.coverImage ? (
-          <img
-            src={post.coverImage}
-            alt={post.coverAlt || post.title}
-            className="h-full w-full object-contain p-4"
-            decoding="async"
-          />
+          <CoverImage src={post.coverImage} alt={post.coverAlt || post.title} eager />
         ) : (
           <ScentGif number={post.coverGifNumber ?? 1} alt={post.title} className="blog-hero-gif" />
         )}
@@ -143,14 +139,14 @@ export default function BlogPostPage({ post, onNavigate }: BlogPostPageProps) {
                   className="w-full rounded-2xl border border-[#b08d57]/20"
                 />
                 {section.image.caption && (
-                  <figcaption className="mt-2 text-center text-xs text-charcoal/50">{section.image.caption}</figcaption>
+                  <figcaption className="mt-2 text-center text-xs text-charcoal/65">{section.image.caption}</figcaption>
                 )}
               </figure>
             )}
             {section.quote && (
               <blockquote className="mt-6 border-l-2 border-gold bg-[#efe4d4]/40 py-4 pl-6 pr-4">
                 <p className="font-serif-display text-xl italic leading-snug text-burgundy">“{section.quote.text}”</p>
-                {section.quote.cite && <cite className="mt-2 block text-xs not-italic text-charcoal/50">— {section.quote.cite}</cite>}
+                {section.quote.cite && <cite className="mt-2 block text-xs not-italic text-charcoal/65">— {section.quote.cite}</cite>}
               </blockquote>
             )}
           </section>

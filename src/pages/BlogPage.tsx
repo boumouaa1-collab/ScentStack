@@ -2,6 +2,7 @@ import { ArrowRight } from 'lucide-react';
 import { getPublishedPosts } from '@/data/blog';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import ScentGif from '@/components/ScentGif';
+import CoverImage from '@/components/CoverImage';
 import Reveal from '@/components/Reveal';
 import TiltCard from '@/components/TiltCard';
 
@@ -31,15 +32,9 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
         {posts.map((post, i) => (
           <Reveal key={post.slug} delay={i * 70}>
           <TiltCard className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#b08d57]/15 bg-white transition-shadow hover:shadow-lg">
-            <div className="flex aspect-[16/10] items-center justify-center overflow-hidden bg-[#efe4d4]/60">
+            <div className="relative aspect-video overflow-hidden bg-[#efe4d4]/60">
               {post.coverImage ? (
-                <img
-                  src={post.coverImage}
-                  alt={post.coverAlt || post.title}
-                  className="h-full w-full object-contain p-3"
-                  loading="lazy"
-                  decoding="async"
-                />
+                <CoverImage src={post.coverImage} alt={post.coverAlt || post.title} />
               ) : (
                 <ScentGif number={post.coverGifNumber ?? 1} alt={post.title} className="blog-card-gif" />
               )}
@@ -48,7 +43,7 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
               <span className="text-xs uppercase tracking-widest text-gold">{post.publishedLabel}</span>
               <h2 className="mt-2 font-serif-display text-2xl leading-snug text-burgundy">{post.title}</h2>
               <p className="mt-3 flex-1 text-sm leading-relaxed text-charcoal/70">{post.excerpt}</p>
-              <div className="mt-5 flex items-center justify-between text-xs text-charcoal/50">
+              <div className="mt-5 flex items-center justify-between text-xs text-charcoal/65">
                 <span>{post.readTime}</span>
                 <button
                   type="button"

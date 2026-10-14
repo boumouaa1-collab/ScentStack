@@ -10,6 +10,7 @@
     --plum: #5e2335;
     --beige: #d9c7b0;
     --gold: #b08d57;
+    --gold-text: #7d6030;
     --charcoal: #2b2522;
   }
 
@@ -41,7 +42,7 @@
   }
 
   .text-gold {
-    color: var(--gold);
+    color: var(--gold-text);
   }
 
   .text-burgundy {
@@ -605,7 +606,7 @@
 
   .section-eyebrow {
     @apply mb-3 text-xs font-medium uppercase tracking-[0.3em];
-    color: var(--gold);
+    color: var(--gold-text);
   }
 
   .marquee-track {
@@ -952,3 +953,15 @@
     }
   }
 }
+
+/* ---- Speed: no endlessly repainting effects ----
+   Blurred drifting blobs, pulsing box-shadows and floating filtered images force the browser to
+   repaint every frame, which slows phones down and hurts the Google speed score. They are static
+   now; everything still looks the same, it just does not wiggle. */
+.hero-blob { filter: none; }
+.hero-blob-a, .hero-blob-b, .payment-logo, .product-gif, .ritual-gif, .home-feature-gif,
+.home-feature-side-gif, .hero-side-gif, .btn-pulse, .float-cover, .bundle-highlight-box {
+  animation: none;
+}
+.support-button { animation: support-enter 500ms ease-out both; }
+.footer-payment-label { color: #6a625c; }

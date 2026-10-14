@@ -1,24 +1,23 @@
-import { useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Home from '@/pages/Home';
-import ShopPage from '@/pages/ShopPage';
-import ProductPage from '@/pages/ProductPage';
-import BundlePage from '@/pages/BundlePage';
-import CheckoutPage from '@/pages/CheckoutPage';
-import ThankYouPage from '@/pages/ThankYouPage';
-import SuccessPage from '@/pages/SuccessPage';
+const ShopPage = lazy(() => import('@/pages/ShopPage'));
+const ProductPage = lazy(() => import('@/pages/ProductPage'));
+const BundlePage = lazy(() => import('@/pages/BundlePage'));
+const CheckoutPage = lazy(() => import('@/pages/CheckoutPage'));
+const ThankYouPage = lazy(() => import('@/pages/ThankYouPage'));
+const SuccessPage = lazy(() => import('@/pages/SuccessPage'));
 import { products, getProduct, siteConfig, testProduct } from '@/data/products';
 import { pathForPage, pageForPath } from '@/lib/router';
-import LegalPage from '@/pages/LegalPage';
-import ContactPage from '@/pages/ContactPage';
-import AboutPage from '@/pages/AboutPage';
-import FAQPage from '@/pages/FAQPage';
-import SupportButton from '@/components/SupportButton';
-import ErrorPage from '@/pages/ErrorPage';
-import BlogPage from '@/pages/BlogPage';
-import BlogPostPage from '@/pages/BlogPostPage';
-import { getBlogPost } from '@/data/blog';
+const LegalPage = lazy(() => import('@/pages/LegalPage'));
+const ContactPage = lazy(() => import('@/pages/ContactPage'));
+const AboutPage = lazy(() => import('@/pages/AboutPage'));
+const FAQPage = lazy(() => import('@/pages/FAQPage'));
+const SupportButton = lazy(() => import('@/components/SupportButton'));
+const ErrorPage = lazy(() => import('@/pages/ErrorPage'));
+const BlogPage = lazy(() => import('@/pages/BlogPage'));
+const BlogPostRoute = lazy(() => import('@/pages/BlogPostRoute'));
 import { CartProvider } from '@/lib/cartContext';
 import CartBar from '@/components/CartBar';
 
@@ -90,9 +89,7 @@ function App() {
     if (page === 'bundle') return <BundlePage onNavigate={navigate} />;
     if (page === 'blog') return <BlogPage onNavigate={navigate} />;
     if (page.startsWith('blog-')) {
-      const slug = page.replace('blog-', '');
-      const post = getBlogPost(slug);
-      if (post) return <BlogPostPage post={post} onNavigate={navigate} />;
+      return <BlogPostRoute slug={page.replace('blog-', '')} onNavigate={navigate} />;
     }
     if (page === 'not-found') return <ErrorPage status="404" onNavigate={navigate} />;
     if (page === 'forbidden') return <ErrorPage status="403" onNavigate={navigate} />;
@@ -119,9 +116,14 @@ function App() {
     <CartProvider>
       <div className="min-h-screen bg-[#f7f1e8]">
         <Navbar onNavigate={navigate} currentPage={page} />
-        <main>{render()}</main>
-        <Footer onNavigate={navigate} />
-        <SupportButton />
+        {/* The footer sits inside the same boundary as the page, so it never jumps down while a page loads. */}
+        <Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
+          <main>{render()}</main>
+          <Footer onNavigate={navigate} />
+        </Suspense>
+        <Suspense fallback={null}>
+          <SupportButton />
+        </Suspense>
         <CartBar onNavigate={navigate} />
       </div>
     </CartProvider>

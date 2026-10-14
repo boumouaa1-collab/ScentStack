@@ -32,7 +32,7 @@ export default function AddToCartButton({ productId, className = '' }: AddToCart
       className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-widest transition-all ${
         inCart
           ? 'bg-white text-burgundy ring-2 ring-[#b08d57]'
-          : 'bg-[#b08d57] text-white hover:bg-[#c5a36c]'
+          : 'bg-[#7d6030] text-white hover:bg-[#6b5028]'
       } ${className}`}
     >
       {inCart ? (

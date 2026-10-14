@@ -41,20 +41,32 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" /></noscript>
 
     <!-- ============ GOOGLE ANALYTICS (GA4) ============
          Active — Measurement ID G-CEDDKZ4YEX. To switch to a different
          GA4 property later, replace both occurrences below. -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CEDDKZ4YEX"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-CEDDKZ4YEX');
+      // Load the Google Analytics script after the page is ready (or on first interaction),
+      // so it never slows down the first paint. Visits are still counted.
+      (function () {
+        var loaded = false;
+        function load() {
+          if (loaded) return; loaded = true;
+          var s = document.createElement('script');
+          s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-CEDDKZ4YEX';
+          document.head.appendChild(s);
+        }
+        ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(function (e) {
+          window.addEventListener(e, load, { once: true, passive: true });
+        });
+        window.addEventListener('load', function () { setTimeout(load, 3500); });
+      })();
     </script>
 
     <!-- ============ PINTEREST TAG ============

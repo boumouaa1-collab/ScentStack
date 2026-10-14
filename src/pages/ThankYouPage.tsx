@@ -96,7 +96,7 @@ export default function ThankYouPage({ itemId, onNavigate }: ThankYouPageProps) 
 
         {cross && !isBundle && !isTest && product && (
           <div className="mt-8 overflow-hidden rounded-3xl p-8 text-left" style={{ background: cross.accent }}>
-            <p className="text-xs uppercase tracking-[0.3em] text-[#b08d57]">One more thing</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-[#e8d3a6]">One more thing</p>
             <h3 className="mt-2 font-serif-display text-2xl text-[#f7f1e8]">
               Add {cross.title} for ${cross.price}
             </h3>
@@ -152,7 +152,7 @@ export default function ThankYouPage({ itemId, onNavigate }: ThankYouPageProps) 
               Follow Scent Stack on Pinterest
             </a>
           )}
-          <p className="flex items-center gap-2 text-xs text-charcoal/50">
+          <p className="flex items-center gap-2 text-xs text-charcoal/65">
             <Mail size={13} />
             Need help? Open the support chat below.
           </p>

@@ -41,7 +41,7 @@ export default function CartBar({ onNavigate }: CartBarProps) {
           <button
             type="button"
             onClick={clearCart}
-            className="text-xs uppercase tracking-widest text-charcoal/50 transition-colors hover:text-charcoal/80"
+            className="text-xs uppercase tracking-widest text-charcoal/65 transition-colors hover:text-charcoal/80"
           >
             Clear
           </button>

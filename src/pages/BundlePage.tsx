@@ -24,7 +24,7 @@ export default function BundlePage({ onNavigate }: BundlePageProps) {
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-charcoal/70">{bundle.description}</p>
         <div className="mt-8 flex items-center justify-center gap-4">
           <span className="font-serif-display text-5xl text-burgundy">${bundle.price}</span>
-          <span className="text-xl text-charcoal/40 line-through">${bundle.originalPrice}</span>
+          <span className="text-xl text-charcoal/65 line-through">${bundle.originalPrice}</span>
           <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium uppercase tracking-widest text-green-700">
             SAVE ${bundle.saving}
           </span>
@@ -38,7 +38,7 @@ export default function BundlePage({ onNavigate }: BundlePageProps) {
             pulse
             onNavigate={onNavigate}
           />
-          <button onClick={() => onNavigate('home')} className="btn-secondary">
+          <button onClick={() => onNavigate('shop')} className="btn-secondary">
             Browse separately
           </button>
         </div>

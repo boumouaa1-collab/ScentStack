@@ -110,7 +110,7 @@ export default function Home({ products, onNavigate }: HomeProps) {
                 'No Subscription',
                 'Available Worldwide',
               ].map((t) => (
-                <span key={t} className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] text-charcoal/50">
+                <span key={t} className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] text-charcoal/65">
                   <Sparkles size={14} className="text-gold" />
                   {t}
                 </span>
@@ -157,7 +157,7 @@ export default function Home({ products, onNavigate }: HomeProps) {
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#efe4d4]/60">
                 {f.icon}
               </div>
-              <h3 className="font-serif-display text-xl text-burgundy">{f.title}</h3>
+              <h2 className="font-serif-display text-xl text-burgundy">{f.title}</h2>
               <p className="mt-2 text-sm leading-relaxed text-charcoal/70">{f.text}</p>
             </Reveal>
           ))}

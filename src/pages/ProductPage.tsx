@@ -100,7 +100,7 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
       {/* Breadcrumb */}
       <div className="mx-auto max-w-7xl px-6 pt-6 lg:px-10">
         <button
-          onClick={() => onNavigate('home')}
+          onClick={() => onNavigate('shop')}
           className="inline-flex items-center gap-2 text-sm text-charcoal/60 transition-colors hover:text-burgundy"
         >
           <ArrowLeft size={15} />
@@ -112,7 +112,7 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
       <section className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
         <div className="grid gap-12 lg:grid-cols-2">
           {/* Cover / page carousel */}
-          <div className="lg:sticky lg:top-28 lg:self-start">
+          <div className="min-w-0 lg:sticky lg:top-28 lg:self-start">
             <div
               className="relative aspect-square overflow-hidden rounded-2xl shadow-xl outline-none focus-visible:ring-2 focus-visible:ring-[#b08d57]"
               style={{ background: product.accent }}
@@ -136,13 +136,16 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
                 if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) goHero(dx < 0 ? 1 : -1);
               }}
             >
-              {/* Blurred copy fills the box behind portrait pages, so nothing is cropped and there are no empty bars. */}
-              <img
-                src={gallery[heroIndex]}
-                alt=""
-                aria-hidden="true"
-                className="absolute inset-0 h-full w-full scale-110 object-cover opacity-60 blur-2xl"
-              />
+              {/* Portrait pages sit in the square box over a soft blurred copy, so there are no empty bars. The square cover needs none. */}
+              {heroIndex > 0 && (
+                <img
+                  src={gallery[heroIndex]}
+                  alt=""
+                  aria-hidden="true"
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full scale-110 object-cover opacity-60 blur-2xl"
+                />
+              )}
               <button
                 type="button"
                 onClick={() => setLightboxIndex(heroIndex)}
@@ -222,7 +225,7 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
 
             <div className="mt-8 flex items-baseline gap-4">
               <span className="font-serif-display text-4xl text-burgundy">${product.price}</span>
-              <span className="text-sm text-charcoal/50">One-time payment &middot; Instant download</span>
+              <span className="text-sm text-charcoal/65">One-time payment &middot; Instant download</span>
             </div>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -271,7 +274,7 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
                 <Zap size={16} className="text-gold" />
                 Instant digital delivery
               </span>
-              <span className="text-charcoal/30">|</span>
+              <span className="text-charcoal/65">|</span>
               <span className="inline-flex items-center gap-2">
                 <FileText size={16} className="text-gold" />
                 {product.format}
@@ -376,7 +379,7 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
             </button>
           ))}
           {gallery.length <= 1 && (
-            <div className="flex aspect-[4/5] items-center justify-center rounded-2xl border border-dashed border-[#b08d57]/30 bg-white/40 p-6 text-center text-xs uppercase tracking-widest text-charcoal/40">
+            <div className="flex aspect-[4/5] items-center justify-center rounded-2xl border border-dashed border-[#b08d57]/30 bg-white/40 p-6 text-center text-xs uppercase tracking-widest text-charcoal/65">
               More interior pages coming soon
             </div>
           )}
@@ -391,7 +394,7 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
           <div className="grid gap-6 md:grid-cols-2">
             {related.map((rel) => (
               <div key={rel.id} className="overflow-hidden rounded-2xl p-8" style={{ background: rel.accent }}>
-                <p className="text-xs uppercase tracking-[0.3em] text-[#b08d57]">Complete your ritual</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-[#e8d3a6]">Complete your ritual</p>
                 <h3 className="mt-2 font-serif-display text-2xl text-[#f7f1e8]">{rel.title}</h3>
                 <p className="mt-3 text-sm text-[#f7f1e8]/70">{product.upsellMessage}</p>
                 <div className="mt-5 flex items-center justify-between gap-4">
@@ -409,10 +412,10 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
           </div>
 
           <div className="bundle-highlight-box mt-8 rounded-2xl p-8 text-center">
-            <p className="text-sm font-medium uppercase tracking-[0.15em] text-[#b08d57]">✨ Best value — build the complete collection</p>
+            <p className="text-sm font-medium uppercase tracking-[0.15em] text-[#7d6030]">✨ Best value — build the complete collection</p>
             <h3 className="mt-3 flex items-baseline justify-center gap-3 font-serif-display text-4xl font-bold text-burgundy">
               <span className="tabular-nums">${bundle.price}</span>
-              <span className="text-xl font-normal tabular-nums text-charcoal/40 line-through">${bundle.originalPrice}</span>
+              <span className="text-xl font-normal tabular-nums text-charcoal/65 line-through">${bundle.originalPrice}</span>
             </h3>
             <button
               onClick={() => {

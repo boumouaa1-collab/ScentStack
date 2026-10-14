@@ -323,7 +323,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium text-charcoal">{p.title}</p>
-                      <p className="text-xs text-charcoal/50">Digital PDF</p>
+                      <p className="text-xs text-charcoal/65">Digital PDF</p>
                     </div>
                     <span className="font-serif-display text-xl font-bold tabular-nums text-burgundy">${Number(p.price).toFixed(2)}</span>
                     {cartProducts.length > 1 && (
@@ -332,7 +332,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                         onClick={() => removeItem(p.id)}
                         aria-label={`Remove ${p.title}`}
                         title="Remove"
-                        className="shrink-0 rounded-full p-1.5 text-charcoal/40 transition-colors hover:bg-white hover:text-burgundy"
+                        className="shrink-0 rounded-full p-1.5 text-charcoal/65 transition-colors hover:bg-white hover:text-burgundy"
                       >
                         <X size={14} />
                       </button>
@@ -445,7 +445,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
               {checkingEmail && <p className="mt-2 text-xs text-charcoal/60">Checking your email…</p>}
               {emailLooksOk && emailChecked && !emailCheck?.ok && <p className="mt-2 text-xs text-red-700">{emailCheck?.message}</p>}
               {emailValid && <p className="mt-2 text-xs text-green-700">✓ Email verified</p>}
-              <p className="mt-2 text-xs text-charcoal/50">
+              <p className="mt-2 text-xs text-charcoal/65">
                 Your download link{lineItems.length > 1 ? 's are' : ' is'} sent to this exact address — double-check it before paying.
                 {email && emailValid ? ` We’ll send it to ${maskEmail(email.trim())}.` : ''}
               </p>
@@ -467,13 +467,13 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
               {paypalReady && status === 'processing' && <LoadingSpinner label="Confirming your payment" />}
               <div id="paypal-button-container" className="min-h-[220px]" />
               {!emailValid && paypalReady && (
-                <p className="mt-3 text-center text-xs text-charcoal/50">
+                <p className="mt-3 text-center text-xs text-charcoal/65">
                   The PayPal button appears once your email above is valid.
                 </p>
               )}
             </div>
 
-            <div className="mt-8 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-charcoal/50">
+            <div className="mt-8 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-charcoal/65">
               <Lock size={13} className="text-gold" />
               Secure payment through PayPal
             </div>

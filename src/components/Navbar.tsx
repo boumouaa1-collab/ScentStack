@@ -58,7 +58,7 @@ export default function Navbar({ onNavigate, currentPage }: NavbarProps) {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => nav('home')}
+            onClick={() => nav('shop')}
             className="hidden items-center gap-2 rounded-full border border-[#b08d57]/40 px-5 py-2 text-xs uppercase tracking-widest text-burgundy transition-colors hover:bg-burgundy hover:text-[#f7f1e8] sm:flex"
           >
             Shop The Collection
