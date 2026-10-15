@@ -10,13 +10,13 @@ type RevealProps = {
 };
 
 export default function Reveal({ children, delay = 0, className = '', as = 'div' }: RevealProps) {
-  const { ref, inView } = useInView<HTMLElement>();
+  const { ref, inView, hidden } = useInView<HTMLElement>();
   const Tag = as;
 
   return (
     <Tag
       ref={ref as React.Ref<HTMLElement> as never}
-      className={`reveal-on-scroll ${inView ? 'is-visible' : ''} ${className}`}
+      className={`reveal-on-scroll ${hidden ? 'reveal-hidden' : ''} ${inView ? 'is-visible' : ''} ${className}`}
       style={{ transitionDelay: inView ? `${delay}ms` : '0ms' }}
     >
       {children}

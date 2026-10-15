@@ -94,7 +94,7 @@ export default function BlogPostPage({ post, onNavigate }: BlogPostPageProps) {
 
       <div className="relative mt-8 aspect-video overflow-hidden rounded-2xl bg-[#efe4d4]/60">
         {post.coverImage ? (
-          <CoverImage src={post.coverImage} alt={post.coverAlt || post.title} eager />
+          <CoverImage src={post.coverImage} alt={post.coverAlt || post.title} priority />
         ) : (
           <ScentGif number={post.coverGifNumber ?? 1} alt={post.title} className="blog-hero-gif" />
         )}

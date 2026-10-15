@@ -159,6 +159,9 @@ export default function ProductPage({ product, onNavigate }: ProductPageProps) {
                   width={1200}
                   height={1200}
                   decoding="async"
+                  fetchPriority={heroIndex === 0 ? 'high' : undefined}
+                  srcSet={/^\/productImages\/(soon\/[a-z-]+|prod1\/cover)\.webp$/.test(gallery[heroIndex]) ? `${gallery[heroIndex].replace('.webp', '-720.webp')} 720w, ${gallery[heroIndex]} 1200w` : undefined}
+                  sizes="(min-width: 1024px) 560px, 92vw"
                   className="fade-in h-full w-full object-contain"
                 />
               </button>

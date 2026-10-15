@@ -24,6 +24,35 @@ export default function TrustVideos() {
   const players = useRef<(HTMLVideoElement | null)[]>([]);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
+  // Only videos whose file really exists are shown (a video you have not uploaded yet is left out,
+  // instead of showing a broken box). null = still checking.
+  const [available, setAvailable] = useState<string[] | null>(null);
+  const videos = trustVideos.filter((v) => available?.includes(v.id));
+
+  useEffect(() => {
+    let cancelled = false;
+    const check = async () => {
+      const found: string[] = [];
+      await Promise.all(
+        trustVideos.map(async (v) => {
+          try {
+            const res = await fetch(v.src, { method: 'HEAD' });
+            // A missing file on this host answers with the web page itself, so check the type too.
+            if (res.ok && (res.headers.get('content-type') || '').startsWith('video/')) found.push(v.id);
+          } catch {
+            // not reachable: leave it out
+          }
+        }),
+      );
+      if (!cancelled) setAvailable(found);
+    };
+    const idle = (window as Window & { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback;
+    const handle = idle ? idle(check) : window.setTimeout(check, 1500);
+    return () => {
+      cancelled = true;
+      if (!idle) window.clearTimeout(handle);
+    };
+  }, []);
 
   const updateArrows = useCallback(() => {
     const el = scroller.current;
@@ -33,11 +62,13 @@ export default function TrustVideos() {
   }, []);
 
   useEffect(() => {
-    updateArrows();
+    // Measure after the first paint so reading the layout never blocks rendering.
+    const frame = requestAnimationFrame(updateArrows);
     const el = scroller.current;
     el?.addEventListener('scroll', updateArrows, { passive: true });
     window.addEventListener('resize', updateArrows);
     return () => {
+      cancelAnimationFrame(frame);
       el?.removeEventListener('scroll', updateArrows);
       window.removeEventListener('resize', updateArrows);
     };
@@ -45,14 +76,14 @@ export default function TrustVideos() {
 
   // Structured data so Google can list the videos.
   useEffect(() => {
-    if (trustVideos.length === 0) return;
+    if (videos.length === 0) return;
     const id = 'trust-videos-schema';
     document.getElementById(id)?.remove();
     const el = document.createElement('script');
     el.id = id;
     el.type = 'application/ld+json';
     el.text = JSON.stringify(
-      trustVideos.map((v) => ({
+      videos.map((v) => ({
         '@context': 'https://schema.org',
         '@type': 'VideoObject',
         name: v.title,
@@ -64,9 +95,9 @@ export default function TrustVideos() {
     );
     document.head.appendChild(el);
     return () => document.getElementById(id)?.remove();
-  }, []);
+  }, [videos.length]);
 
-  if (trustVideos.length === 0) return null;
+  if (videos.length === 0) return null;
 
   const scrollByCard = (direction: 1 | -1) => {
     const el = scroller.current;
@@ -76,7 +107,7 @@ export default function TrustVideos() {
   // Only one video plays at a time.
   const pauseOthers = (index: number) => players.current.forEach((video, i) => i !== index && video?.pause());
 
-  const many = trustVideos.length > 1;
+  const many = videos.length > 1;
 
   return (
     <section className="border-y border-[#b08d57]/15 bg-white py-20" aria-labelledby="trust-videos-title">
@@ -98,7 +129,7 @@ export default function TrustVideos() {
             aria-label="Product videos"
             style={{ justifyContent: many ? undefined : 'center' }}
           >
-            {trustVideos.map((video, i) => (
+            {videos.map((video, i) => (
               <figure
                 key={video.id}
                 className={`${widthClass[video.aspect]} shrink-0 snap-start overflow-hidden rounded-2xl border border-[#b08d57]/20 bg-[#f7f1e8] shadow-sm`}

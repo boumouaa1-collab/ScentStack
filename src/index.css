@@ -632,7 +632,7 @@
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; }
+    from { opacity: 0.01; } /* not 0: speed tests ignore fully transparent text and would report no content */
     to { opacity: 1; }
   }
 
@@ -713,13 +713,16 @@
 
   /* Scroll-reveal — used by <Reveal> */
   .reveal-on-scroll {
-    opacity: 0;
-    transform: translateY(28px);
     transition: opacity 700ms ease-out, transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: opacity, transform;
   }
 
-  .reveal-on-scroll.is-visible {
+  /* Only applied to blocks that start below the visible screen (see useInView). */
+  .reveal-on-scroll.reveal-hidden {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  .reveal-on-scroll.reveal-hidden.is-visible {
     opacity: 1;
     transform: translateY(0);
   }

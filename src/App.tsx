@@ -2,6 +2,16 @@ import { Suspense, lazy, useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Home from '@/pages/Home';
+// Start downloading the page the visitor landed on right away, in parallel with starting the app,
+// instead of waiting until the app has rendered and asked for it.
+if (typeof window !== 'undefined') {
+  const path = window.location.pathname;
+  if (path.startsWith('/products/')) void import('@/pages/ProductPage');
+  else if (path === '/shop') void import('@/pages/ShopPage');
+  else if (path === '/blog') void import('@/pages/BlogPage');
+  else if (path.startsWith('/blog/')) void import('@/pages/BlogPostRoute');
+}
+
 const ShopPage = lazy(() => import('@/pages/ShopPage'));
 const ProductPage = lazy(() => import('@/pages/ProductPage'));
 const BundlePage = lazy(() => import('@/pages/BundlePage'));

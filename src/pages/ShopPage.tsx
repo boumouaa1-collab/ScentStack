@@ -31,7 +31,7 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
             <Reveal key={product.id} delay={i * 90}>
             <TiltCard className="product-card relative flex h-full cursor-pointer flex-col overflow-hidden">
               <div className="product-visual card-visual relative aspect-square overflow-hidden" style={{ background: product.accent }}>
-                <CoverImage src={coverFor(product)} alt={`${product.title} cover`} />
+                <CoverImage src={coverFor(product)} alt={`${product.title} cover`} priority={i < 2} />
                 <CanvaBadge />
               </div>
               <div className="flex flex-1 flex-col p-7">

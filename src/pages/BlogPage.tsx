@@ -34,7 +34,7 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
           <TiltCard className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#b08d57]/15 bg-white transition-shadow hover:shadow-lg">
             <div className="relative aspect-video overflow-hidden bg-[#efe4d4]/60">
               {post.coverImage ? (
-                <CoverImage src={post.coverImage} alt={post.coverAlt || post.title} />
+                <CoverImage src={post.coverImage} alt={post.coverAlt || post.title} priority={i < 2} />
               ) : (
                 <ScentGif number={post.coverGifNumber ?? 1} alt={post.title} className="blog-card-gif" />
               )}

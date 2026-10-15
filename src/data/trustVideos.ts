@@ -1,10 +1,11 @@
 // Videos shown in the "See it in action" strip on the home page.
 //
 // HOW TO ADD / CHANGE A VIDEO
-//  1. Put the compressed file in  public/videos/   (MP4, H.264 video + AAC audio, e.g. video-1.mp4)
-//  2. Put a poster picture (the frame shown before play) next to it  (e.g. video-1.webp or .jpg)
+//  1. Put the compressed file in  public/videos/   (MP4, H.264 video + AAC audio) named video-1.mp4, video-2.mp4, video-3.mp4
+//  2. Put a poster picture (the frame shown before play) next to it: video-1.webp, video-2.webp, video-3.webp
 //  3. Add or edit a line below. Order here = order on the site. Delete a line to remove it.
 //
+// A video whose file is missing is simply left out of the site (no broken box), so you can add them one by one.
 // Keep each file small (about 2–8 MB): 720p or 1080p, ~1–3 Mbps. Bigger files slow the page for visitors.
 
 export type TrustVideo = {
@@ -25,22 +26,30 @@ export const trustVideosHeading = {
 
 export const trustVideos: TrustVideo[] = [
   {
-    id: 'workbook-preview',
-    title: 'Inside the Fragrance Discovery Workbook',
-    caption: 'A quick flip through the pages of our guided workbook.',
-    src: '/productImages/prod1/preview.mp4',
-    poster: '/productImages/prod1/poster.webp',
-    aspect: 'square',
-    uploadDate: '2026-10-01',
+    id: 'video-1',
+    title: 'Find the scents you love',
+    caption: 'The Fragrance Discovery Workbook and Find Your Signature Scent.',
+    src: '/videos/video-1.mp4',
+    poster: '/videos/video-1.webp',
+    aspect: 'portrait',
+    uploadDate: '2026-10-20',
   },
-  // Add your next two videos here, for example:
-  // {
-  //   id: 'collection-tracker',
-  //   title: 'The Fragrance Collection Tracker',
-  //   caption: 'How to catalogue every bottle you own.',
-  //   src: '/videos/video-2.mp4',
-  //   poster: '/videos/video-2.webp',
-  //   aspect: 'landscape',
-  //   uploadDate: '2026-10-15',
-  // },
+  {
+    id: 'video-2',
+    title: 'Organize your collection',
+    caption: 'The Fragrance Collection Tracker and the Fragrance Wardrobe Planner.',
+    src: '/videos/video-2.mp4',
+    poster: '/videos/video-2.webp',
+    aspect: 'landscape',
+    uploadDate: '2026-10-20',
+  },
+  {
+    id: 'video-3',
+    title: 'Remember what you love',
+    caption: 'The Digital Fragrance Journal and the Perfume Journal Printable.',
+    src: '/videos/video-3.mp4',
+    poster: '/videos/video-3.webp',
+    aspect: 'portrait',
+    uploadDate: '2026-10-20',
+  },
 ];

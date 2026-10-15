@@ -1,0 +1,14 @@
+# Scent Stack
+
+> Scent Stack sells digital fragrance workbooks, journals and planners (instant PDF download, printable and digital-friendly) to help people discover their taste, organise a perfume collection and wear fragrance with intention.
+
+## Main pages
+- [Shop](https://scentstack.store/shop): all digital fragrance products
+- [Fragrance Discovery Workbook](https://scentstack.store/products/fragrance-discovery-workbook): 36-page guided workbook
+- [Bundle](https://scentstack.store/bundle): the complete collection
+- [Blog](https://scentstack.store/blog): practical fragrance guides and tips
+- [FAQ](https://scentstack.store/faq): payment, delivery and refunds
+- [Contact](https://scentstack.store/contact): customer support
+
+## Notes
+- Products are digital downloads delivered instantly by email after secure PayPal checkout.
