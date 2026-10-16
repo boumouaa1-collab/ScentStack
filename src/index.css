@@ -968,3 +968,7 @@
 }
 .support-button { animation: support-enter 500ms ease-out both; }
 .footer-payment-label { color: #6a625c; }
+
+/* On dark (burgundy) areas the gold text must be the light gold, or it is unreadable. */
+.bg-burgundy .text-gold,
+.bg-burgundy .section-eyebrow { color: #e8d3a6; }

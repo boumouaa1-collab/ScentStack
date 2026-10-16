@@ -384,8 +384,8 @@ export const bundle = {
   id: 'bundle',
   name: 'Build Your Complete Scent Stack',
   price: 39.99,
-  originalPrice: 48.94,
-  saving: 8.95,
+  originalPrice: 49.94,
+  saving: 9.95,
   description: 'Six premium fragrance tools. One complete system.',
   productIds: ['discovery', 'collector', 'journal', 'printable', 'signature', 'wardrobe'],
   // FIXME: duplicates 'printable' product's button below — NOT a real bundle button yet.

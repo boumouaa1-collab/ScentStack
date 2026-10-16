@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react';
-import { ArrowRight, BookOpen, Layers, Sparkles, Check, Gem, NotebookPen, Wand2 } from 'lucide-react';
+import { ArrowRight, BookOpen, Sparkles, Check, Gem, NotebookPen, Wand2 } from 'lucide-react';
 import type { Product } from '@/data/products';
 import { bundle } from '@/data/products';
 import BuyButton from '@/components/BuyButton';
 import NewsletterForm from '@/components/NewsletterForm';
 import TrustVideos from '@/components/TrustVideos';
+import BundleShowcase from '@/components/BundleShowcase';
 import { coverFor } from '@/lib/stock';
 import CoverImage from '@/components/CoverImage';
 import CanvaBadge from '@/components/CanvaBadge';
@@ -237,32 +238,7 @@ export default function Home({ products, onNavigate }: HomeProps) {
 
       <TrustVideos />
 
-      {/* Bundle banner */}
-      <section className="bg-burgundy py-20 text-[#f7f1e8]">
-        <Reveal className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 text-center lg:px-10">
-          <Layers className="text-gold" size={32} />
-          <p className="text-xs uppercase tracking-[0.3em] text-gold">Build Your Complete Scent Stack</p>
-          <h2 className="font-serif-display text-4xl md:text-5xl">{bundle.name}</h2>
-          <p className="max-w-xl text-[#f7f1e8]/70">{bundle.description}</p>
-          <div className="flex items-center gap-4">
-            <span className="font-serif-display text-4xl">${bundle.price}</span>
-            <span className="text-lg text-[#f7f1e8]/40 line-through">${bundle.originalPrice}</span>
-            <span className="rounded-full bg-[#b08d57]/20 px-3 py-1 text-xs uppercase tracking-widest text-gold">
-              SAVE ${bundle.saving}
-            </span>
-          </div>
-          <button
-            onClick={() => {
-              track('bundle_click', { source: 'homepage_banner' });
-              onNavigate('bundle');
-            }}
-            className="inline-flex items-center gap-2 rounded-full bg-[#b08d57] px-8 py-3.5 text-sm font-medium uppercase tracking-widest text-white transition-all hover:bg-[#c5a36c]"
-          >
-            Get The Complete Scent Stack
-            <ArrowRight size={16} />
-          </button>
-        </Reveal>
-      </section>
+      <BundleShowcase onNavigate={onNavigate} />
 
       {/* How it works */}
       <section className="mx-auto max-w-7xl px-6 py-20 lg:px-10">
